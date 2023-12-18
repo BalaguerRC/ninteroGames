@@ -10,7 +10,7 @@
         </p>
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-        <form class="card-body">
+        <form class="card-body" v-on:submit.prevent="login">
           <div class="form-control">
             <label class="label">
               <span class="label-text">Email</span>
@@ -19,6 +19,7 @@
               type="email"
               placeholder="email"
               class="input input-bordered"
+              v-model="email"
               required
             />
           </div>
@@ -30,6 +31,7 @@
               type="password"
               placeholder="password"
               class="input input-bordered"
+              v-model="password"
               required
             />
             <label class="label">
@@ -38,6 +40,7 @@
               >
             </label>
           </div>
+
           <div class="form-control mt-3">
             <button class="btn btn-success">Login</button>
           </div>
@@ -51,5 +54,72 @@
         </div>
       </div>
     </div>
+    <div class="toast">
+      <div role="alert" class="alert alert-error" v-if="error">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="stroke-current shrink-0 h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>{{ errorMsg }}</span>
+        <div>
+          <button class="btn btn-sm btn-circle" v-on:click="reWrite">X</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<script setup>
+import axios from "axios";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+const error = ref(false);
+const errorMsg = ref("");
+
+function login() {
+  let json = {
+    email: email.value,
+    password: password.value,
+  };
+  axios
+    .post(import.meta.env.VITE_API_ENDPOINT + "/users/login", json)
+    .then((data) => {
+      console.log("esto es", data);
+      if (data.status == 200) {
+        console.log("Todo correcto");
+        localStorage.setItem("token", data.data.token);
+        router.push("home"); //redirecting whenn everythin is ok :3
+      } else {
+        error.value = !error.value;
+        errorMsg.value = data.response.data.message;
+      }
+    })
+    .catch((err) => {
+      error.value = !error.value;
+      errorMsg.value = err.response.data.message;
+    });
+}
+function reWrite() {
+  error.value = !error.value;
+  errorMsg.value = "";
+}
+/**
+ * Notes
+ * *referencing the variables with the input, we use v-model, v-model is used in html
+ * * v-on:submit.prevent="method", is an event to execute a method
+ * * v-on:click  is an click event like a "onClick"
+ */
+</script>

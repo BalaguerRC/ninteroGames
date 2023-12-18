@@ -7,3 +7,6 @@ import CounterButton from "@/components/CounterButton.vue";
     <CounterButton />
   </div>
 </template>
+
+<style scoped>/** scoped, use only on this page */
+</style>

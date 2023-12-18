@@ -10,7 +10,7 @@
         </p>
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-        <form class="card-body">
+        <form class="card-body" v-on:submit.prevent="signUp">
           <div class="form-control">
             <label class="label">
               <span class="label-text">Name</span>
@@ -19,6 +19,7 @@
               type="text"
               placeholder="name"
               class="input input-bordered"
+              v-model="name"
               required
             />
           </div>
@@ -30,6 +31,7 @@
               type="text"
               placeholder="last name"
               class="input input-bordered"
+              v-model="lastName"
               required
             />
           </div>
@@ -41,6 +43,7 @@
               type="text"
               placeholder="username"
               class="input input-bordered"
+              v-model="username"
               required
             />
           </div>
@@ -52,6 +55,7 @@
               type="email"
               placeholder="email"
               class="input input-bordered"
+              v-model="email"
               required
             />
           </div>
@@ -63,6 +67,7 @@
               type="password"
               placeholder="password"
               class="input input-bordered"
+              v-model="password"
               required
             />
           </div>
@@ -74,6 +79,7 @@
               type="password"
               placeholder="Confirm Password"
               class="input input-bordered"
+              v-model="confirmPassword"
               required
             />
           </div>
@@ -95,4 +101,119 @@
       </div>
     </div>
   </div>
+  <div class="toast toast-start">
+    <div role="alert" class="alert alert-error" v-if="error">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="stroke-current shrink-0 h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+      <span>{{ errorMsg }}</span>
+      <div>
+        <button class="btn btn-sm btn-circle" v-on:click="reWrite">X</button>
+      </div>
+    </div>
+    <div>
+      <button class="btn btn-sm btn-circle" v-on:click="test">test</button>
+    </div>
+  </div>
 </template>
+
+<script setup>
+import axios from "axios";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const name = ref("");
+const lastName = ref("");
+const username = ref("");
+const email = ref("");
+const password = ref("");
+const confirmPassword = ref("");
+const error = ref(false);
+const errorMsg = ref("");
+
+function signUp() {
+  let json = {
+    nombre: name.value,
+    apellido: lastName.value,
+    username: username.value,
+    email: email.value,
+    password: password.value,
+    confirmPassword: confirmPassword.value,
+  };
+
+  axios
+    .post(import.meta.env.VITE_API_ENDPOINT + "/users/register", json)
+    .then((data) => {
+      console.log(data);
+      if (data.status == 201) {
+        console.log("Todo correcto");
+        router.push("login"); //redirecting whenn everythin is ok :3
+      }
+    })
+    .catch((err) => {
+      console.log("esto es", err);
+      if (err.response.data.found == true) {
+        error.value = !error.value;
+        errorMsg.value = err.response.data.result_username
+          ? err.response.data.result_username + ". "
+          : null + err.response.data.result_email
+          ? err.response.data.result_email + ". "
+          : null;
+      } else {
+        error.value = !error.value;
+        errorMsg.value = err.response.data.errors[0];
+      }
+    });
+}
+function reWrite() {
+  error.value = !error.value;
+  errorMsg.value = "";
+}
+/*export default {
+  name: "Register",
+  data: function () {
+    return {
+      user: "",
+      lastName: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      error: false,
+      errorMsg: "",
+    };
+  },
+  methods: {
+    signUp() {
+      let json = {
+        nombre: name,
+        apellido: lastName,
+        username: username,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      };
+      axios
+        .post(import.meta.env.VITE_API_ENDPOINT + "/users/register", json)
+        .then((data) => {
+          console.log(data);
+        });
+    },
+    reWrite() {
+      this.error = false;
+      this.errorMsg = "";
+    },
+  },
+};*/
+</script>
