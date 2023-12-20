@@ -49,7 +49,7 @@
           style="padding-left: 32px; padding-right: 32px; padding-bottom: 32px"
         >
           <div class="form-control">
-            <a href="signin" class="btn btn-warning">Sign In</a>
+            <a href="signup" class="btn btn-warning">Sign In</a>
           </div>
         </div>
       </div>
@@ -101,6 +101,7 @@ function login() {
       if (data.status == 200) {
         console.log("Todo correcto");
         localStorage.setItem("token", data.data.token);
+        localStorage.setItem("user_data", JSON.stringify(data.data.user));
         router.push("home"); //redirecting whenn everythin is ok :3
       } else {
         error.value = !error.value;
@@ -109,7 +110,7 @@ function login() {
     })
     .catch((err) => {
       error.value = !error.value;
-      errorMsg.value = err.response.data.message;
+      errorMsg.value = err.response.data?.message;
     });
 }
 function reWrite() {

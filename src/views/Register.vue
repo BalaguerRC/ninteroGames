@@ -121,9 +121,6 @@
         <button class="btn btn-sm btn-circle" v-on:click="reWrite">X</button>
       </div>
     </div>
-    <div>
-      <button class="btn btn-sm btn-circle" v-on:click="test">test</button>
-    </div>
   </div>
 </template>
 
@@ -157,7 +154,7 @@ function signUp() {
     .then((data) => {
       console.log(data);
       if (data.status == 201) {
-        console.log("Todo correcto");
+        console.log("Ok");
         router.push("login"); //redirecting whenn everythin is ok :3
       }
     })
@@ -180,40 +177,5 @@ function reWrite() {
   error.value = !error.value;
   errorMsg.value = "";
 }
-/*export default {
-  name: "Register",
-  data: function () {
-    return {
-      user: "",
-      lastName: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      error: false,
-      errorMsg: "",
-    };
-  },
-  methods: {
-    signUp() {
-      let json = {
-        nombre: name,
-        apellido: lastName,
-        username: username,
-        email: email,
-        password: password,
-        confirmPassword: confirmPassword,
-      };
-      axios
-        .post(import.meta.env.VITE_API_ENDPOINT + "/users/register", json)
-        .then((data) => {
-          console.log(data);
-        });
-    },
-    reWrite() {
-      this.error = false;
-      this.errorMsg = "";
-    },
-  },
-};*/
+
 </script>
