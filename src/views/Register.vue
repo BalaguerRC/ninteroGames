@@ -130,6 +130,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+const dataUser = JSON.parse(localStorage.getItem("user_data"));
+
 const name = ref("");
 const lastName = ref("");
 const username = ref("");
@@ -176,6 +178,10 @@ function signUp() {
 function reWrite() {
   error.value = !error.value;
   errorMsg.value = "";
+}
+
+if(dataUser){
+  router.push("/home")
 }
 
 </script>

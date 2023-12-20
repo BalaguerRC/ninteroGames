@@ -84,6 +84,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
+const dataUser = JSON.parse(localStorage.getItem("user_data"));
+
 const email = ref("");
 const password = ref("");
 const error = ref(false);
@@ -117,6 +119,11 @@ function reWrite() {
   error.value = !error.value;
   errorMsg.value = "";
 }
+
+if(dataUser){
+  router.push("/home")
+}
+
 /**
  * Notes
  * *referencing the variables with the input, we use v-model, v-model is used in html

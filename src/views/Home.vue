@@ -36,10 +36,7 @@
             class="btn btn-ghost btn-circle avatar"
           >
             <div class="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                v-bind:src="userImg"
-              />
+              <img alt="Tailwind CSS Navbar component" v-bind:src="userImg" />
             </div>
           </div>
           <ul
@@ -47,13 +44,13 @@
             class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <a class="justify-between">
+              <a class="justify-between" v-on:click="onProfile">
                 Profile
                 <span class="badge">New</span>
               </a>
             </li>
-            <li><a>Settings</a></li>
-            <li><a>Logout</a></li>
+            <li><a v-on:click="onSettings">Settings</a></li>
+            <li><a v-on:click="logOut">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -95,11 +92,26 @@ if (dataUser) {
 } else {
   console.log("no hay");
 }
+
 function onSignIn() {
   router.push("login");
 }
 function onSignUp() {
   router.push("signup");
+}
+
+function onProfile() {
+  router.push("profile");
+}
+
+function onSettings() {
+  router.push("settings");
+}
+
+function logOut() {
+  localStorage.removeItem("user_data");
+  localStorage.removeItem("token");
+  router.push("/");
 }
 </script>
 
