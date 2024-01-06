@@ -72,10 +72,13 @@
       </div>
     </nav>
   </div>
+
+  <HomeView/>
 </template>
 
 <script setup>
-import CounterButton from "@/components/CounterButton.vue";
+import HomeView from "@/components/HomeView.vue";
+//import CounterButton from "@/components/CounterButton.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -115,6 +118,4 @@ function logOut() {
 }
 </script>
 
-<style scoped>
-/** scoped, use only on this page */
-</style>
+<style scoped></style>
