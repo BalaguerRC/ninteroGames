@@ -109,9 +109,7 @@ function onSettings() {
 }
 
 function logOut() {
-  localStorage.removeItem("user_data");
-  localStorage.removeItem("token");
-  router.push("/");
+  router.push('/logout')
 }
 </script>
 

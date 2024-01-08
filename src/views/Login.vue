@@ -98,16 +98,16 @@ function login() {
   };
   axios
     .post(import.meta.env.VITE_API_ENDPOINT + "/users/login", json)
-    .then((data) => {
-      console.log("esto es", data);
-      if (data.status == 200) {
+    .then((response) => {
+      console.log("esto es", response);
+      if (response.status == 200) {
         console.log("Todo correcto");
-        localStorage.setItem("token", data.data.token);
-        localStorage.setItem("user_data", JSON.stringify(data.data.user));
-        router.push("home"); //redirecting whenn everythin is ok :3
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user_data", JSON.stringify(response.data.user));
+        router.push("home"); //redirecting when everything is ok :3
       } else {
         error.value = !error.value;
-        errorMsg.value = data.response.data.message;
+        errorMsg.value = response.response.data.message;
       }
     })
     .catch((err) => {
