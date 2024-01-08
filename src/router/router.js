@@ -11,6 +11,30 @@ const routes = [
     path: "/home",
     name: "home",
     component: () => import("@/views/Home.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("@/components/HomeView.vue"),
+      },
+      {
+        path: "profile",
+        name: "profile",
+        component: () => import("@/views/Profile.vue"),
+      },
+      {
+        path: "about",
+        component: () => import("@/views/About.vue"),
+      },
+
+      {
+        path: "settings",
+        //name: "settings",
+        component: () => import("@/views/Settings.vue"),
+        meta: {
+          isProtected: true,
+        },
+      },
+    ],
   },
   {
     path: "/login",
@@ -23,23 +47,21 @@ const routes = [
     name: "signup",
     component: () => import("@/views/Register.vue"),
   },
+  //test children and params
   {
-    path: "/about",
-    name: "about",
-    component: () => import("@/views/About.vue"),
-  },
-  {
-    path: "/profile",
-    name: "profile",
-    component: () => import("@/views/Profile.vue"),
-  },
-  {
-    path: "/settings",
-    name: "settings",
-    component: () => import("@/views/Settings.vue"),
-    meta: {
-      isProtected: true
-    }
+    path: "/test",
+    name: "test",
+    component: () => import("@/views/Test.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("@/views/test/TestView.vue"),
+      },
+      {
+        path: ":id",
+        component: () => import("@/views/test/TestTexto.vue"),
+      },
+    ],
   },
   {
     path: "/logout",
@@ -50,9 +72,9 @@ const routes = [
       router.push("/");
     },
     meta: {
-      isProtected: true
-    }
-  }
+      isProtected: true,
+    },
+  },
 ];
 
 const router = createRouter({
@@ -61,25 +83,25 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.isProtected)) {
-    axios.get(import.meta.env.VITE_API_ENDPOINT + "/validators/jwt", {
-      headers: {"Authorization" : `Bearer ${localStorage.getItem("token")}`}
-    })
-    .then((res) => {
-      if (res.status != 200 && !localStorage.getItem("user_data")) {
-        next("/login")
-      } else if (res.status == 200 && localStorage.getItem("user_data")) {
-        next()
-      }
-    })
-    .catch((err) => {
-      console.log("Could not process validation.\n" + err)
-      next("/login")
-    })
+  if (to.matched.some((record) => record.meta.isProtected)) {
+    axios
+      .get(import.meta.env.VITE_API_ENDPOINT + "/validators/jwt", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((res) => {
+        if (res.status != 200 && !localStorage.getItem("user_data")) {
+          next("/login");
+        } else if (res.status == 200 && localStorage.getItem("user_data")) {
+          next();
+        }
+      })
+      .catch((err) => {
+        console.log("Could not process validation.\n" + err);
+        next("/login");
+      });
+  } else {
+    next();
   }
-  else {
-    next()
-  }
-})
+});
 
 export default router;

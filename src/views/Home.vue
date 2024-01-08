@@ -1,10 +1,10 @@
 <template>
   <div
-    class="bg-base-100 text-base-content sticky top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur p-2"
+    class="bg-base-100 text-base-content sticky top-0 z-30 flex h-16 w-full justify-center bg-opacity-90 backdrop-blur"
   >
-    <nav className="navbar  bg-base-100 w-full p-4">
+    <nav className="navbar w-full p-2">
       <div class="flex-1">
-        <a class="btn btn-ghost text-xl">daisyUI</a>
+        <a class="btn btn-ghost text-xl" href="/home">nintero</a>
       </div>
 
       <div class="flex-none" v-if="dataValidate">
@@ -72,12 +72,12 @@
       </div>
     </nav>
   </div>
-
-  <HomeView/>
+  <router-view />
 </template>
 
 <script setup>
-import HomeView from "@/components/HomeView.vue";
+//import HomeView from "@/components/HomeView.vue";
+import { RouterView } from "vue-router";
 //import CounterButton from "@/components/CounterButton.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -104,11 +104,11 @@ function onSignUp() {
 }
 
 function onProfile() {
-  router.push("profile");
+  router.push("/home/profile");
 }
 
 function onSettings() {
-  router.push("settings");
+  router.push("/home/settings");
 }
 
 function logOut() {
