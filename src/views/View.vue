@@ -7,4 +7,5 @@ console.log("test view");
 router.push("home");
 </script>
 
-<template></template>
+<template>
+</template>
