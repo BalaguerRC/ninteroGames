@@ -104,7 +104,7 @@ function login() {
         console.log("Todo correcto");
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user_data", JSON.stringify(response.data.user));
-        router.push("home"); //redirecting when everything is ok :3
+        router.push("/"); //redirecting when everything is ok :3
       } else {
         error.value = !error.value;
         errorMsg.value = response.response.data.message;
@@ -121,7 +121,7 @@ function reWrite() {
 }
 
 if(dataUser){
-  router.push("/home")
+  router.push("/")
 }
 
 /**
