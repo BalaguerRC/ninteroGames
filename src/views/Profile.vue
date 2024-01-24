@@ -3,7 +3,7 @@
     <div class="pl-10 pr-10 pb-10">
       <div class="text-sm breadcrumbs">
         <ul>
-          <li><a href="/home">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li>Profile</li>
         </ul>
       </div>
