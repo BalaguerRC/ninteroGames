@@ -4,7 +4,7 @@
       <div class="flex centerA">
         <div class="join">
           <button class="btn join-item btn-sm">Home</button>
-          <button class="btn join-item btn-sm">News</button>
+          <button class="btn join-item btn-sm" @click="onNews">News</button>
           <button class="btn join-item btn-sm">Category</button>
         </div>
         <div class="join">
@@ -125,6 +125,11 @@
 
 <script setup>
 import CarouselItem from "@/components/CarouselItem.vue";
+
+function onNews() {
+  router.push('/home/news');
+}
+
 </script>
 <style scoped>
 /** scoped, use only on this page */

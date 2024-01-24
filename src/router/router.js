@@ -25,7 +25,6 @@ const routes = [
         path: "about",
         component: () => import("@/views/About.vue"),
       },
-
       {
         path: "settings",
         //name: "settings",
@@ -34,6 +33,20 @@ const routes = [
           isProtected: true,
         },
       },
+      {
+        path: "news",
+        component: () => import("@/views/News.vue"),
+        children: [
+          {
+            path: ":articleid",
+            component: () => import("@/views/Article.vue"),
+          },
+          {
+            path: "create",
+            component: () => import("@/views/WriteArticle.vue")
+          }
+        ],
+      }
     ],
   },
   {
@@ -84,21 +97,30 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.isProtected)) {
-    axios
+    if (localStorage.getItem("token")) {
+      axios
       .get(import.meta.env.VITE_API_ENDPOINT + "/validators/jwt", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       })
       .then((res) => {
-        if (res.status != 200 && !localStorage.getItem("user_data")) {
+        if (res.status != 200) {
+          localStorage.removeItem("token");
           next("/login");
         } else if (res.status == 200 && localStorage.getItem("user_data")) {
           next();
+        } else {
+          next("/login");
         }
       })
       .catch((err) => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_data");
         console.log("Could not process validation.\n" + err);
         next("/login");
       });
+    } else {
+      next("/login");
+    }
   } else {
     next();
   }

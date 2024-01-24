@@ -2,7 +2,7 @@
     // Normal fields
     import { ref, onMounted, watch } from 'vue';
     import { useRouter } from "vue-router";
-    import Swal from 'sweetalert2'
+    import Swal from 'sweetalert2';
     import axios from "axios";
 
     const API_URL = import.meta.env.VITE_API_ENDPOINT;
