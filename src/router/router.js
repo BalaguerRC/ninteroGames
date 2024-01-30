@@ -1,20 +1,64 @@
 import { createRouter, createWebHistory } from "vue-router";
 import axios from "axios";
-
+/** news
+ * [{
+    title:"test",
+    lastUpdateDate: "2002-11-11",
+    author:{
+        username: "jogo"
+    },
+    thumbnailURL:"null"
+},
+{
+    title:"test",
+    lastUpdateDate: "2002-11-11",
+    author:{
+        username: "jogo"
+    },
+    thumbnailURL:"null"
+},{
+    title:"test",
+    lastUpdateDate: "2002-11-11",
+    author:{
+        username: "jogo"
+    },
+    thumbnailURL:"null"
+}
+]
+ */
 const routes = [
   {
     path: "/",
     name: "view",
-    component: () => import("@/views/Home.vue"),
+    //component: () => import("@/views/Home.vue"),
     children: [
       {
         path: "",
-        component: () => import("@/components/HomeView.vue"),
+        component: () => import("@/views/Home.vue"),
+      },
+      {
+        path: "search",
+        component: () => import("@/views/Search.vue"),
+        children: [
+          {
+            path: ":name",
+            component: () => import("@/views/Search.vue"),
+          },
+        ],
+      },
+      {
+        path: "game",
+        children: [
+          {
+            path: ":id/:name",
+            component: () => import("@/views/GameItem.vue"),
+          },
+        ],
       },
       {
         path: "profile",
         name: "profile",
-        component: () => import("@/views/Profile.vue"),
+        component: () => import("@/views/auth/Profile.vue"),
       },
       {
         path: "about",
@@ -23,7 +67,7 @@ const routes = [
       {
         path: "settings",
         //name: "settings",
-        component: () => import("@/views/Settings.vue"),
+        component: () => import("@/views/auth/Settings.vue"),
         meta: {
           isProtected: true,
         },
@@ -38,22 +82,22 @@ const routes = [
           },
           {
             path: "create",
-            component: () => import("@/views/WriteArticle.vue")
-          }
+            component: () => import("@/views/WriteArticle.vue"),
+          },
         ],
-      }
+      },
     ],
   },
   {
     path: "/login",
     name: "login",
-    component: () => import("@/views/Login.vue"),
+    component: () => import("@/views/auth/Login.vue"),
   },
 
   {
     path: "/signup",
     name: "signup",
-    component: () => import("@/views/Register.vue"),
+    component: () => import("@/views/auth/Register.vue"),
   },
   //test children and params
   {
@@ -94,25 +138,25 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.isProtected)) {
     if (localStorage.getItem("token")) {
       axios
-      .get(import.meta.env.VITE_API_ENDPOINT + "/validators/jwt", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-      .then((res) => {
-        if (res.status != 200) {
+        .get(import.meta.env.VITE_API_ENDPOINT + "/validators/jwt", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
+        .then((res) => {
+          if (res.status != 200) {
+            localStorage.removeItem("token");
+            next("/login");
+          } else if (res.status == 200 && localStorage.getItem("user_data")) {
+            next();
+          } else {
+            next("/login");
+          }
+        })
+        .catch((err) => {
           localStorage.removeItem("token");
+          localStorage.removeItem("user_data");
+          console.log("Could not process validation.\n" + err);
           next("/login");
-        } else if (res.status == 200 && localStorage.getItem("user_data")) {
-          next();
-        } else {
-          next("/login");
-        }
-      })
-      .catch((err) => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user_data");
-        console.log("Could not process validation.\n" + err);
-        next("/login");
-      });
+        });
     } else {
       next("/login");
     }
