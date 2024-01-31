@@ -9,7 +9,7 @@
 
       <div class="flex-none" v-if="dataValidate">
         <div class="dropdown dropdown-end">
-          <button class="btn btn-ghost btn-circle">
+          <button class="btn btn-ghost btn-circle" tabindex="0">
             <div class="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -28,6 +28,22 @@
               <span class="badge badge-xs badge-primary indicator-item"></span>
             </div>
           </button>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
+          >
+            <li>
+              Notifications
+            </li>
+            <li>
+              <a class="justify-between">
+                Good news about this game
+                <span class="badge">New</span>
+              </a>
+            </li>
+            <li><a>New assets in this game</a></li>
+            <li><a>El peso, nueva competencia de nintendo</a></li>
+          </ul>
         </div>
         <div class="dropdown dropdown-end">
           <div
