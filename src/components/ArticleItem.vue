@@ -4,7 +4,7 @@ const router = useRouter();
 
 //const props = defineProps
 defineProps(['articleObj']);
-function goto_article(articleid) {
+function goToArticle(articleid) {
     router.push(`/news/${articleid}`);
 }
 </script>
@@ -15,11 +15,11 @@ function goto_article(articleid) {
         <div class="card-body">
             <div class="flex justify-between">
                 <h2 class="card-title">{{ articleObj.title }}</h2>
-                <div class="badge badge-outline">Last Updated: {{ new Date(articleObj.lastUpdateDate).toLocaleDateString('en-GB') }}</div>
+                <div class="badge badge-outline">Published on: {{ new Date(articleObj.creationDate).toISOString().split("T")[0] }}</div>
             </div>
             <p>Written by: {{ articleObj.author.username }}</p>
             <div class="card-actions justify-end">
-                <button class="btn btn-primary" @click="goto_article(articleObj._id)">Read article</button>
+                <button class="btn btn-primary" @click="goToArticle(articleObj._id)">Read article</button>
             </div>
         </div>
     </div>

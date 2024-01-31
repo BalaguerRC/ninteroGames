@@ -5,7 +5,6 @@
     import Swal from 'sweetalert2';
     import axios from "axios";
 
-    const API_URL = import.meta.env.VITE_API_ENDPOINT;
     const router = useRouter();
     const user_data = JSON.parse(localStorage.getItem("user_data"));
     
@@ -89,7 +88,7 @@
               html: '<pre>' + err.response.data.message + '</pre>'
             });
           }
-        })
+        });
       }
     }
 

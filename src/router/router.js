@@ -28,20 +28,6 @@ const routes = [
           isProtected: true,
         },
       },
-      {
-        path: "news",
-        component: () => import("@/views/News.vue"),
-        children: [
-          {
-            path: ":articleid",
-            component: () => import("@/views/Article.vue"),
-          },
-          {
-            path: "create",
-            component: () => import("@/views/WriteArticle.vue")
-          }
-        ],
-      }
     ],
   },
   {
@@ -49,7 +35,22 @@ const routes = [
     name: "login",
     component: () => import("@/views/Login.vue"),
   },
-
+  {
+    path: "/news",
+    component: () => import("@/views/News.vue"),
+  },
+  {
+    path: "/news/:articleid",
+    component: () => import("@/views/Article.vue"),
+  },
+  {
+    path: "/news/create",
+    component: () => import("@/views/WriteArticle.vue")
+  },
+  {
+    path: "/news/update/:articleid",
+    component: () => import("@/views/UpdateArticle.vue")
+  },
   {
     path: "/signup",
     name: "signup",
@@ -111,7 +112,7 @@ router.beforeEach((to, from, next) => {
         localStorage.removeItem("token");
         localStorage.removeItem("user_data");
         console.log("Could not process validation.\n" + err);
-        next("/login");
+        next("/");
       });
     } else {
       next("/login");

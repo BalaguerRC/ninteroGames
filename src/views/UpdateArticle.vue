@@ -1,5 +1,8 @@
 <script setup>
 import ArticleForm from '../components/ArticleForm.vue';
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 </script>
 
 <template>
@@ -7,10 +10,10 @@ import ArticleForm from '../components/ArticleForm.vue';
         <div class="m-10">
             <div class="divider">
                 <div class="divider-content">
-                    <h1 class="text-3xl font-bold">New Article</h1>
+                    <h1 class="text-3xl font-bold">Update Article</h1>
                 </div>
             </div>
-            <ArticleForm/>
+            <ArticleForm :articleid="route.params.articleid"/>
         </div>
     </div>
 </template>

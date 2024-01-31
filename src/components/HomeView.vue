@@ -127,7 +127,7 @@
 import CarouselItem from "@/components/CarouselItem.vue";
 
 function onNews() {
-  router.push('/home/news');
+  router.push('/news');
 }
 
 </script>
