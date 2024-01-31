@@ -72,20 +72,6 @@ const routes = [
           isProtected: true,
         },
       },
-      {
-        path: "news",
-        component: () => import("@/views/News.vue"),
-        children: [
-          {
-            path: ":articleid",
-            component: () => import("@/views/Article.vue"),
-          },
-          {
-            path: "create",
-            component: () => import("@/views/WriteArticle.vue"),
-          },
-        ],
-      },
     ],
   },
   {
