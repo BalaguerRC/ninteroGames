@@ -119,7 +119,7 @@ onBeforeMount(() => {
         <div class="mb-3">
             <p class="italic">Updated on: {{ new Date(article.lastUpdateDate).toISOString().split("T")[0] }}</p>
         </div>
-        <div v-html="article.content"></div>
+        <div class="overflow-hidden" v-html="article.content"></div>
         <div class="my-5">
             <p class="italic">Written by: <span class="font-bold">{{ article.author.username }}</span></p>
         </div>

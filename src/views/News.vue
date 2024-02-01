@@ -182,8 +182,11 @@ function setPage(event) {
     if (page.value < 1) {
         page.value = 1;
     }
+    
     if (event.target.tagName == "BUTTON") {
         page.value = parseInt(event.target.dataset.gotonumber) || null;
+    } else if (event.target.tagName == "INPUT") {
+        page.value = parseInt(event.target.value) || 1;
     }
     getArticleMiddleware();
 }
