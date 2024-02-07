@@ -22,26 +22,32 @@ const pageLimitOptions = [10, 15, 20, 25, 30];
 
 const search = ref('');
 const date = ref(null);
+const authorList = ref();
+const author = ref('');
 const clearFilterButton = ref(false);
 
 const user_data = JSON.parse(localStorage.getItem("user_data"));
 
 function filterArticles() {
     let query_route;
-    let query_body;
+    let query_body = {};
 
     if (search.value && date.value) {
         query_route = `/articles/search/${search.value}/filter?limit=${pageLimit.value}&page=${page.value}`;
-        query_body = {
-            gte: new Date(date.value[0]).toLocaleDateString('en-CA'),
-            lte: new Date(date.value[1]).toLocaleDateString('en-CA')
-        };
+        query_body.gte = new Date(date.value[0]).toLocaleDateString('en-CA');
+        query_body.lte = new Date(date.value[1]).toLocaleDateString('en-CA');
+        // query_body = {
+        //     gte: new Date(date.value[0]).toLocaleDateString('en-CA'),
+        //     lte: new Date(date.value[1]).toLocaleDateString('en-CA')
+        // };
     } else if (date.value) {
         query_route = `/articles/filter?limit=${pageLimit.value}&page=${page.value}`;
-        query_body = {
-            gte: new Date(date.value[0]).toLocaleDateString('en-CA'),
-            lte: new Date(date.value[1]).toLocaleDateString('en-CA')
-        };
+        query_body.gte = new Date(date.value[0]).toLocaleDateString('en-CA');
+        query_body.lte = new Date(date.value[1]).toLocaleDateString('en-CA');
+        // query_body = {
+        //     gte: new Date(date.value[0]).toLocaleDateString('en-CA'),
+        //     lte: new Date(date.value[1]).toLocaleDateString('en-CA')
+        // };
     } else if (search.value) {
         query_route = `/articles/search/${search.value}`;
         axios.get(import.meta.env.VITE_API_ENDPOINT + query_route)
@@ -77,6 +83,12 @@ function filterArticles() {
             });
         });
         return
+    } else if (author.value) {
+        query_route = `/articles/filter?limit=${pageLimit.value}&page=${page.value}`;
+    }
+
+    if (author.value) {
+        query_body.author = author.value;
     }
 
     axios.post(import.meta.env.VITE_API_ENDPOINT + query_route, query_body)
@@ -148,8 +160,37 @@ function getAllArticles() {
         });
 }
 
+function getAllAuthors() {
+    axios.get(import.meta.env.VITE_API_ENDPOINT + '/users/get/developers')
+        .then((response) => {
+            if (response.status === 200) {
+                authorList.value = response.data;
+            } else {
+                console.log(response.data);
+                Swal.fire({
+                    background: "#252526",
+                    color: "#FFF",
+                    title: "There was an error!",
+                    icon: "error",
+                    html: response.data.message
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            Swal.fire({
+                background: "#252526",
+                color: "#FFF",
+                title: "There was an error!",
+                icon: "error",
+                text: error.response.data.message
+            });
+        });
+}
+
 function getArticleMiddleware() {
-    if (search.value || date.value) {
+    getAllAuthors();
+    if (search.value || date.value || author.value) {
         console.log("getting articles by filter");
         filterArticles();
     }
@@ -164,6 +205,7 @@ function onFilterArticle(event) {
     clearFilterButton.value = true;
     console.log(search.value);
     console.log(date.value);
+    console.log(author.value);
     getArticleMiddleware();
 }
 
@@ -171,6 +213,7 @@ function onClearFilter(event) {
     page.value = 1;
     search.value = "";
     date.value = null;
+    author.value = "";
     clearFilterButton.value = false;
     getArticleMiddleware();
 }
@@ -193,6 +236,7 @@ function setPage(event) {
 
 onMounted(() => {
     getAllArticles();
+    getAllAuthors();
     //console.log(articles);
 });
 
@@ -215,9 +259,15 @@ watch(pageLimit, () => {
             </div>
             <button class="btn btn-sm btn-primary" @click="router.push('news/create')">Write new article</button>
         </div>
-        <div class="flex flex-row mb-5 items-center gap-5">
-            <input type="text" placeholder="Title Query" class="input input-bordered basis-1/2" v-model="search">
-            <VueDatePicker v-model="date" input-class-name="basis-1/2" dark :clearable="true" :enable-time-picker="false" :range="true"/>
+        <div class="flex flex-row mb-5 items-center space-x-4">
+            <input type="text" placeholder="Title Query" class="input input-bordered grow" v-model="search">
+            <select v-model="author" class="select select-bordered w-full max-w-xs grow">
+                <option disabled selected value="">Filter author</option>
+                <option v-for="authorItem in authorList" :value="authorItem._id">
+                    {{ authorItem.username }}
+                </option>
+            </select>
+            <VueDatePicker v-model="date" input-class-name="grow" dark :clearable="true" :enable-time-picker="false" :range="true"/>
         </div>
         <div class="flex flex-row mb-5 justify-between gap-4">
             <button type="button" @click="onClearFilter" class="btn btn-outline btn-error basis-1/2" :disabled="!clearFilterButton">Clear filter</button>
