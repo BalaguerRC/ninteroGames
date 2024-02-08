@@ -11,6 +11,9 @@
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <form class="card-body" v-on:submit.prevent="signUp">
+          <div class="flex justify-center">
+            <a class="btn btn-ghost btn-sm" v-on:click="onHome">ninteroGames</a>
+          </div>
           <div class="form-control">
             <label class="label">
               <span class="label-text">Name</span>
@@ -126,7 +129,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -141,6 +144,11 @@ const confirmPassword = ref("");
 const error = ref(false);
 const errorMsg = ref("");
 
+onMounted(() => {
+  if (dataUser) {
+    onHome();
+  }
+});
 function signUp() {
   let json = {
     nombre: name.value,
@@ -179,9 +187,7 @@ function reWrite() {
   error.value = !error.value;
   errorMsg.value = "";
 }
-
-if(dataUser){
-  router.push("/home")
+function onHome() {
+  router.push("/");
 }
-
 </script>

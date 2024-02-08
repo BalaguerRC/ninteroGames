@@ -11,6 +11,9 @@
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <form class="card-body" v-on:submit.prevent="login">
+          <div class="flex justify-center">
+            <a class="btn btn-ghost btn-sm" v-on:click="onHome">ninteroGames</a>
+          </div>
           <div class="form-control">
             <label class="label">
               <span class="label-text">Email</span>
@@ -80,7 +83,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -90,6 +93,12 @@ const email = ref("");
 const password = ref("");
 const error = ref(false);
 const errorMsg = ref("");
+
+onMounted(() => {
+  if (dataUser) {
+    onHome();
+  }
+});
 
 function login() {
   let json = {
@@ -104,7 +113,7 @@ function login() {
         console.log("Todo correcto");
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user_data", JSON.stringify(response.data.user));
-        router.push("/"); //redirecting when everything is ok :3
+        onHome(); //redirecting when everything is ok :3
       } else {
         error.value = !error.value;
         errorMsg.value = response.response.data.message;
@@ -120,8 +129,8 @@ function reWrite() {
   errorMsg.value = "";
 }
 
-if(dataUser){
-  router.push("/")
+function onHome() {
+  router.push("/");
 }
 
 /**
