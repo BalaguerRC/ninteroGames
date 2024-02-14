@@ -1,36 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import axios from "axios";
-/** news
- * [{
-    title:"test",
-    lastUpdateDate: "2002-11-11",
-    author:{
-        username: "jogo"
-    },
-    thumbnailURL:"null"
-},
-{
-    title:"test",
-    lastUpdateDate: "2002-11-11",
-    author:{
-        username: "jogo"
-    },
-    thumbnailURL:"null"
-},{
-    title:"test",
-    lastUpdateDate: "2002-11-11",
-    author:{
-        username: "jogo"
-    },
-    thumbnailURL:"null"
-}
-]
- */
+
 const routes = [
   {
     path: "/",
-    name: "view",
-    //component: () => import("@/views/Home.vue"),
+    component: () => import("@/views/View.vue"),
     children: [
       {
         path: "",
@@ -72,28 +46,28 @@ const routes = [
           isProtected: true,
         },
       },
+      {
+        path: "/news",
+        component: () => import("@/views/News.vue"),
+      },
+      {
+        path: "/news/:articleid",
+        component: () => import("@/views/Article.vue"),
+      },
+      {
+        path: "/news/create",
+        component: () => import("@/views/WriteArticle.vue"),
+      },
+      {
+        path: "/news/update/:articleid",
+        component: () => import("@/views/UpdateArticle.vue"),
+      },
     ],
   },
   {
     path: "/login",
     name: "login",
     component: () => import("@/views/auth/Login.vue"),
-  },
-  {
-    path: "/news",
-    component: () => import("@/views/News.vue"),
-  },
-  {
-    path: "/news/:articleid",
-    component: () => import("@/views/Article.vue"),
-  },
-  {
-    path: "/news/create",
-    component: () => import("@/views/WriteArticle.vue")
-  },
-  {
-    path: "/news/update/:articleid",
-    component: () => import("@/views/UpdateArticle.vue")
   },
   {
     path: "/signup",
@@ -104,7 +78,6 @@ const routes = [
   {
     path: "/test",
     name: "test",
-    component: () => import("@/views/Test.vue"),
     children: [
       {
         path: "",

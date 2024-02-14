@@ -32,9 +32,7 @@
             tabindex="0"
             class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
           >
-            <li>
-              Notifications
-            </li>
+            <li>Notifications</li>
             <li>
               <a class="justify-between">
                 Good news about this game
@@ -91,31 +89,32 @@
 </template>
 
 <script setup>
-//import HomeView from "@/components/HomeView.vue";
-import { RouterView } from "vue-router";
-//import CounterButton from "@/components/CounterButton.vue";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-const userImg = ref(null);
 const dataValidate = ref(false);
+const userImg = ref("");
 
-const dataUser = JSON.parse(localStorage.getItem("user_data"));
+onMounted(() => {
+  const dataUser = JSON.parse(localStorage.getItem("user_data"));
+  if (dataUser) {
+    dataValidate.value = true;
+    userImg.value = dataUser.profileURL;
+    console.log("there is data");
+    console.log("datavalidate", dataValidate.value);
+  }
+});
 
-if (dataUser) {
-  dataValidate.value = true;
-  console.log("hay data");
-  userImg.value = dataUser.profileURL;
-} else {
-  console.log("no hay");
-}
+watch(userImg, (newValue) => {
+  console.log("there are changes...", newValue);
+});
 
 function onSignIn() {
-  router.push("login");
+  router.push("/login");
 }
 function onSignUp() {
-  router.push("signup");
+  router.push("/signup");
 }
 
 function onProfile() {
@@ -128,6 +127,8 @@ function onSettings() {
 
 function logOut() {
   router.push("/logout");
+  userImg.value = "";
+  dataValidate.value = false;
 }
 </script>
 

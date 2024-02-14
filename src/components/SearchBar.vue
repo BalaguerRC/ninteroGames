@@ -4,6 +4,7 @@
       <button class="btn join-item btn-sm" @click="onHome">Home</button>
       <button class="btn join-item btn-sm" @click="onNews">News</button>
       <button class="btn join-item btn-sm">Category</button>
+      <button class="btn join-item btn-sm" @click="onTest">test</button>
     </div>
     <div class="join">
       <input
@@ -45,6 +46,9 @@ function onNews() {
 }
 function onHome() {
   router.push("/");
+}
+function onTest() {
+  router.push("/test");
 }
 function onSerch() {
   //console.log(search.value);
