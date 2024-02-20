@@ -1,7 +1,7 @@
 <template>
   <div class="md:container md:mx-auto">
     <div class="p-10">
-      <div class="flex centerA">
+      <div class="flex centerA" id="#">
         <div class="join">
           <button class="btn join-item btn-sm">Home</button>
           <button class="btn join-item btn-sm">News</button>
@@ -33,11 +33,16 @@
         </div>
       </div>
 
-      <h2 class="text-4xl font-bold pt-5">
-        {{ $route.params.name }}
-      </h2>
+      <div v-if="validateGame">
+        <h2 class="text-4xl font-bold pt-5">
+          {{ games?.name }}
+        </h2>
 
-      <GameDetail :games-obj="games" />
+        <GameDetail :games-obj="games" />
+      </div>
+      <div v-if="!validateGame">
+        <h2>The game doesnt exist</h2>
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +56,8 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 const games = ref({});
+const validateGame = ref(true);
+
 console.log(route.params.id);
 onMounted(() => {
   console.log(
@@ -61,8 +68,13 @@ onMounted(() => {
       import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + route.params.id
     )
     .then((data) => {
+      console.log("data", data);
       console.log(data.data);
       games.value = data.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      validateGame.value = false;
     });
 });
 </script>

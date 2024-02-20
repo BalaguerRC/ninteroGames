@@ -2,13 +2,9 @@
   <main>
     <div class="gameDetails">
       <div class="pr-5">
-        <figure class="w-11/12">
-          <img
-            :src="gamesObj.gameImages"
-            alt="Shoes"
-            style="width: 847px; height: 500px"
-          />
-        </figure>
+        <div>
+          <ImageList :games-obj="gamesObj.gameImages" />
+        </div>
         <div>
           <h2 class="text-4xl font-bold pt-5">About</h2>
           <p>
@@ -65,7 +61,11 @@
                 <!-- row 2 -->
                 <tr>
                   <th>Category:</th>
-                  <th v-for="category in gamesObj.category" :key="category._id" class="flex flex-col">
+                  <th
+                    v-for="category in gamesObj.category"
+                    :key="category._id"
+                    class="flex flex-col"
+                  >
                     <span class="badge badge-ghost badge-sm">{{
                       category.nombre
                     }}</span>
@@ -106,6 +106,7 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import ImageList from "@/components/ImageList.vue";
 const router = useRouter();
 defineProps(["gamesObj"]);
 </script>

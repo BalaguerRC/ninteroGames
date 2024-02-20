@@ -7,12 +7,12 @@
       <h2 class="font-bold hiddenText">{{ gameObj.name }}</h2>
       <div class="card-actions justify-between">
         <h4>${{ gameObj.price }}</h4>
-        <button
+        <a
           class="btn btn-sm btn-primary"
-          @click="goToGame(gameObj._id, gameObj.name)"
+          @click="goToGame(gameObj._id)"
         >
           View
-        </button>
+      </a>
       </div>
     </div>
   </div>
@@ -23,8 +23,8 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 defineProps(["gameObj"]);
 
-function goToGame(gameId, name) {
-  router.push(`/game/${gameId}/${name}`);
+function goToGame(gameId) {
+  router.push(`/game/${gameId}`);
 }
 </script>
 

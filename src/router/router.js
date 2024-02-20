@@ -24,7 +24,7 @@ const routes = [
         path: "game",
         children: [
           {
-            path: ":id/:name",
+            path: ":id",
             component: () => import("@/views/GameItem.vue"),
           },
         ],
