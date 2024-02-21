@@ -30,62 +30,11 @@
         <h2 class="text-4xl font-bold">Popular</h2>
         <div class="pt-3">
           <div class="grid grid-cols-4 gap-3">
-            <div class="card w-90 bg-base-100 shadow-xl">
-              <figure>
-                <img
-                  src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">Shoes!</h2>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">Buy Now</button>
-                </div>
-              </div>
-            </div>
-            <div class="card w-90 bg-base-100 shadow-xl">
-              <figure>
-                <img
-                  src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">Shoes!</h2>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">Buy Now</button>
-                </div>
-              </div>
-            </div>
-            <div class="card w-90 bg-base-100 shadow-xl">
-              <figure>
-                <img
-                  src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">Shoes!</h2>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">Buy Now</button>
-                </div>
-              </div>
-            </div>
-            <div class="card w-90 bg-base-100 shadow-xl">
-              <figure>
-                <img
-                  src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                  alt="Shoes"
-                />
-              </figure>
-              <div class="card-body">
-                <h2 class="card-title">Shoes!</h2>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">Buy Now</button>
-                </div>
-              </div>
-            </div>
+            <PopularGames
+              v-for="game in games"
+              :key="game.downloads"
+              :gameObj="game"
+            />
           </div>
         </div>
       </div>
@@ -97,7 +46,22 @@
 import { useRouter } from "vue-router";
 const router = useRouter();
 import CarouselItem from "@/components/CarouselItem.vue";
+import PopularGames from "@/components/Home/PopularGamesItem.vue";
 import SearchBar from "@/components/SearchBar.vue";
+
+import { onMounted, ref } from "vue";
+import axios from "axios";
+const games = ref([]);
+
+onMounted(() => {
+  //console.log(import.meta.env.VITE_API_ENDPOINT + "/game/sortdownloads");
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/games/sortdownloads")
+    .then((data) => {
+      console.log(data.data);
+      games.value = data.data;
+    });
+});
 
 function onNews() {
   router.push("/news");

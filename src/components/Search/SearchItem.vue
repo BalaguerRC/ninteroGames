@@ -1,0 +1,35 @@
+<template>
+  <div class="card w-90 bg-base-100 shadow-xl">
+    <figure>
+      <img :src="searchItem.thumbnailURL" alt="Shoes" />
+    </figure>
+    <div class="card-body">
+      <h2 class="font-bold hiddenText">{{ searchItem.name }}</h2>
+      <div class="card-actions justify-between">
+        <h4>${{ searchItem.price }}</h4>
+        <a class="btn btn-sm btn-primary" @click="onGameItem(searchItem._id)">
+          View
+        </a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+defineProps(["searchItem"]);
+
+function onGameItem(id) {
+  router.push("/game/" + id + "/");
+}
+</script>
+
+<style>
+.hiddenText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <div class="md:container md:mx-auto">
     <div class="p-10">
-      <div class="flex centerA">
+      <div class="flex centerA" id="#">
         <div class="join">
           <button class="btn join-item btn-sm">Home</button>
           <button class="btn join-item btn-sm">News</button>
@@ -33,109 +33,51 @@
         </div>
       </div>
 
-      <h2 class="text-4xl font-bold pt-5">
-        {{ $route.params.name }} - {{ $route.params.id }}
-      </h2>
+      <div v-if="validateGame">
+        <h2 class="text-4xl font-bold pt-5">
+          {{ games?.name }}
+        </h2>
 
-      <main>
-        <div class="gameDetails">
-          <div class="pr-5">
-            <figure class="w-11/12">
-              <img
-                src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-                alt="Shoes"
-              />
-            </figure>
-            <div>
-              <h2 class="text-4xl font-bold pt-5">About</h2>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla,
-                exercitationem in esse molestias, suscipit illo, accusamus atque
-                sequi dignissimos tenetur aut aspernatur voluptates ea eos
-                dolorem iure similique consequuntur? Dolores? Lorem ipsum dolor
-                sit amet consectetur adipisicing elit. Nulla, exercitationem in
-                esse molestias, suscipit illo, accusamus atque sequi dignissimos
-                tenetur aut aspernatur voluptates ea eos dolorem iure similique
-                consequuntur? Dolores?
-              </p>
-            </div>
-            <div>
-              <h2 class="text-4xl font-bold pt-5">Requeriments</h2>
-              <div class="flex-col lg:flex-row hero-content pt-5">
-                <p>
-                  MÍNIMO: <br />
-                  SO: Windows 10 or later 64-bit (latest update)<br />
-                  Procesador: Intel Core i5-6600K or AMD Ryzen R5 1600
-                  processor<br />
-                  Memoria: 12 GB de RAM Gráficos: NVIDIA GeForce GTX 1050 Ti or
-                  AMD Radeon RX 580<br />
-                  DirectX: Versión 12
-                </p>
-                <p>
-                  MÍNIMO: <br />
-                  SO: Windows 10 or later 64-bit (latest update)<br />
-                  Procesador: Intel Core i5-6600K or AMD Ryzen R5 1600
-                  processor<br />
-                  Memoria: 12 GB de RAM Gráficos: NVIDIA GeForce GTX 1050 Ti or
-                  AMD Radeon RX 580<br />
-                  DirectX: Versión 12
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="sticky top-16 h-max">
-            <div class="contenedor1">
-              <figure class="imagenDetail">
-                <img
-                  src="https://daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.jpg"
-                  alt="Shoes"
-                  style="width: 180px; height: 220px"
-                />
-              </figure>
-              <div class="pt-5 contenedorDetail">
-                <table class="table table-sm">
-                  <!-- head -->
-                  <thead></thead>
-                  <tbody>
-                    <!-- row 1 -->
-                    <tr>
-                      <th>0.00 US$</th>
-                    </tr>
-                    <!-- row 2 -->
-                    <tr class="justify-between">
-                      <th>Category:</th>
-                      <th>
-                        <div class="badge">default</div>
-                        <div class="badge">default</div>
-                      </th>
-                    </tr>
-                    <tr>
-                      <th>Author::</th>
-                      <th><div class="badge">default</div></th>
-                    </tr>
-                    <tr>
-                      <th>Publication Date:</th>
-                      <th><div class="badge">2023-12-18</div></th>
-                    </tr>
-                    <tr>
-                      <th>Downloads:</th>
-                      <th><div class="badge">12</div></th>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <button class="btn w-full btn-sm button">Dowload</button>
-              <button class="btn btn-outline w-full btn-sm button">
-                + Add Whitelist
-              </button>
-            </div>
-          </div>
-        </div>
-      </main>
+        <GameDetail :games-obj="games" />
+      </div>
+      <div v-if="!validateGame">
+        <h2>The game doesnt exist</h2>
+      </div>
     </div>
   </div>
 </template>
 
+<script setup>
+import { onMounted, ref } from "vue";
+//import GameDetails from "@/components/GameDetail.vue";
+import GameDetail from "../components/GameDetail.vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const games = ref({});
+const validateGame = ref(true);
+
+console.log(route.params.id);
+onMounted(() => {
+  console.log(
+    import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + route.params.id
+  );
+  axios
+    .get(
+      import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + route.params.id
+    )
+    .then((data) => {
+      console.log("data", data);
+      console.log(data.data);
+      games.value = data.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      validateGame.value = false;
+    });
+});
+</script>
 <style scoped>
 /** scoped, use only on this page */
 
