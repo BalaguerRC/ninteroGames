@@ -30,10 +30,10 @@
         <h2 class="text-4xl font-bold">Popular</h2>
         <div class="pt-3">
           <div class="grid grid-cols-4 gap-3">
-            <PopularGames
+            <GamesItems
               v-for="game in games"
               :key="game.downloads"
-              :gameObj="game"
+              :searchItem="game"
             />
           </div>
         </div>
@@ -46,7 +46,7 @@
 import { useRouter } from "vue-router";
 const router = useRouter();
 import CarouselItem from "@/components/CarouselItem.vue";
-import PopularGames from "@/components/Home/PopularGamesItem.vue";
+import GamesItems from "@/components/Search/SearchItem.vue";
 import SearchBar from "@/components/SearchBar.vue";
 
 import { onMounted, ref } from "vue";
