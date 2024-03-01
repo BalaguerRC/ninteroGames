@@ -2,6 +2,39 @@
   <div class="md:container md:mx-auto">
     <div class="p-10">
       <SearchBar />
+      <div
+        class="alert shadow-lg mt-5"
+        v-if="user_data && user_data.tipo === 1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="stroke-info shrink-0 w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <div>
+          <h3 class="font-bold">
+            Welcome <strong>{{ user_data.username }}</strong
+            >!
+          </h3>
+          <div class="text-xs">
+            Since you are a developer, you can publish your own game
+          </div>
+        </div>
+        <button
+          class="btn btn-sm btn-primary"
+          @click="router.push('/game/create')"
+        >
+          Publish a new game
+        </button>
+      </div>
 
       <h2 class="text-4xl font-bold pt-5">
         {{ $route.params.name == undefined ? null : `"${$route.params.name}"` }}
@@ -24,11 +57,11 @@
               categoriesSelected?.map((option) => option.nombre).join(', ')
             "
           />
-          <div class="dropdown w-full">
+          <div class="dropdown w-full ">
             <div
               tabindex="0"
               role="button"
-              class="btn m-1 btn-outline btn-sm w-full"
+              class="btn btn-outline btn-sm w-full "
             >
               Category
               <svg
@@ -54,7 +87,7 @@
               >
                 <span class="label-text">{{ category.nombre }}</span>
                 <input
-                  class="checkbox"
+                  class="checkbox checkbox-sm"
                   type="checkbox"
                   :value="category"
                   v-model="categoriesSelected"
@@ -71,6 +104,7 @@
               {{ prices.label }}
             </option>
           </select>
+
           <select
             class="select select-bordered max-w-xs select-sm join-item"
             v-model="developerSelected"
@@ -78,6 +112,19 @@
             <option selected value="">Developers</option>
             <option v-for="dvs in developers" :key="dvs._id" :value="dvs._id">
               {{ dvs.username }}
+            </option>
+          </select>
+          <select
+            class="select select-bordered max-w-xs select-sm join-item"
+            v-model="orderSelected"
+          >
+            <option selected value="">Order by</option>
+            <option
+              v-for="orders in orderBy"
+              :key="orders.value"
+              :value="orders.value"
+            >
+              {{ orders.label }}
             </option>
           </select>
         </div>
@@ -175,15 +222,16 @@
 
 <script setup>
 import SearchItem from "@/components/Search/SearchItem.vue";
-import TestSelect from "@/components/TestMultiSelect.vue";
 import { onMounted, ref, watch } from "vue";
 import SearchBar from "@/components/SearchBar.vue";
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+const user_data = JSON.parse(localStorage.getItem("user_data"));
+
 const route = useRoute();
-const search = ref(route.params.name);
+const search = ref("");
 const game = ref([]);
 
 const price = ref([
@@ -198,6 +246,12 @@ const priceSelected = ref("");
 
 const developers = ref([]);
 const developerSelected = ref("");
+
+const orderBy = ref([
+  { label: "Most downloads", value: "DESC" },
+  { label: "Least downloads", value: "ASCD" },
+]);
+const orderSelected = ref("");
 
 function getAllAuthors() {
   axios
@@ -265,17 +319,20 @@ function filterGame() {
     search.value,
     categoriesSelected.value.length,
     priceSelected.value.value,
-    developerSelected.value
+    developerSelected.value,
+    orderSelected.value
   );
   if (
     search.value ||
     categoriesSelected.value.length != 0 ||
     priceSelected.value.value != "" ||
-    developerSelected.value != ""
+    developerSelected.value != "" ||
+    orderSelected.value != ""
   ) {
     query_route = `/games/filter?limit=8&&page=${page.value}`;
+
     query_body = {
-      name: search.value == "" ? undefined : search.value,
+      name: search.value == "" ? undefined : search.value, //keys condition {}, if search.value == "": return undefine ,otherwise return the exact value of search.value
       category:
         categoriesSelected.value.length == 0
           ? undefined
@@ -284,6 +341,7 @@ function filterGame() {
         priceSelected.value.value == "" ? undefined : priceSelected.value.value,
       developer:
         developerSelected.value == "" ? undefined : developerSelected.value,
+      downloads: orderSelected.value == "" ? undefined : orderSelected.value,
     };
     axios
       .post(import.meta.env.VITE_API_ENDPOINT + query_route, query_body)
@@ -588,15 +646,6 @@ const pageLimitOptions = [10, 15, 20, 25, 30];
 const categories = ref([]);
 const categoriesSelected = ref([]);
 
-function onSelectCategories(name) {
-  /*if (name != "Category") {
-    //console.log(name);
-    categoriesSelected.value.push(name);
-    for (let index = 0; index < categoriesSelected.length; index++) {
-      console.log("array", categoriesSelected);
-    }
-  }*/
-}
 function getGamesMiddleware() {
   getAllAuthors();
   if (search.value) {
@@ -610,6 +659,7 @@ function getGamesMiddleware() {
 
 onMounted(() => {
   if (route.params.name) {
+    search.value = route.params.name == undefined ? "" : route.params.name;
     getGamesMiddleware();
   } else {
     getAllGames();

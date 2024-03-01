@@ -7,16 +7,16 @@
         </div>
         <div>
           <h2 class="text-4xl font-bold pt-5">About</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla,
-            exercitationem in esse molestias, suscipit illo, accusamus atque
-            sequi dignissimos tenetur aut aspernatur voluptates ea eos dolorem
-            iure similique consequuntur? Dolores? Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Nulla, exercitationem in esse
-            molestias, suscipit illo, accusamus atque sequi dignissimos tenetur
-            aut aspernatur voluptates ea eos dolorem iure similique
-            consequuntur? Dolores?
+          <p v-if="gamesObj.about === ''">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo,
+            corporis magni. Ipsa maxime dolorem perferendis cumque temporibus
+            asperiores eos nostrum, sint culpa a iure. Incidunt ullam
+            dignissimos beatae dolorum. Odit?Lorem ipsum dolor sit amet
+            consectetur adipisicing elit. Nemo, corporis magni. Ipsa maxime
+            dolorem perferendis cumque temporibus asperiores eos nostrum, sint
+            culpa a iure. Incidunt ullam dignissimos beatae dolorum. Odit?
           </p>
+          <div class="overflow-hidden" v-html="gamesObj.about"></div>
         </div>
         <div>
           <h2 class="text-4xl font-bold pt-5">Requeriments</h2>
@@ -27,7 +27,8 @@
               Procesador: {{ gamesObj.minreq?.processor }}<br />
               Memoria: {{ gamesObj.minreq?.memory }}<br />
               Graphics: {{ gamesObj.minreq?.graphics }}<br />
-              DirectX: {{ gamesObj.minreq?.directx }}
+              DirectX: {{ gamesObj.minreq?.directx }}<br />
+              Storage: {{ gamesObj.minreq?.storage }}
             </p>
             <p>
               Maximo: <br />
@@ -35,7 +36,8 @@
               Procesador: {{ gamesObj.recreq?.processor }}<br />
               Memoria: {{ gamesObj.recreq?.memory }}<br />
               Graphics: {{ gamesObj.recreq?.graphics }}<br />
-              DirectX: {{ gamesObj.recreq?.directx }}
+              DirectX: {{ gamesObj.recreq?.directx }}<br />
+              Storage: {{ gamesObj.recreq?.storage }}
             </p>
           </div>
         </div>
@@ -115,7 +117,7 @@ defineProps(["gamesObj"]);
 /** scoped, use only on this page */
 .containerReque {
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .button {
   margin-top: 10px;
