@@ -17,8 +17,7 @@
                 style="width: 500px; border-radius: 2%"
               />
             </figure>
-            <label class="form-control">
-              <label class="label"></label>
+            <label class="form-control pt-3">
               <div class="flex">
                 <input
                   type="url"
@@ -141,6 +140,7 @@
                   </label>
                   <input
                     type="number"
+                    step="0.01"
                     placeholder="0"
                     class="input input-bordered w-32"
                     required
@@ -447,8 +447,11 @@ onMounted(() => {
   getAllCategories();
 });
 function changeThumbnail() {
-  console.log("test change", imgThumbnail2.value);
-  imgThumbnail.value = imgThumbnail2.value;
+  if (imgThumbnail2.value != "") {
+    console.log("test change", imgThumbnail2.value);
+    imgThumbnail.value = imgThumbnail2.value;
+  }
+
   //imgThumbnail2.value = imgThumbnail.value;
 }
 function addImgInImageLIst() {
@@ -464,7 +467,16 @@ function getAllCategories() {
       console.log("category", data.data);
       categories.value = data.data;
     })
-    .catch((err) => console.log(err));
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: error.response.data.message,
+      });
+    });
 }
 /*watch(imgList, () => {
   console.log("watch", imgList);
@@ -494,58 +506,81 @@ function onPublish() {
       storage: requeMX.value.storage,
     },
   });
-  axios
-    .post(
-      import.meta.env.VITE_API_ENDPOINT + "/games/create",
-      {
-        name: title.value,
-        about: About.value,
-        category: categoriesSelected.value?.map((data) => data._id),
-        thumbnailURL: imgThumbnail.value,
-        gameImages: imgList.value?.map((option) => option),
-        price: price.value,
-        minreq: {
-          os: requeMN.value.os,
-          processor: requeMN.value.processor,
-          memory: requeMN.value.memory,
-          graphics: requeMN.value.graphics,
-          directx: requeMN.value.directx,
-          storage: requeMN.value.storage,
+
+  if (
+    categoriesSelected.value.length != 0 &&
+    imgList.value.length != 0 &&
+    About.value != ""
+  ) {
+    console.log("Ready To send");
+    axios
+      .post(
+        import.meta.env.VITE_API_ENDPOINT + "/games/create",
+        {
+          name: title.value,
+          about: About.value,
+          category: categoriesSelected.value?.map((data) => data._id),
+          thumbnailURL: imgThumbnail.value,
+          gameImages: imgList.value?.map((option) => option),
+          price: price.value,
+          minreq: {
+            os: requeMN.value.os,
+            processor: requeMN.value.processor,
+            memory: requeMN.value.memory,
+            graphics: requeMN.value.graphics,
+            directx: requeMN.value.directx,
+            storage: requeMN.value.storage,
+          },
+          recreq: {
+            os: requeMX.value.os,
+            processor: requeMX.value.processor,
+            memory: requeMX.value.memory,
+            graphics: requeMX.value.graphics,
+            directx: requeMX.value.directx,
+            storage: requeMX.value.storage,
+          },
         },
-        recreq: {
-          os: requeMX.value.os,
-          processor: requeMX.value.processor,
-          memory: requeMX.value.memory,
-          graphics: requeMX.value.graphics,
-          directx: requeMX.value.directx,
-          storage: requeMX.value.storage,
-        },
-      },
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    )
-    .then((data) => {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "New game created!",
-        text: "Redirecting you to news page",
-        icon: "success",
-        timer: 3000,
-        showConfirmButton: false,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log("data", data.data.game._id);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "New game created!",
+          text: "Redirecting you to news page",
+          icon: "success",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message,
+        });
       });
-    })
-    .catch((error) => {
-      console.log(error);
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "error",
-        text: error.response.data.message,
-      });
+  } else {
+    Swal.fire({
+      background: "#252526",
+      color: "#FFF",
+      title: "Error when publishing!",
+      icon: "error",
+      text:
+        categoriesSelected.value.length === 0
+          ? "Select a category"
+          : imgList.value.length === 0
+          ? "Add an image in the Image Urls field"
+          : "Fill in the About field",
     });
+  }
+  /**/
 }
 </script>
 <style>

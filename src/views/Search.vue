@@ -57,11 +57,11 @@
               categoriesSelected?.map((option) => option.nombre).join(', ')
             "
           />
-          <div class="dropdown w-full ">
+          <div class="dropdown w-full">
             <div
               tabindex="0"
               role="button"
-              class="btn btn-outline btn-sm w-full "
+              class="btn btn-outline btn-sm w-full"
             >
               Category
               <svg
@@ -288,8 +288,8 @@ function getAllGames() {
       import.meta.env.VITE_API_ENDPOINT + "/games/?limit=8&page=" + page.value
     )
     .then((data) => {
-      console.log(data.data);
-      console.log(data.data.docs);
+      //console.log(data.data);
+      //console.log(data.data.docs);
       game.value = data.data.docs;
 
       hasPrevPage.value = data.data.hasPrevPage;
@@ -314,18 +314,22 @@ function getAllCategories() {
 function filterGame() {
   let query_route;
   let query_body = {};
-  console.log(
+  /*console.log(
     "From filter",
     search.value,
+    "Categorie",
     categoriesSelected.value.length,
-    priceSelected.value.value,
+    "price",
+    priceSelected.value,
+    "developer",
     developerSelected.value,
+    "ordered",
     orderSelected.value
-  );
+  );*/
   if (
-    search.value ||
+    search.value != "" ||
     categoriesSelected.value.length != 0 ||
-    priceSelected.value.value != "" ||
+    priceSelected.value != "" ||
     developerSelected.value != "" ||
     orderSelected.value != ""
   ) {
@@ -346,7 +350,7 @@ function filterGame() {
     axios
       .post(import.meta.env.VITE_API_ENDPOINT + query_route, query_body)
       .then((data) => {
-        console.log("filter category");
+        console.log("filter category", data.data);
         game.value = data.data.docs;
 
         hasPrevPage.value = data.data.hasPrevPage;
@@ -368,6 +372,7 @@ function filterGame() {
         });
       });
   } else {
+    console.log("else getAll");
     getAllGames();
   }
 }
@@ -622,6 +627,7 @@ function setPage(event) {
   } else if (event.target.tagName == "INPUT") {
     page.value = parseInt(event.target.value) || 1;
   }
+  console.log("cambio de pagina");
   getGamesMiddleware();
 }
 
@@ -647,8 +653,14 @@ const categories = ref([]);
 const categoriesSelected = ref([]);
 
 function getGamesMiddleware() {
-  getAllAuthors();
-  if (search.value) {
+  //getAllAuthors();
+  if (
+    search.value ||
+    categoriesSelected.value.length != 0 ||
+    priceSelected.value != "" ||
+    developerSelected.value != "" ||
+    orderSelected.value != ""
+  ) {
     console.log("getting games by filter");
     filterGame();
   } else {

@@ -58,7 +58,10 @@
               <tbody>
                 <!-- row 1 -->
                 <tr>
-                  <th class="text-lg">${{ gamesObj.price }}</th>
+                  <th class="text-lg" v-if="gamesObj.price != 0">
+                    ${{ gamesObj.price }}
+                  </th>
+                  <th class="text-lg" v-if="gamesObj.price === 0">Free</th>
                 </tr>
                 <!-- row 2 -->
                 <tr>
@@ -76,7 +79,11 @@
                 <tr>
                   <th>Author::</th>
                   <th>
-                    <div class="badge">{{ gamesObj.developer?.username }}</div>
+                    <a class="link" @click="onProfile(gamesObj.developer?._id)"
+                      ><div class="badge">
+                        {{ gamesObj.developer?.username }}
+                      </div></a
+                    >
                   </th>
                 </tr>
                 <tr>
@@ -97,7 +104,11 @@
             </table>
           </div>
           <button class="btn w-full btn-sm button">Dowload</button>
-          <button class="btn btn-outline w-full btn-sm button">
+          <button
+            :disabled="gamesValidate"
+            class="btn btn-outline w-full btn-sm button"
+            @click="addWishList(gamesObj._id)"
+          >
             + Add Whitelist
           </button>
         </div>
@@ -108,9 +119,47 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
 import ImageList from "@/components/ImageList.vue";
+
+import Swal from "sweetalert2";
+import axios from "axios";
 const router = useRouter();
-defineProps(["gamesObj"]);
+
+defineProps(["gamesObj", "gamesValidate"]);
+function onProfile(id) {
+  router.push("/profile/" + id);
+}
+function addWishList(id) {
+  axios
+    .put(
+      import.meta.env.VITE_API_ENDPOINT + "/wishlist/add/" + id,
+      {},
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    )
+    .then((data) => {
+      console.log("wishlist", data.data);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "success",
+        text: data.data.message,
+      });
+      //userdata.value = data.data;
+    })
+    .catch((err) => {
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: err.response.data.message,
+      });
+    });
+}
 </script>
 
 <style scoped>

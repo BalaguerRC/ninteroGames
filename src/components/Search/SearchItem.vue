@@ -6,7 +6,8 @@
     <div class="card-body">
       <h2 class="font-bold hiddenText">{{ searchItem.name }}</h2>
       <div class="card-actions justify-between">
-        <h4>${{ searchItem.price }}</h4>
+        <h4 v-if="searchItem.price != 0">${{ searchItem.price }}</h4>
+        <h4 v-if="searchItem.price === 0">Free</h4>
         <a class="btn btn-sm btn-primary" @click="onGameItem(searchItem._id)">
           View
         </a>
