@@ -1,0 +1,591 @@
+<template>
+  <div class="md:container md:mx-auto">
+    <div class="m-10">
+      <div class="divider">
+        <div class="divider-content">
+          <h1 class="text-3xl font-bold">Publish a new game</h1>
+        </div>
+      </div>
+      <div>
+        <form class="flex justify-around" @submit.prevent="onPublish">
+          <div class="p-5">
+            <h1 class="text-2xl font-bold py-2">Thumbnail</h1>
+            <figure>
+              <img
+                :src="imgThumbnail"
+                alt="Shoes"
+                style="width: 500px; border-radius: 2%"
+              />
+            </figure>
+            <label class="form-control pt-3">
+              <div class="flex">
+                <input
+                  type="url"
+                  class="input input-bordered flex-1 mr-2"
+                  placeholder="urls..."
+                  v-model="imgThumbnail2"
+                  :readonly="imgThumbnail == imgThumbnail2 ? true : false"
+                  required
+                />
+                <button
+                  type="button"
+                  class="btn flex-initial"
+                  @click="changeThumbnail"
+                  :disabled="imgThumbnail == imgThumbnail2 ? true : false"
+                >
+                  Addthumbnail
+                </button>
+              </div>
+            </label>
+            <label class="form-control">
+              <h1 class="text-2xl font-bold py-2">Image List</h1>
+              <div class="form-control">
+                <div class="flex flex-wrap justify-center w-full py-2 gap-5">
+                  <div v-for="imgs in imgList" :key="imgs" :id="imgs">
+                    <a>
+                      <div class="avatar">
+                        <div class="w-20 mask mask-squircle">
+                          <img
+                            :src="imgs"
+                            alt="Tailwind-CSS-Avatar-component"
+                          />
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <label class="label">
+                  <span class="label-text">Images URLs</span>
+                </label>
+
+                <div class="flex">
+                  <input
+                    type="url"
+                    class="input input-bordered flex-1 mr-2"
+                    placeholder="urls..."
+                    :value="imgList?.map((option) => option).join(', ')"
+                    readonly
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="btn flex-initial"
+                    onclick="preview_modal.showModal()"
+                  >
+                    Add Urls
+                  </button>
+                  <dialog id="preview_modal" class="modal">
+                    <div class="modal-box">
+                      <h3 class="text-center font-bold text-lg mb-5">
+                        Images URLs
+                      </h3>
+                      <div class="flex justify-center w-full py-2 gap-5">
+                        <div v-for="imgs in imgList" :key="imgs" :id="imgs">
+                          <a>
+                            <div class="avatar">
+                              <div class="w-20 mask mask-squircle">
+                                <img
+                                  :src="imgs"
+                                  alt="Tailwind-CSS-Avatar-component"
+                                />
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                      <input
+                        type="url"
+                        class="input input-bordered flex-1 mr-2 w-full"
+                        placeholder="urls..."
+                        v-model="imgForList"
+                      />
+                      <a
+                        class="btn btn-accent mt-2 mr-2"
+                        @click="addImgInImageLIst"
+                        >Add Img</a
+                      ><a class="btn btn-error mt-2" @click="imgList = []"
+                        >Clear All</a
+                      >
+                      <div class="modal-action">
+                        <form method="dialog">
+                          <!-- if there is a button in form, it will close the modal -->
+                          <button class="btn">Close</button>
+                        </form>
+                      </div>
+                    </div>
+                  </dialog>
+                </div>
+              </div>
+            </label>
+          </div>
+          <div class="w-full p-5">
+            <div class="form-control">
+              <h1 class="text-2xl font-bold py-2">Principal</h1>
+              <div class="flex-col lg:flex-row hero-content containerReque p-0">
+                <div class="w-full">
+                  <label class="label">
+                    <span class="label-text">Game title</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Title of game"
+                    class="input input-bordered w-full"
+                    required
+                    v-model="title"
+                  />
+                </div>
+                <div>
+                  <label class="label">
+                    <span class="label-text">Price US$</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="0"
+                    class="input input-bordered w-32"
+                    required
+                    v-model="price"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">Select category</span>
+              </label>
+              <div class="flex-col lg:flex-row hero-content containerReque p-0">
+                <input
+                  type="text"
+                  placeholder="category..."
+                  class="input input-bordered w-full"
+                  :value="
+                    categoriesSelected
+                      ?.map((option) => option.nombre)
+                      .join(', ')
+                  "
+                  required
+                  readonly
+                />
+                <div class="dropdown dropdown-top">
+                  <div tabindex="0" role="button" class="btn btn-outline w-40">
+                    Category
+                    <svg
+                      width="12px"
+                      height="12px"
+                      class="hidden h-2 w-2 fill-current opacity-60 sm:inline-block"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 2048 2048"
+                    >
+                      <path
+                        d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <ul
+                    tabindex="0"
+                    class="dropdown-content z-[2] menu bg-base-200 w-56 p-2 rounded-box"
+                  >
+                    <label
+                      class="label cursor-pointer"
+                      v-for="category in categories"
+                      :key="category._id"
+                    >
+                      <span class="label-text">{{ category.nombre }}</span>
+                      <input
+                        class="checkbox checkbox-sm"
+                        type="checkbox"
+                        :value="category"
+                        v-model="categoriesSelected"
+                      />
+                    </label>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <label class="form-control">
+              <div class="label">
+                <span class="label-text">About the game</span>
+              </div>
+              <!--API KEY taken from https://github.com/tinymce/tinymce-vue/blob/main/stories/index.js-->
+              <Editor
+                aria-required="true"
+                api-key="qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc"
+                :init="{
+                  plugins: 'lists link image table code help wordcount',
+                  skin: 'oxide-dark',
+                  content_css: 'dark',
+                  placeholder: 'Type your article content here...',
+                }"
+                v-model="About"
+              />
+              <!-- <textarea class="textarea textarea-bordered h-24" placeholder="Bio"></textarea> -->
+              <!-- <div>
+                    <p>{{ content }}</p>
+                </div> -->
+            </label>
+
+            <label class="form-control">
+              <h1 class="text-2xl font-bold py-2">Requeriments</h1>
+              <div class="flex-col lg:flex-row hero-content p-0 containerReque">
+                <div class="w-full">
+                  <h2 class="text-1xl font-bold pt-5">Minimun:</h2>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">SO:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="so..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMN.os"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Processor:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="processor..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMN.processor"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Memory:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="memory..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMN.memory"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Graphics:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="graphics..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMN.graphics"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">DirectX</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="directX..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMN.directx"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Storage</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="storage..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMN.storage"
+                    />
+                  </div>
+                </div>
+                <div class="w-full">
+                  <h2 class="text-1xl font-bold pt-5">Maximuns:</h2>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">SO:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="so..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMX.os"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Processor:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="processor..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMX.processor"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Memory:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="memory..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMX.memory"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Graphics:</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="graphics..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMX.graphics"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">DirectX</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="directX..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMX.directx"
+                    />
+                  </div>
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text">Storage</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="storage..."
+                      class="input input-bordered"
+                      required
+                      v-model="requeMX.storage"
+                    />
+                  </div>
+                </div>
+              </div>
+            </label>
+
+            <div class="flex flex-row mt-4 space-x-4">
+              <button
+                type="button"
+                class="btn grow"
+                @click="$router.push('/search')"
+              >
+                Back
+              </button>
+              <button type="submit" class="btn btn-accent font-bold grow">
+                Publish
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+import Editor from "@tinymce/tinymce-vue";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { onMounted, ref, watch } from "vue";
+//https://i.pinimg.com/originals/24/f5/0f/24f50f3054c5eccd7a37f1b3e906021c.png
+const imgNull = ref(
+  "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
+);
+
+const title = ref("");
+const categories = ref([]);
+const categoriesSelected = ref([]);
+const About = ref("");
+const price = ref(0);
+const requeMN = ref({
+  os: "",
+  processor: "",
+  memory: "",
+  graphics: "",
+  directx: "",
+  storage: "",
+});
+const requeMX = ref({
+  os: "",
+  processor: "",
+  memory: "",
+  graphics: "",
+  directx: "",
+  storage: "",
+});
+
+const imgThumbnail = ref("");
+const imgThumbnail2 = ref("");
+
+const imgList = ref([]);
+const imgForList = ref("");
+
+onMounted(() => {
+  //console.log(imgList.value);
+  if (imgThumbnail.value == "") {
+    console.log("test image");
+    imgThumbnail.value = imgNull.value;
+  }
+  getAllCategories();
+});
+function changeThumbnail() {
+  if (imgThumbnail2.value != "") {
+    console.log("test change", imgThumbnail2.value);
+    imgThumbnail.value = imgThumbnail2.value;
+  }
+
+  //imgThumbnail2.value = imgThumbnail.value;
+}
+function addImgInImageLIst() {
+  console.log("image", imgForList.value);
+  imgList.value.push(imgForList.value);
+  console.log("imgList", imgList.value);
+  imgForList.value = "";
+}
+function getAllCategories() {
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/categories/get")
+    .then((data) => {
+      console.log("category", data.data);
+      categories.value = data.data;
+    })
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: error.response.data.message,
+      });
+    });
+}
+/*watch(imgList, () => {
+  console.log("watch", imgList);
+});*/
+function onPublish() {
+  console.log("data to send", {
+    name: title.value,
+    about: About.value,
+    category: categoriesSelected.value?.map((data) => data._id),
+    thumbnailURL: imgThumbnail.value,
+    gameImages: imgList.value?.map((option) => option),
+    price: price.value,
+    minreq: {
+      os: requeMN.value.os,
+      processor: requeMN.value.processor,
+      memory: requeMN.value.memory,
+      graphics: requeMN.value.graphics,
+      directx: requeMN.value.directx,
+      storage: requeMN.value.storage,
+    },
+    recreq: {
+      os: requeMX.value.os,
+      processor: requeMX.value.processor,
+      memory: requeMX.value.memory,
+      graphics: requeMX.value.graphics,
+      directx: requeMX.value.directx,
+      storage: requeMX.value.storage,
+    },
+  });
+
+  if (
+    categoriesSelected.value.length != 0 &&
+    imgList.value.length != 0 &&
+    About.value != ""
+  ) {
+    console.log("Ready To send");
+    axios
+      .post(
+        import.meta.env.VITE_API_ENDPOINT + "/games/create",
+        {
+          name: title.value,
+          about: About.value,
+          category: categoriesSelected.value?.map((data) => data._id),
+          thumbnailURL: imgThumbnail.value,
+          gameImages: imgList.value?.map((option) => option),
+          price: price.value,
+          minreq: {
+            os: requeMN.value.os,
+            processor: requeMN.value.processor,
+            memory: requeMN.value.memory,
+            graphics: requeMN.value.graphics,
+            directx: requeMN.value.directx,
+            storage: requeMN.value.storage,
+          },
+          recreq: {
+            os: requeMX.value.os,
+            processor: requeMX.value.processor,
+            memory: requeMX.value.memory,
+            graphics: requeMX.value.graphics,
+            directx: requeMX.value.directx,
+            storage: requeMX.value.storage,
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log("data", data.data.game._id);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "New game created!",
+          text: "Redirecting you to news page",
+          icon: "success",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message,
+        });
+      });
+  } else {
+    Swal.fire({
+      background: "#252526",
+      color: "#FFF",
+      title: "Error when publishing!",
+      icon: "error",
+      text:
+        categoriesSelected.value.length === 0
+          ? "Select a category"
+          : imgList.value.length === 0
+          ? "Add an image in the Image Urls field"
+          : "Fill in the About field",
+    });
+  }
+  /**/
+}
+</script>
+<style>
+.containerReque {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+</style>

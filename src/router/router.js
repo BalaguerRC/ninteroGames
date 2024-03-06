@@ -24,6 +24,10 @@ const routes = [
         path: "game",
         children: [
           {
+            path: "create",
+            component: () => import("@/views/PublishGame.vue"),
+          },
+          {
             path: ":id",
             component: () => import("@/views/GameItem.vue"),
           },
@@ -32,7 +36,16 @@ const routes = [
       {
         path: "profile",
         name: "profile",
-        component: () => import("@/views/auth/Profile.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("@/views/auth/Profile.vue"),
+          },
+          {
+            path: ":id",
+            component: () => import("@/views/Profile/ProfileUser.vue"),
+          },
+        ],
       },
       {
         path: "about",

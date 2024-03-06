@@ -7,16 +7,16 @@
         </div>
         <div>
           <h2 class="text-4xl font-bold pt-5">About</h2>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla,
-            exercitationem in esse molestias, suscipit illo, accusamus atque
-            sequi dignissimos tenetur aut aspernatur voluptates ea eos dolorem
-            iure similique consequuntur? Dolores? Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Nulla, exercitationem in esse
-            molestias, suscipit illo, accusamus atque sequi dignissimos tenetur
-            aut aspernatur voluptates ea eos dolorem iure similique
-            consequuntur? Dolores?
+          <p v-if="gamesObj.about === ''">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo,
+            corporis magni. Ipsa maxime dolorem perferendis cumque temporibus
+            asperiores eos nostrum, sint culpa a iure. Incidunt ullam
+            dignissimos beatae dolorum. Odit?Lorem ipsum dolor sit amet
+            consectetur adipisicing elit. Nemo, corporis magni. Ipsa maxime
+            dolorem perferendis cumque temporibus asperiores eos nostrum, sint
+            culpa a iure. Incidunt ullam dignissimos beatae dolorum. Odit?
           </p>
+          <div class="overflow-hidden" v-html="gamesObj.about"></div>
         </div>
         <div>
           <h2 class="text-4xl font-bold pt-5">Requeriments</h2>
@@ -27,7 +27,8 @@
               Procesador: {{ gamesObj.minreq?.processor }}<br />
               Memoria: {{ gamesObj.minreq?.memory }}<br />
               Graphics: {{ gamesObj.minreq?.graphics }}<br />
-              DirectX: {{ gamesObj.minreq?.directx }}
+              DirectX: {{ gamesObj.minreq?.directx }}<br />
+              Storage: {{ gamesObj.minreq?.storage }}
             </p>
             <p>
               Maximo: <br />
@@ -35,7 +36,8 @@
               Procesador: {{ gamesObj.recreq?.processor }}<br />
               Memoria: {{ gamesObj.recreq?.memory }}<br />
               Graphics: {{ gamesObj.recreq?.graphics }}<br />
-              DirectX: {{ gamesObj.recreq?.directx }}
+              DirectX: {{ gamesObj.recreq?.directx }}<br />
+              Storage: {{ gamesObj.recreq?.storage }}
             </p>
           </div>
         </div>
@@ -56,7 +58,10 @@
               <tbody>
                 <!-- row 1 -->
                 <tr>
-                  <th class="text-lg">${{ gamesObj.price }}</th>
+                  <th class="text-lg" v-if="gamesObj.price != 0">
+                    ${{ gamesObj.price }}
+                  </th>
+                  <th class="text-lg" v-if="gamesObj.price === 0">Free</th>
                 </tr>
                 <!-- row 2 -->
                 <tr>
@@ -74,7 +79,11 @@
                 <tr>
                   <th>Author::</th>
                   <th>
-                    <div class="badge">{{ gamesObj.developer?.username }}</div>
+                    <a class="link" @click="onProfile(gamesObj.developer?._id)"
+                      ><div class="badge">
+                        {{ gamesObj.developer?.username }}
+                      </div></a
+                    >
                   </th>
                 </tr>
                 <tr>
@@ -95,7 +104,11 @@
             </table>
           </div>
           <button class="btn w-full btn-sm button">Dowload</button>
-          <button class="btn btn-outline w-full btn-sm button">
+          <button
+            :disabled="gamesValidate"
+            class="btn btn-outline w-full btn-sm button"
+            @click="addWishList(gamesObj._id)"
+          >
             + Add Whitelist
           </button>
         </div>
@@ -106,16 +119,54 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
 import ImageList from "@/components/ImageList.vue";
+
+import Swal from "sweetalert2";
+import axios from "axios";
 const router = useRouter();
-defineProps(["gamesObj"]);
+
+defineProps(["gamesObj", "gamesValidate"]);
+function onProfile(id) {
+  router.push("/profile/" + id);
+}
+function addWishList(id) {
+  axios
+    .put(
+      import.meta.env.VITE_API_ENDPOINT + "/wishlist/add/" + id,
+      {},
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    )
+    .then((data) => {
+      console.log("wishlist", data.data);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "success",
+        text: data.data.message,
+      });
+      //userdata.value = data.data;
+    })
+    .catch((err) => {
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: err.response.data.message,
+      });
+    });
+}
 </script>
 
 <style scoped>
 /** scoped, use only on this page */
 .containerReque {
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .button {
   margin-top: 10px;
