@@ -7,7 +7,12 @@
         </div>
       </div>
       <div>
-        <form class="flex justify-around" @submit.prevent="onPublish">
+        <form
+          class="flex justify-around"
+          @submit.prevent="
+            route.params.id ? onPublishUpdate(route.params.id) : onPublish()
+          "
+        >
           <div class="p-5">
             <h1 class="text-2xl font-bold py-2">Thumbnail</h1>
             <figure>
@@ -390,8 +395,19 @@
               >
                 Back
               </button>
-              <button type="submit" class="btn btn-accent font-bold grow">
+              <button
+                type="submit"
+                class="btn btn-accent font-bold grow"
+                v-if="!route.params.id"
+              >
                 Publish
+              </button>
+              <button
+                type="submit"
+                class="btn btn-accent font-bold grow"
+                v-if="route.params.id"
+              >
+                Update
               </button>
             </div>
           </div>
@@ -405,10 +421,14 @@ import Editor from "@tinymce/tinymce-vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
 //https://i.pinimg.com/originals/24/f5/0f/24f50f3054c5eccd7a37f1b3e906021c.png
 const imgNull = ref(
   "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
 );
+const router = useRouter();
+const route = useRoute();
 
 const title = ref("");
 const categories = ref([]);
@@ -444,8 +464,12 @@ onMounted(() => {
     console.log("test image");
     imgThumbnail.value = imgNull.value;
   }
+  if (route.params.id) {
+    getGameId(route.params.id);
+  }
   getAllCategories();
 });
+
 function changeThumbnail() {
   if (imgThumbnail2.value != "") {
     console.log("test change", imgThumbnail2.value);
@@ -549,12 +573,13 @@ function onPublish() {
         Swal.fire({
           background: "#252526",
           color: "#FFF",
-          title: "New game created!",
+          title: "Game Updated!",
           text: "Redirecting you to news page",
           icon: "success",
           timer: 3000,
           showConfirmButton: false,
         });
+        router.push("/game/" + data.data.game._id);
       })
       .catch((error) => {
         console.log(error);
@@ -580,7 +605,117 @@ function onPublish() {
           : "Fill in the About field",
     });
   }
-  /**/
+}
+
+//params ID
+function getGameId(id) {
+  console.log(import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + id);
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + id)
+    .then((data) => {
+      console.log("Game by ID", data.data);
+      //games.value = data.data;
+      title.value = data.data.name;
+      price.value = data.data.price;
+      categoriesSelected.value = data.data.category?.map((data) => data);
+      imgThumbnail.value = data.data.thumbnailURL;
+      imgThumbnail2.value = data.data.thumbnailURL;
+      imgList.value = data.data.gameImages?.map((data) => data);
+      About.value = data.data.about;
+      requeMN.value.os = data.data.minreq.os;
+      requeMN.value.processor = data.data.minreq.processor;
+      requeMN.value.memory = data.data.minreq.memory;
+      requeMN.value.graphics = data.data.minreq.graphics;
+      requeMN.value.directx = data.data.minreq.directx;
+      requeMN.value.storage = data.data.minreq.storage;
+
+      requeMX.value.os = data.data.recreq.os;
+      requeMX.value.processor = data.data.recreq.processor;
+      requeMX.value.memory = data.data.recreq.memory;
+      requeMX.value.graphics = data.data.recreq.graphics;
+      requeMX.value.directx = data.data.recreq.directx;
+      requeMX.value.storage = data.data.recreq.storage;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function onPublishUpdate(id) {
+  if (
+    categoriesSelected.value.length != 0 &&
+    imgList.value.length != 0 &&
+    About.value != ""
+  ) {
+    console.log("Ready To Update", id);
+    axios
+      .put(
+        import.meta.env.VITE_API_ENDPOINT + "/games/update/" + id,
+        {
+          name: title.value,
+          about: About.value,
+          category: categoriesSelected.value?.map((data) => data._id),
+          thumbnailURL: imgThumbnail.value,
+          gameImages: imgList.value?.map((option) => option),
+          price: price.value,
+          minreq: {
+            os: requeMN.value.os,
+            processor: requeMN.value.processor,
+            memory: requeMN.value.memory,
+            graphics: requeMN.value.graphics,
+            directx: requeMN.value.directx,
+            storage: requeMN.value.storage,
+          },
+          recreq: {
+            os: requeMX.value.os,
+            processor: requeMX.value.processor,
+            memory: requeMX.value.memory,
+            graphics: requeMX.value.graphics,
+            directx: requeMX.value.directx,
+            storage: requeMX.value.storage,
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log("data", data.data.game._id);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Game Updated!",
+          text: "Redirecting you to news page",
+          icon: "success",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        router.push("/game/" + data.data.game._id);
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message,
+        });
+      });
+  } else {
+    Swal.fire({
+      background: "#252526",
+      color: "#FFF",
+      title: "Error when publishing!",
+      icon: "error",
+      text:
+        categoriesSelected.value.length === 0
+          ? "Select a category"
+          : imgList.value.length === 0
+          ? "Add an image in the Image Urls field"
+          : "Fill in the About field",
+    });
+  }
 }
 </script>
 <style>

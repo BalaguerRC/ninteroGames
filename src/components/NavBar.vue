@@ -34,6 +34,7 @@
             class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
           >
             <li>Wishlist</li>
+            <div v-if="wishlist.length===0" class="text-center py-2">There are no games</div>
             <li v-for="list in wishlist" :key="list._id">
               <div class="flex justify-between">
                 <a>{{ list.name }}</a>
@@ -153,13 +154,7 @@ function getWishList() {
       localStorage.setItem("wishlist", JSON.stringify(data.data.wishlist));
     })
     .catch((err) => {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "error",
-        text: err.response.data.message,
-      });
+      console.log(err.response.data.message);
     });
 }
 

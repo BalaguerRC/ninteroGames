@@ -31,6 +31,10 @@ const routes = [
             path: ":id",
             component: () => import("@/views/GameItem.vue"),
           },
+          {
+            path: "update/:id",
+            component: () => import("@/views/PublishGame.vue"),
+          },
         ],
       },
       {

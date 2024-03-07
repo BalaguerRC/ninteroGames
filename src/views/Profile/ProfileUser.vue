@@ -57,10 +57,19 @@
               })
             }}
           </div>
-          <div v-if="validate">
+          <div class="py-2" v-if="validate">
             <button class="btn btn-sm btn-error w-full" @click="onUnFollow()">
               Unfollow
             </button>
+            {{
+              userdata.followers?.forEach((element) => {
+                if (element._id === dataUser._id) {
+                  validate = true;
+                } else {
+                  validate = false;
+                }
+              })
+            }}
           </div>
         </div>
       </div>
@@ -174,6 +183,78 @@
 
       <div class="grid grid-cols-3 gapP">
         {{ userdata.libreria?.map((data) => data) }}
+      </div>
+      <div class="grid grid-cols-3 gapP">
+        <div class="card w-90 bg-base-100 shadow-xl">
+          <figure>
+            <img
+              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+              alt="Shoes"
+            />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Shoes!</h2>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="card w-90 bg-base-100 shadow-xl">
+          <figure>
+            <img
+              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+              alt="Shoes"
+            />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Shoes!</h2>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="card w-90 bg-base-100 shadow-xl">
+          <figure>
+            <img
+              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+              alt="Shoes"
+            />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Shoes!</h2>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="card w-90 bg-base-100 shadow-xl">
+          <figure>
+            <img
+              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+              alt="Shoes"
+            />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Shoes!</h2>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </div>
+        <div class="card w-90 bg-base-100 shadow-xl">
+          <figure>
+            <img
+              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+              alt="Shoes"
+            />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">Shoes!</h2>
+            <div class="card-actions justify-end">
+              <button class="btn btn-primary">Buy Now</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -305,5 +386,8 @@ const validate = ref(false);
 /*grid-template-columns: repeat(3, minmax(0, 1fr));*/
 .gapP {
   gap: 1.5rem;
+}
+.content {
+  height: 100vh;
 }
 </style>

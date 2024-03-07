@@ -2,6 +2,37 @@
   <div class="md:container md:mx-auto">
     <div class="p-10">
       <SearchBar />
+      <div
+        class="alert shadow-lg mt-5"
+        v-if="user_data && user_data._id === games.developer?._id"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="stroke-info shrink-0 w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <div>
+          <h3 class="font-bold">
+            Welcome <strong>{{ user_data.username }}</strong
+            >!
+          </h3>
+          <div class="text-xs">This is your game, then you can upgrade.</div>
+        </div>
+        <button
+          class="btn btn-sm btn-primary"
+          @click="router.push('/game/update/' + games?._id)"
+        >
+          Update game
+        </button>
+      </div>
 
       <div v-if="validateGame">
         <h2 class="text-4xl font-bold pt-5">
@@ -23,9 +54,12 @@ import SearchBar from "@/components/SearchBar.vue";
 //import GameDetails from "@/components/GameDetail.vue";
 import GameDetail from "../components/GameDetail.vue";
 import axios from "axios";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+
+const user_data = JSON.parse(localStorage.getItem("user_data"));
 
 const route = useRoute();
+const router = useRouter();
 const games = ref({});
 const validateGame = ref(true);
 
