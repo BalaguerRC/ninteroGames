@@ -12,7 +12,15 @@
         v-model="search"
       />
 
-      <button class="btn btn-sm join-item rounded-r-full" @click="onSerch">
+      <button
+        class="btn btn-sm join-item rounded-r-full"
+        @click="onSerch"
+        :disabled="
+          $route.fullPath.slice(0,8) === '/search' || $route.fullPath.slice(0,8) === '/search/'
+            ? true
+            : false
+        "
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"

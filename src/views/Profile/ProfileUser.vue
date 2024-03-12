@@ -182,76 +182,20 @@
       </div>
 
       <div class="grid grid-cols-3 gapP">
-        {{ userdata.libreria?.map((data) => data) }}
-      </div>
-      <div class="grid grid-cols-3 gapP">
-        <div class="card w-90 bg-base-100 shadow-xl">
+        <div
+          class="card w-90 bg-base-100 shadow-xl"
+          v-for="libreria in userdata.libreria"
+          :key="libreria._id"
+        >
           <figure>
-            <img
-              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-              alt="Shoes"
-            />
+            <img :src="libreria.thumbnailURL" alt="Shoes" />
           </figure>
           <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
+            <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
             <div class="card-actions justify-end">
-              <button class="btn btn-primary">Buy Now</button>
-            </div>
-          </div>
-        </div>
-        <div class="card w-90 bg-base-100 shadow-xl">
-          <figure>
-            <img
-              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-              alt="Shoes"
-            />
-          </figure>
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Buy Now</button>
-            </div>
-          </div>
-        </div>
-        <div class="card w-90 bg-base-100 shadow-xl">
-          <figure>
-            <img
-              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-              alt="Shoes"
-            />
-          </figure>
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Buy Now</button>
-            </div>
-          </div>
-        </div>
-        <div class="card w-90 bg-base-100 shadow-xl">
-          <figure>
-            <img
-              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-              alt="Shoes"
-            />
-          </figure>
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Buy Now</button>
-            </div>
-          </div>
-        </div>
-        <div class="card w-90 bg-base-100 shadow-xl">
-          <figure>
-            <img
-              src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-              alt="Shoes"
-            />
-          </figure>
-          <div class="card-body">
-            <h2 class="card-title">Shoes!</h2>
-            <div class="card-actions justify-end">
-              <button class="btn btn-primary">Buy Now</button>
+              <a class="btn btn-primary btn-sm" :href="'/game/' + libreria._id"
+                >view</a
+              >
             </div>
           </div>
         </div>
@@ -389,5 +333,10 @@ const validate = ref(false);
 }
 .content {
   height: 100vh;
+}
+.hiddenText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

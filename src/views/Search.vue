@@ -135,12 +135,111 @@
 
       <div class="pt-5">
         <div class="pt-3">
-          <div class="grid grid-cols-4 gap-3">
+          <div class="grid grid-cols-4 gap-3" v-if="validateGames">
             <SearchItem
               v-for="searchItems in game"
               :key="searchItems._id"
               :search-item="searchItems"
             />
+          </div>
+          <div class="grid grid-cols-4 gap-3" v-if="!validateGames">
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -232,6 +331,7 @@ const user_data = JSON.parse(localStorage.getItem("user_data"));
 
 const route = useRoute();
 const search = ref("");
+const validateGames = ref(false);
 const game = ref([]);
 
 const price = ref([
@@ -299,6 +399,7 @@ function getAllGames() {
 
       page.value = data.data.page;
       totalPages.value = data.data.totalPages;
+      validateGames.value = true;
     })
     .catch((err) => console.log(err));
 }

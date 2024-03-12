@@ -1,31 +1,60 @@
 <template>
-  <div class="card lg:card-side bg-base-100 shadow-xl">
+  <div class="card lg:card-side bg-base-100 shadow-xl w-full">
     <figure class="componentIMG0 componentIMG">
       <img
-        src="https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
+        class="min-h-full"
+        :src="thumbnailURL"
         alt="Album"
+        style="border-top-left-radius: 10px; border-bottom-left-radius: 10px"
       />
     </figure>
     <div class="card-body">
-      <h2 class="card-title">Super Mario Bros</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aut est
-        obcaecati autem illum reiciendis cum veritatis fugiat vero earum porro
-        ipsum a et quasi, ab, praesentium nemo fuga dolores quae?
-      </p>
+      <div class="flex flex-col">
+        <div class="flex justify-between">
+          <h2 class="card-title">{{ title }}</h2>
+          <span class="badge badge-accent badge-lg my-2">{{ category }}</span>
+        </div>
+
+        <h2 class="text-sm opacity-50">by {{ author }}</h2>
+      </div>
+
+      <p
+        v-html="content.length > 270 ? content.slice(0, 270) + '...' : content"
+      ></p>
       <div class="card-actions justify-end">
-        <button class="btn btn-primary">view</button>
+        <a class="btn btn-active btn-sm" :href="'game/' + id" v-if="!article"
+          >view ></a
+        >
+        <a class="btn btn-active btn-sm" :href="'news/' + id" v-if="article"
+          >Read More ></a
+        >
       </div>
     </div>
   </div>
 </template>
-
+<script setup>
+defineProps([
+  "thumbnailURL",
+  "title",
+  "content",
+  "article",
+  "id",
+  "author",
+  "category",
+]);
+</script>
 <style>
 .componentIMG0 {
   width: 100%;
+  height: 100%;
 }
 .componentIMG {
   max-width: 500px;
-  max-height: 600px;
+  max-height: 700px;
+}
+.hiddenText {
+  /*overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;*/
 }
 </style>
