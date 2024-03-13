@@ -48,7 +48,7 @@
             <img
               :src="gamesObj.thumbnailURL"
               alt="Shoes"
-              style="width: 280px"
+              style="width: 280px; border-radius: 10px"
             />
           </figure>
           <div class="pt-5 contenedorDetail">
@@ -103,7 +103,8 @@
               </tbody>
             </table>
           </div>
-          <button class="btn w-full btn-sm button">Dowload</button>
+          <button class="btn btn-success w-full btn-sm button" v-if="!validateDownload">Buy</button>
+          <button class="btn w-full btn-sm button" v-if="validateDownload">Dowload</button>
           <button
             :disabled="gamesValidate"
             class="btn btn-outline w-full btn-sm button"
@@ -124,6 +125,7 @@ import ImageList from "@/components/ImageList.vue";
 
 import Swal from "sweetalert2";
 import axios from "axios";
+const validateDownload = ref(false);
 const router = useRouter();
 
 defineProps(["gamesObj", "gamesValidate"]);
@@ -184,6 +186,7 @@ function addWishList(id) {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 }
 .contenedorDetail {
   width: 280px;

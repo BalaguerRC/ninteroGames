@@ -45,31 +45,30 @@
               {{ userdata.followingCount }}
             </p>
           </a>
+
           <div class="py-2" v-if="!validate">
-            <button class="btn btn-sm w-full btn-primary" @click="onFollow()">
-              Follow
-            </button>
-            {{
-              userdata.followers?.forEach((element) => {
-                if (element._id === dataUser._id) {
-                  validate = true;
+            <a
+              class="btn btn-sm w-full btn-primary"
+              @click="
+                () => {
+                  onFollow();
                 }
-              })
-            }}
+              "
+            >
+              Follow
+            </a>
           </div>
           <div class="py-2" v-if="validate">
-            <button class="btn btn-sm btn-error w-full" @click="onUnFollow()">
-              Unfollow
-            </button>
-            {{
-              userdata.followers?.forEach((element) => {
-                if (element._id === dataUser._id) {
-                  validate = true;
-                } else {
-                  validate = false;
+            <a
+              class="btn btn-sm btn-error w-full"
+              @click="
+                () => {
+                  onUnFollow();
                 }
-              })
-            }}
+              "
+            >
+              Unfollow
+            </a>
           </div>
         </div>
       </div>
@@ -180,22 +179,96 @@
         </div>
         <div class="divider"></div>
       </div>
-
-      <div class="grid grid-cols-3 gapP">
-        <div
-          class="card w-90 bg-base-100 shadow-xl"
-          v-for="libreria in userdata.libreria"
-          :key="libreria._id"
-        >
-          <figure>
-            <img :src="libreria.thumbnailURL" alt="Shoes" />
-          </figure>
-          <div class="card-body">
-            <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
-            <div class="card-actions justify-end">
-              <a class="btn btn-primary btn-sm" :href="'/game/' + libreria._id"
-                >view</a
-              >
+      <div class="bg-gray-800 containerGames">
+        <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
+          <div
+            class="card w-90 bg-base-100 shadow-xl"
+            v-for="libreria in userdata.libreria"
+            :key="libreria._id"
+          >
+            <figure>
+              <img :src="libreria.thumbnailURL" alt="Shoes" />
+            </figure>
+            <div class="card-body">
+              <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
+              <div class="card-actions justify-end">
+                <a
+                  class="btn btn-primary btn-sm"
+                  :href="'/game/' + libreria._id"
+                  >view</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="Nothing" v-if="userdata.libreria?.length === 0">
+          <div class="NothingChild">THERE NO GAMES</div>
+        </div>
+        <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
+          <div class="card w-90 bg-base-100 shadow-xl">
+            <figure>
+              <div class="skeleton w-full h-56"></div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton w-full h-8"></div>
+              <div class="card-actions justify-end">
+                <div class="skeleton w-20 h-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card w-90 bg-base-100 shadow-xl">
+            <figure>
+              <div class="skeleton w-full h-56"></div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton w-full h-8"></div>
+              <div class="card-actions justify-end">
+                <div class="skeleton w-20 h-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card w-90 bg-base-100 shadow-xl">
+            <figure>
+              <div class="skeleton w-full h-56"></div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton w-full h-8"></div>
+              <div class="card-actions justify-end">
+                <div class="skeleton w-20 h-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card w-90 bg-base-100 shadow-xl">
+            <figure>
+              <div class="skeleton w-full h-56"></div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton w-full h-8"></div>
+              <div class="card-actions justify-end">
+                <div class="skeleton w-20 h-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card w-90 bg-base-100 shadow-xl">
+            <figure>
+              <div class="skeleton w-full h-56"></div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton w-full h-8"></div>
+              <div class="card-actions justify-end">
+                <div class="skeleton w-20 h-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card w-90 bg-base-100 shadow-xl">
+            <figure>
+              <div class="skeleton w-full h-56"></div>
+            </figure>
+            <div class="card-body">
+              <div class="skeleton w-full h-8"></div>
+              <div class="card-actions justify-end">
+                <div class="skeleton w-20 h-8"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -205,13 +278,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import Swal from "sweetalert2";
 import axios from "axios";
 
 const userdata = ref({});
+const userFollowers = ref([]);
+const validateGames = ref(false);
+
 const dataUser = JSON.parse(localStorage.getItem("user_data"));
 const route = useRoute();
 const router = useRouter();
@@ -233,10 +309,11 @@ function onFollow() {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "There was an error!",
+        title: "Following!",
         icon: "success",
         text: data.data.message,
       });
+      validate.value = true;
       getUser();
     })
     .catch((err) => {
@@ -269,11 +346,13 @@ function onUnFollow() {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "There was an error!",
+        title: "Un Follow!",
         icon: "success",
         text: data.data.message,
       });
+
       getUser();
+      validate.value = false;
     })
     .catch((err) => {
       Swal.fire({
@@ -291,6 +370,9 @@ function getUser() {
     .then((data) => {
       console.log(data.data);
       userdata.value = data.data;
+      userFollowers.value = data.data.followers;
+      validateGames.value = true;
+      validateFollowing();
     })
     .catch((err) => {
       Swal.fire({
@@ -302,17 +384,45 @@ function getUser() {
       });
     });
 }
-/*function OnProfileRoute(id) {
-  console.log(id);
-  router.push("/profile/" + id);
-}*/
-
 onMounted(() => {
+  if (dataUser._id === route.params.id) {
+    console.log("My Profile");
+    router.push("/profile");
+  }
   getUser();
+  //validateFollowing();
 });
+/*watch(validateGames, () => {
+  console.log("hay cambios");
+});*/
+function validateFollowing() {
+  userFollowers.value.forEach((data) =>
+    data._id === dataUser._id
+      ? (validate.value = true)
+      : (validate.value = false)
+  );
+}
 const validate = ref(false);
 </script>
 <style>
+.Nothing {
+  width: 100%; /* Ancho del contenedor */
+  min-height: 46.5rem;
+  display: flex; /* Utilizamos flexbox para centrar horizontalmente */
+  justify-content: center; /* Centramos horizontalmente */
+  align-items: center; /* Centramos verticalmente */
+}
+.NothingChild {
+  text-align: center; /* Alineación del texto dentro del div (opcional) */
+  font-weight: 800;
+  font-size: 20px;
+}
+.containerGames {
+  max-height: 47.5rem;
+  min-height: 47.5rem;
+  overflow-x: auto;
+  border-radius: 10px;
+}
 .centerA {
   align-items: center;
   justify-content: space-between;

@@ -13,7 +13,7 @@
             route.params.id ? onPublishUpdate(route.params.id) : onPublish()
           "
         >
-          <div class="p-5">
+          <div class="sticky top-16 h-max p-5">
             <h1 class="text-2xl font-bold py-2">Thumbnail</h1>
             <figure>
               <img
@@ -23,10 +23,10 @@
               />
             </figure>
             <label class="form-control pt-3">
-              <div class="flex">
+              <div class="join">
                 <input
                   type="url"
-                  class="input input-bordered flex-1 mr-2"
+                  class="input input-bordered flex-1 join-item"
                   placeholder="urls..."
                   v-model="imgThumbnail2"
                   :readonly="imgThumbnail == imgThumbnail2 ? true : false"
@@ -34,12 +34,15 @@
                 />
                 <button
                   type="button"
-                  class="btn flex-initial"
+                  class="btn flex-initial join-item"
                   @click="changeThumbnail"
                   :disabled="imgThumbnail == imgThumbnail2 ? true : false"
                 >
                   Addthumbnail
                 </button>
+                <a class="btn btn-error join-item" @click="changeImage()">
+                  X
+                </a>
               </div>
             </label>
             <label class="form-control">
@@ -63,10 +66,10 @@
                   <span class="label-text">Images URLs</span>
                 </label>
 
-                <div class="flex">
+                <div class="join">
                   <input
                     type="url"
-                    class="input input-bordered flex-1 mr-2"
+                    class="input input-bordered flex-1 join-item"
                     placeholder="urls..."
                     :value="imgList?.map((option) => option).join(', ')"
                     readonly
@@ -74,55 +77,62 @@
                   />
                   <button
                     type="button"
-                    class="btn flex-initial"
+                    class="btn flex-initial join-item"
                     onclick="preview_modal.showModal()"
                   >
                     Add Urls
                   </button>
-                  <dialog id="preview_modal" class="modal">
-                    <div class="modal-box">
-                      <h3 class="text-center font-bold text-lg mb-5">
-                        Images URLs
-                      </h3>
-                      <div class="flex justify-center w-full py-2 gap-5">
-                        <div v-for="imgs in imgList" :key="imgs" :id="imgs">
-                          <a>
-                            <div class="avatar">
-                              <div class="w-20 mask mask-squircle">
-                                <img
-                                  :src="imgs"
-                                  alt="Tailwind-CSS-Avatar-component"
-                                />
-                              </div>
+                </div>
+                <dialog id="preview_modal" class="modal">
+                  <div class="modal-box">
+                    <h3 class="text-center font-bold text-lg mb-5">
+                      Images URLs
+                    </h3>
+                    <div class="flex justify-center w-full py-2 gap-5">
+                      <div v-for="imgs in imgList" :key="imgs" :id="imgs">
+                        <a>
+                          <div class="avatar">
+                            <div class="w-20 mask mask-squircle">
+                              <img
+                                :src="imgs"
+                                alt="Tailwind-CSS-Avatar-component"
+                              />
                             </div>
-                          </a>
-                        </div>
+                          </div>
+                        </a>
                       </div>
+                    </div>
+                    <label class="label">
+                      <span class="label-text">URLs</span>
+                    </label>
+                    <div class="join w-full">
                       <input
                         type="url"
-                        class="input input-bordered flex-1 mr-2 w-full"
+                        class="input input-bordered flex-1 w-full join-item"
                         placeholder="urls..."
                         v-model="imgForList"
                       />
                       <a
-                        class="btn btn-accent mt-2 mr-2"
+                        class="btn btn-accent join-item"
                         @click="addImgInImageLIst"
                         >Add Img</a
-                      ><a class="btn btn-error mt-2" @click="imgList = []"
+                      ><a class="btn btn-error join-item" @click="imgList = []"
                         >Clear All</a
                       >
-                      <div class="modal-action">
-                        <form method="dialog">
-                          <!-- if there is a button in form, it will close the modal -->
-                          <button class="btn">Close</button>
-                        </form>
-                      </div>
                     </div>
-                  </dialog>
-                </div>
+
+                    <div class="modal-action">
+                      <form method="dialog">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <button class="btn">Close</button>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
               </div>
             </label>
           </div>
+          
           <div class="w-full p-5">
             <div class="form-control">
               <h1 class="text-2xl font-bold py-2">Principal</h1>
@@ -478,11 +488,18 @@ function changeThumbnail() {
 
   //imgThumbnail2.value = imgThumbnail.value;
 }
+function changeImage() {
+  imgThumbnail.value =
+    "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg";
+  imgThumbnail2.value = "";
+}
 function addImgInImageLIst() {
-  console.log("image", imgForList.value);
-  imgList.value.push(imgForList.value);
-  console.log("imgList", imgList.value);
-  imgForList.value = "";
+  if (imgForList.value != "") {
+    console.log("image", imgForList.value);
+    imgList.value.push(imgForList.value);
+    console.log("imgList", imgList.value);
+    imgForList.value = "";
+  }
 }
 function getAllCategories() {
   axios

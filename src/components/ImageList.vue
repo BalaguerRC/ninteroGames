@@ -6,7 +6,7 @@
       :key="games"
       :id="games"
     >
-      <img :src="games" class="w-full" />
+      <img :src="games" class="w-full" style="border-radius: 10px;"/>
     </div>
   </div>
   <div class="flex justify-center w-full py-2 gap-5">
