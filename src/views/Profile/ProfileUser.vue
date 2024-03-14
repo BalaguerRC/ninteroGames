@@ -172,102 +172,149 @@
           <button>close</button>
         </form>
       </dialog>
-      <div class="pt-5">
-        <div class="flex centerGame">
-          <h2 class="text-3xl font-bold">Games</h2>
-          <p class="font-bold">Total Games: {{ userdata.libreria?.length }}</p>
-        </div>
-        <div class="divider"></div>
-      </div>
-      <div class="bg-gray-800 containerGames">
-        <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
-          <div
-            class="card w-90 bg-base-100 shadow-xl"
-            v-for="libreria in userdata.libreria"
-            :key="libreria._id"
-          >
-            <figure>
-              <img :src="libreria.thumbnailURL" alt="Shoes" />
-            </figure>
-            <div class="card-body">
-              <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
-              <div class="card-actions justify-end">
-                <a
-                  class="btn btn-primary btn-sm"
-                  :href="'/game/' + libreria._id"
-                  >view</a
+
+      <div role="tablist" class="tabs tabs-lifted tabs-sm pt-4">
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="Games"
+          checked
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+        >
+          <div>
+            <div class="pt-5">
+              <div class="flex centerGame">
+                <h2 class="text-3xl font-bold">Games</h2>
+                <p class="font-bold">
+                  Total Games: {{ userdata.libreria?.length }}
+                </p>
+              </div>
+              <div class="divider"></div>
+            </div>
+            <div class="bg-gray-800 containerGames">
+              <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
+                <div
+                  class="card w-90 bg-base-100 shadow-xl"
+                  v-for="libreria in userdata.libreria"
+                  :key="libreria._id"
                 >
+                  <figure>
+                    <img :src="libreria.thumbnailURL" alt="Shoes" />
+                  </figure>
+                  <div class="card-body">
+                    <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
+                    <div class="card-actions justify-end">
+                      <a
+                        class="btn btn-primary btn-sm"
+                        :href="'/game/' + libreria._id"
+                        >view</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="Nothing" v-if="userdata.libreria?.length === 0">
+                <div class="NothingChild">THERE NO GAMES</div>
+              </div>
+              <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="Nothing" v-if="userdata.libreria?.length === 0">
-          <div class="NothingChild">THERE NO GAMES</div>
-        </div>
-        <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="My Games"
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+        >
+          <div class="pt-5">
+            <div class="flex centerGame">
+              <h2 class="text-3xl font-bold">My Games</h2>
+              <p class="font-bold">
+                Total Games: 0
+              </p>
             </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
+            <div class="divider"></div>
+            <div class="bg-gray-800 containerGames">
+              <div class="Nothing">
+                <div class="NothingChild">THERE NO GAMES</div>
               </div>
             </div>
           </div>
@@ -448,5 +495,9 @@ const validate = ref(false);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.tab:is(input[type="radio"]) {
+  width: 150px;
+  font-weight: 700;
 }
 </style>

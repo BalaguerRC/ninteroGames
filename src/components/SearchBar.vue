@@ -1,7 +1,7 @@
 <template>
   <div class="flex centerA">
     <div class="join">
-      <button class="btn join-item btn-sm" @click="onHome">Home</button>
+      <a class="btn join-item btn-sm" href="/">Home</a>
       <button class="btn join-item btn-sm" @click="onNews">News</button>
     </div>
     <div class="join">

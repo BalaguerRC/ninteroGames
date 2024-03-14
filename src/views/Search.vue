@@ -36,7 +36,7 @@
         </button>
       </div>
 
-      <h2 class="text-4xl font-bold pt-5">
+      <h2 class="text-4xl font-bold pt-14">
         {{ $route.params.name == undefined ? null : `"${$route.params.name}"` }}
       </h2>
 
@@ -133,8 +133,8 @@
         </div>
       </div>
 
-      <div class="pt-5">
-        <div class="pt-3">
+      <div class="py-14">
+        <div>
           <div class="grid grid-cols-4 gap-3" v-if="validateGames">
             <SearchItem
               v-for="searchItems in game"
@@ -244,7 +244,7 @@
         </div>
       </div>
 
-      <div class="my-4">
+      <div class="mb-10">
         <div class="flex items-center gap-3 justify-center">
           <div class="join">
             <button

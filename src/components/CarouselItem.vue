@@ -1,8 +1,8 @@
 <template>
-  <div class="card lg:card-side bg-base-100 shadow-xl w-full">
+  <div class="card lg:card-side bg-base-100 shadow-xl w-full heigthCard">
     <figure class="componentIMG0 componentIMG">
       <img
-        class="min-h-full"
+        class="h-full"
         :src="thumbnailURL"
         alt="Album"
         style="border-top-left-radius: 10px; border-bottom-left-radius: 10px"
@@ -20,6 +20,11 @@
 
       <p
         v-html="content.length > 270 ? content.slice(0, 270) + '...' : content"
+        v-if="!article"
+      ></p>
+      <p
+        v-html="content.length > 270 ? content.slice(0, 270) + '...' : content"
+        v-if="article"
       ></p>
       <div class="card-actions justify-end">
         <a class="btn btn-active btn-sm" :href="'game/' + id" v-if="!article"
@@ -46,15 +51,11 @@ defineProps([
 <style>
 .componentIMG0 {
   width: 100%;
-  height: 100%;
 }
 .componentIMG {
-  max-width: 500px;
-  max-height: 700px;
+  max-width: 750px;
 }
-.hiddenText {
-  /*overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;*/
+.heigthCard{
+  height: 25rem;
 }
 </style>

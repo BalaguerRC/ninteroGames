@@ -14,7 +14,6 @@
               :article="true"
               :author="corousel.articleMostRecent.author?.username"
               :category="'Latest News'"
-
             />
             <div
               class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2"
@@ -87,9 +86,9 @@
         </div>
       </div>
 
-      <div class="pt-5">
+      <div class="py-14">
         <h2 class="text-4xl font-bold">Popular</h2>
-        <div class="pt-3">
+        <div class="pt-10">
           <div class="grid grid-cols-4 gap-3" v-if="validateCorousel">
             <GamesItems
               v-for="game in games"
@@ -207,5 +206,13 @@ function onSerch() {
 .centerA {
   align-items: center;
   justify-content: space-between;
+}
+.componentIMG0 {
+  height: 100%;
+  width: 100%;
+}
+.componentIMG {
+  max-width: 500px;
+  max-height: 700px;
 }
 </style>

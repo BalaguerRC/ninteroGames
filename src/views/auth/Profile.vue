@@ -47,7 +47,7 @@
             </p>
           </a>
           <div>
-            <a class="btn btn-sm" href="/settings">Edit User</a>
+            <a class="btn btn-sm btn-warning w-full" href="/settings">Edit User</a>
           </div>
         </div>
       </div>
@@ -301,7 +301,7 @@ function getUser() {
       userData.value = data.data;
       //userFollowers.value = data.data.followers;
       validateGames.value = true;
-      validateFollowing();
+      //validateFollowing();
     })
     .catch((err) => {
       Swal.fire({

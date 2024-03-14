@@ -103,12 +103,42 @@
               </tbody>
             </table>
           </div>
-          <button class="btn btn-success w-full btn-sm button" v-if="!validateDownload">Buy</button>
-          <button class="btn w-full btn-sm button" v-if="validateDownload">Dowload</button>
+          <a
+            class="btn btn-success w-full btn-sm button"
+            v-if="!validateGameUser"
+            onclick="my_modal_1.showModal()"
+            >Buy</a
+          >
+          <dialog id="my_modal_1" class="modal">
+            <div class="modal-box image-full glass">
+              <h3 class="font-bold text-lg">Confir you order!</h3>
+
+              <p class="py-4">
+                Are you sure you want to buy the {{ gamesObj.name }} game?
+              </p>
+              <p class="pt-2 font-bold">Amount to pay: ${{ gamesObj.price }}</p>
+              <div class="modal-action">
+                <form method="dialog">
+                  <!-- if there is a button in form, it will close the modal -->
+                  <button
+                    class="btn btn-sm btn-success mr-2"
+                    @click="buyGame(gamesObj._id)"
+                  >
+                    Confirm
+                  </button>
+                  <button class="btn btn-sm">Close</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+          <button class="btn w-full btn-sm button" v-if="validateGameUser">
+            Dowload
+          </button>
           <button
-            :disabled="gamesValidate"
+            :disabled="validateWishList"
             class="btn btn-outline w-full btn-sm button"
             @click="addWishList(gamesObj._id)"
+            v-if="!validateGameUser"
           >
             + Add Whitelist
           </button>
@@ -119,19 +149,22 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
 import ImageList from "@/components/ImageList.vue";
 
 import Swal from "sweetalert2";
 import axios from "axios";
-const validateDownload = ref(false);
-const router = useRouter();
 
-defineProps(["gamesObj", "gamesValidate"]);
+const router = useRouter();
+const route = useRoute();
+const token = localStorage.getItem("token");
+
+defineProps(["gamesObj", "gamesValidate", "validateGameUser"]);
 function onProfile(id) {
   router.push("/profile/" + id);
 }
+const validateWishList = ref(false);
 function addWishList(id) {
   axios
     .put(
@@ -146,10 +179,13 @@ function addWishList(id) {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "There was an error!",
+        title: "Game added to wish list!",
         icon: "success",
         text: data.data.message,
       });
+      getWish();
+      validateWishList.value = true;
+      //gamesValidate2.value = true;
       //userdata.value = data.data;
     })
     .catch((err) => {
@@ -162,6 +198,54 @@ function addWishList(id) {
       });
     });
 }
+function getWish() {
+  const wlist = JSON.parse(localStorage.getItem("wishlist"));
+  if (wlist) {
+    wlist.map((data) => {
+      if (data._id === route.params.id) {
+        console.log("hay similitud");
+        validateWishList.value = true;
+      }
+    });
+  }
+}
+
+function buyGame(id) {
+  console.log("Comprado", id);
+  axios
+    .put(
+      import.meta.env.VITE_API_ENDPOINT + "/library/buy/" + id,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+    .then((data) => {
+      console.log(data);
+      if (data.status === 200) {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Success!",
+          icon: "success",
+          text: data.data.message,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: err.response.data.message,
+      });
+    });
+}
+onMounted(() => {
+  getWish();
+});
 </script>
 
 <style scoped>

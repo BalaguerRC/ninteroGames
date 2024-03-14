@@ -34,14 +34,51 @@
         </button>
       </div>
 
-      <div v-if="validateGame">
+      <div v-if="validateGameExist && validateGame">
         <h2 class="text-4xl font-bold pt-5">
           {{ games?.name }}
         </h2>
 
-        <GameDetail :games-obj="games" :games-validate="validateWishList" />
+        <GameDetail
+          :games-obj="games"
+          :games-validate="validateWishList"
+          :validate-game-user="validateGameUser"
+        />
       </div>
+
       <div v-if="!validateGame">
+        <div class="skeleton w-96 h-10"></div>
+        <div class="gameDetails">
+          <div class="pr-5 w-full">
+            <div class="">
+              <div class="">
+                <div class="skeleton w-full heightSkeleton"></div>
+              </div>
+              <div class="pt-5">
+                <div class="skeleton w-96 h-10"></div>
+                <div class="skeleton w-full h-52 mt-2"></div>
+              </div>
+              <div class="pt-5 flex-col lg:flex-row hero-content">
+                <div class="w-full">
+                  <div class="skeleton w-96 h-10"></div>
+                  <div class="skeleton w-full h-52 mt-2"></div>
+                </div>
+                <div class="w-full">
+                  <div class="skeleton w-96 h-10"></div>
+                  <div class="skeleton w-full h-52 mt-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="h-max">
+            <div class="skeleton w-full h-52"></div>
+            <div class="skeleton w-96 h-10 mt-2"></div>
+            <div class="skeleton w-96 h-10 mt-2"></div>
+            <div class="skeleton w-96 h-10 mt-2"></div>
+          </div>
+        </div>
+      </div>
+      <div v-if="!validateGameExist">
         <h2>The game doesnt exist</h2>
       </div>
     </div>
@@ -54,6 +91,7 @@ import SearchBar from "@/components/SearchBar.vue";
 //import GameDetails from "@/components/GameDetail.vue";
 import GameDetail from "../components/GameDetail.vue";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { useRoute, useRouter } from "vue-router";
 
 const user_data = JSON.parse(localStorage.getItem("user_data"));
@@ -61,12 +99,15 @@ const user_data = JSON.parse(localStorage.getItem("user_data"));
 const route = useRoute();
 const router = useRouter();
 const games = ref({});
-const validateGame = ref(true);
-
+const validateGameExist = ref(true);
+const validateGame = ref(false);
+const wishList = ref([]);
+const validateWishList = ref(false);
 console.log(route.params.id);
 onMounted(() => {
   getGame();
   getWish();
+  getUser();
 });
 function getGame() {
   console.log(
@@ -80,14 +121,14 @@ function getGame() {
       console.log("data", data);
       console.log(data.data);
       games.value = data.data;
+      validateGame.value = true;
     })
     .catch((err) => {
       console.log(err);
-      validateGame.value = false;
+      validateGameExist.value = false;
     });
 }
-const wishList = ref([]);
-const validateWishList = ref(false);
+
 function getWish() {
   const wlist = JSON.parse(localStorage.getItem("wishlist"));
   if (wlist) {
@@ -98,7 +139,41 @@ function getWish() {
       }
     });
     wishList.value.push({ id: wlist.map((data) => data._id) });
+  } else {
+    validateWishList.value = false;
   }
+}
+
+const userData = ref({});
+const validateGameUser = ref(false);
+function getUser() {
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/users/getid/" + user_data._id)
+    .then((data) => {
+      console.log("my data", data.data);
+      userData.value = data.data;
+      //userFollowers.value = data.data.followers;
+      //validateGameUser.value = true;
+      //validateFollowing();
+      validatingGame();
+    })
+    .catch((err) => {
+      console.log(err);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: err.response.data.message,
+      });
+    });
+}
+function validatingGame() {
+  userData.value.libreria.forEach((data) =>
+    data._id === route.params.id
+      ? (validateGameUser.value = true)
+      : (validateGameUser.value = false)
+  );
 }
 </script>
 <style scoped>
@@ -132,5 +207,8 @@ function getWish() {
   padding-top: 2rem;
   display: flex;
   justify-content: space-between;
+}
+.heightSkeleton {
+  height: 40rem;
 }
 </style>
