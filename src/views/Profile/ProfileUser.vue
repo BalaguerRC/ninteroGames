@@ -186,111 +186,7 @@
           role="tabpanel"
           class="tab-content bg-base-100 border-base-300 rounded-box p-4"
         >
-          <div>
-            <div class="pt-5">
-              <div class="flex centerGame">
-                <h2 class="text-3xl font-bold">Games</h2>
-                <p class="font-bold">
-                  Total Games: {{ userdata.libreria?.length }}
-                </p>
-              </div>
-              <div class="divider"></div>
-            </div>
-            <div class="bg-gray-800 containerGames">
-              <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
-                <div
-                  class="card w-90 bg-base-100 shadow-xl"
-                  v-for="libreria in userdata.libreria"
-                  :key="libreria._id"
-                >
-                  <figure>
-                    <img :src="libreria.thumbnailURL" alt="Shoes" />
-                  </figure>
-                  <div class="card-body">
-                    <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
-                    <div class="card-actions justify-end">
-                      <a
-                        class="btn btn-primary btn-sm"
-                        :href="'/game/' + libreria._id"
-                        >view</a
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="Nothing" v-if="userdata.libreria?.length === 0">
-                <div class="NothingChild">THERE NO GAMES</div>
-              </div>
-              <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
-                <div class="card w-90 bg-base-100 shadow-xl">
-                  <figure>
-                    <div class="skeleton w-full h-56"></div>
-                  </figure>
-                  <div class="card-body">
-                    <div class="skeleton w-full h-8"></div>
-                    <div class="card-actions justify-end">
-                      <div class="skeleton w-20 h-8"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card w-90 bg-base-100 shadow-xl">
-                  <figure>
-                    <div class="skeleton w-full h-56"></div>
-                  </figure>
-                  <div class="card-body">
-                    <div class="skeleton w-full h-8"></div>
-                    <div class="card-actions justify-end">
-                      <div class="skeleton w-20 h-8"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card w-90 bg-base-100 shadow-xl">
-                  <figure>
-                    <div class="skeleton w-full h-56"></div>
-                  </figure>
-                  <div class="card-body">
-                    <div class="skeleton w-full h-8"></div>
-                    <div class="card-actions justify-end">
-                      <div class="skeleton w-20 h-8"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card w-90 bg-base-100 shadow-xl">
-                  <figure>
-                    <div class="skeleton w-full h-56"></div>
-                  </figure>
-                  <div class="card-body">
-                    <div class="skeleton w-full h-8"></div>
-                    <div class="card-actions justify-end">
-                      <div class="skeleton w-20 h-8"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card w-90 bg-base-100 shadow-xl">
-                  <figure>
-                    <div class="skeleton w-full h-56"></div>
-                  </figure>
-                  <div class="card-body">
-                    <div class="skeleton w-full h-8"></div>
-                    <div class="card-actions justify-end">
-                      <div class="skeleton w-20 h-8"></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card w-90 bg-base-100 shadow-xl">
-                  <figure>
-                    <div class="skeleton w-full h-56"></div>
-                  </figure>
-                  <div class="card-body">
-                    <div class="skeleton w-full h-8"></div>
-                    <div class="card-actions justify-end">
-                      <div class="skeleton w-20 h-8"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <GamesUser />
         </div>
 
         <input
@@ -299,25 +195,13 @@
           role="tab"
           class="tab"
           aria-label="My Games"
+          :disabled="userdata.tipo != 1"
         />
         <div
           role="tabpanel"
           class="tab-content bg-base-100 border-base-300 rounded-box p-4"
         >
-          <div class="pt-5">
-            <div class="flex centerGame">
-              <h2 class="text-3xl font-bold">My Games</h2>
-              <p class="font-bold">
-                Total Games: 0
-              </p>
-            </div>
-            <div class="divider"></div>
-            <div class="bg-gray-800 containerGames">
-              <div class="Nothing">
-                <div class="NothingChild">THERE NO GAMES</div>
-              </div>
-            </div>
-          </div>
+          <MyGamesUser />
         </div>
       </div>
     </div>
@@ -325,6 +209,8 @@
 </template>
 
 <script setup>
+import GamesUser from "@/components/Profile/GamesUser.vue";
+import MyGamesUser from "@/components/Profile/MyGamesUser.vue";
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -339,39 +225,43 @@ const dataUser = JSON.parse(localStorage.getItem("user_data"));
 const route = useRoute();
 const router = useRouter();
 function onFollow() {
-  console.log(
-    "follow",
-    import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id
-  );
-  axios
-    .put(
-      import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id,
-      {},
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    )
-    .then((data) => {
-      console.log(data);
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "Following!",
-        icon: "success",
-        text: data.data.message,
+  if (dataUser === null) {
+    router.push("/login");
+  } else {
+    console.log(
+      "follow",
+      import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id
+    );
+    axios
+      .put(
+        import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log(data);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Following!",
+          icon: "success",
+          text: data.data.message,
+        });
+        validate.value = true;
+        getUser();
+      })
+      .catch((err) => {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: err.response.data.message,
+        });
       });
-      validate.value = true;
-      getUser();
-    })
-    .catch((err) => {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "error",
-        text: err.response.data.message,
-      });
-    });
+  }
 }
 function onUnFollow() {
   console.log(
@@ -432,9 +322,11 @@ function getUser() {
     });
 }
 onMounted(() => {
-  if (dataUser._id === route.params.id) {
-    console.log("My Profile");
-    router.push("/profile");
+  if (dataUser != null) {
+    if (dataUser._id === route.params.id) {
+      console.log("My Profile");
+      router.push("/profile");
+    }
   }
   getUser();
   //validateFollowing();
@@ -443,11 +335,13 @@ onMounted(() => {
   console.log("hay cambios");
 });*/
 function validateFollowing() {
-  userFollowers.value.forEach((data) =>
-    data._id === dataUser._id
-      ? (validate.value = true)
-      : (validate.value = false)
-  );
+  if (dataUser != null) {
+    userFollowers.value.forEach((data) =>
+      data._id === dataUser._id
+        ? (validate.value = true)
+        : (validate.value = false)
+    );
+  }
 }
 const validate = ref(false);
 </script>

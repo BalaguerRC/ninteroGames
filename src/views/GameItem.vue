@@ -107,7 +107,9 @@ console.log(route.params.id);
 onMounted(() => {
   getGame();
   getWish();
-  getUser();
+  if (user_data!=null) {
+    getUser();
+  }
 });
 function getGame() {
   console.log(

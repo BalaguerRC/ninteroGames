@@ -461,6 +461,7 @@ function filterGame() {
 
         page.value = data.data.page;
         totalPages.value = data.data.totalPages;
+        validateGames.value = true;
       })
       .catch((error) => {
         console.log(error);

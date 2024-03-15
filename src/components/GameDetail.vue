@@ -105,7 +105,13 @@
           </div>
           <a
             class="btn btn-success w-full btn-sm button"
-            v-if="!validateGameUser"
+            v-if="dataUser === null"
+            @click="router.push('/login')"
+            >Buy</a
+          >
+          <a
+            class="btn btn-success w-full btn-sm button"
+            v-if="!validateGameUser && dataUser != null"
             onclick="my_modal_1.showModal()"
             >Buy</a
           >
@@ -159,6 +165,7 @@ import axios from "axios";
 const router = useRouter();
 const route = useRoute();
 const token = localStorage.getItem("token");
+const dataUser = JSON.parse(localStorage.getItem("user_data"));
 
 defineProps(["gamesObj", "gamesValidate", "validateGameUser"]);
 function onProfile(id) {
@@ -166,37 +173,41 @@ function onProfile(id) {
 }
 const validateWishList = ref(false);
 function addWishList(id) {
-  axios
-    .put(
-      import.meta.env.VITE_API_ENDPOINT + "/wishlist/add/" + id,
-      {},
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    )
-    .then((data) => {
-      console.log("wishlist", data.data);
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "Game added to wish list!",
-        icon: "success",
-        text: data.data.message,
+  if (dataUser != null) {
+    axios
+      .put(
+        import.meta.env.VITE_API_ENDPOINT + "/wishlist/add/" + id,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log("wishlist", data.data);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Game added to wish list!",
+          icon: "success",
+          text: data.data.message,
+        });
+        getWish();
+        validateWishList.value = true;
+        //gamesValidate2.value = true;
+        //userdata.value = data.data;
+      })
+      .catch((err) => {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: err.response.data.message,
+        });
       });
-      getWish();
-      validateWishList.value = true;
-      //gamesValidate2.value = true;
-      //userdata.value = data.data;
-    })
-    .catch((err) => {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "error",
-        text: err.response.data.message,
-      });
-    });
+  } else {
+    router.push("/login");
+  }
 }
 function getWish() {
   const wlist = JSON.parse(localStorage.getItem("wishlist"));
@@ -230,6 +241,7 @@ function buyGame(id) {
           icon: "success",
           text: data.data.message,
         });
+        router.push("/profile");
       }
     })
     .catch((err) => {
