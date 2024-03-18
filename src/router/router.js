@@ -60,6 +60,13 @@ const routes = [
         },
       },
       {
+        path: "notifications",
+        component: () => import("@/views/auth/Notifications.vue"),
+        meta: {
+          isProtected: true,
+        },
+      },
+      {
         path: "/news",
         component: () => import("@/views/News.vue"),
       },

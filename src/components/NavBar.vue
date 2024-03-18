@@ -23,9 +23,7 @@
                   stroke-width="2"
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 ></path>
-                <span
-                  class="badge badge-xs badge-primary indicator-item"
-                ></span>
+                <span class="badge badge-xs badge-primary indicator-item"></span>
               </svg>
             </div>
           </button>
@@ -49,8 +47,8 @@
             </li>
           </ul>
         </div>
-        <div class="dropdown dropdown-end">
-          <button class="btn btn-ghost btn-circle" tabindex="0">
+        <div class="tooltip tooltip-bottom" data-tip="Notifications">
+          <a class="btn btn-ghost btn-circle" tabindex="0" @click="onNotifications">
             <div class="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,21 +66,7 @@
               </svg>
               <span class="badge badge-xs badge-primary indicator-item"></span>
             </div>
-          </button>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
-          >
-            <li>Notifications</li>
-            <li>
-              <a class="justify-between">
-                Good news about this game
-                <span class="badge">New</span>
-              </a>
-            </li>
-            <li><a>New assets in this game</a></li>
-            <li><a>El peso, nueva competencia de nintendo</a></li>
-          </ul>
+          </a>
         </div>
         <div class="dropdown dropdown-end">
           <div
@@ -216,6 +200,10 @@ function onProfile() {
 
 function onSettings() {
   router.push("/settings");
+}
+
+function onNotifications() {
+  router.push("/notifications");
 }
 
 function logOut() {
