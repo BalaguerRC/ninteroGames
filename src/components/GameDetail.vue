@@ -66,21 +66,22 @@
                 <!-- row 2 -->
                 <tr>
                   <th>Category:</th>
-                  <th
-                    v-for="category in gamesObj.category"
-                    :key="category._id"
-                    class="flex flex-col"
-                  >
-                    <span class="badge badge-ghost badge-sm">{{
-                      category.nombre
-                    }}</span>
+                  <th class="flex flex-row flex-wrap">
+                    <div
+                      v-for="category in gamesObj.category"
+                      :key="category._id"
+                    >
+                      <span class="badge badge-ghost badge-sm">{{
+                        category.nombre
+                      }}</span>
+                    </div>
                   </th>
                 </tr>
                 <tr>
                   <th>Author::</th>
                   <th>
-                    <a class="link" @click="onProfile(gamesObj.developer?._id)"
-                      ><div class="badge">
+                    <a class="link" :href="'/profile/'+gamesObj.developer?._id"
+                      ><div class="badge badge-info">
                         {{ gamesObj.developer?.username }}
                       </div></a
                     >
@@ -151,6 +152,68 @@
         </div>
       </div>
     </div>
+    <div class="gameDetails">
+      <div class="w-full">
+        <div class="flex flex-col">
+          <div>
+            <h2 class="text-4xl font-bold pt-5">Comments</h2>
+          </div>
+          <div class="divider" />
+          <div class="join my-5">
+            <input
+              placeholder="comment..."
+              class="input input-bordered w-full join-item"
+            />
+            <button class="btn btn-success join-item">Send</button>
+          </div>
+          <div class="chat chat-start">
+            <div class="chat-image avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS chat bubble component"
+                  src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                />
+              </div>
+            </div>
+            <div class="chat-header">
+              Nintendo
+              <time class="text-xs opacity-50">12:45</time>
+            </div>
+            <div class="bg-slate-800 p-4 w-full border-l-4 my-2 messagge">
+              You were the Chosen One!
+            </div>
+            <div class="chat-footer">
+              <button class="btn btn-sm btn-success mr-2">Like</button>
+              <button class="btn btn-sm">Dislike</button>
+            </div>
+          </div>
+          <div class="chat chat-start">
+            <div class="chat-image avatar">
+              <div class="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS chat bubble component"
+                  src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                />
+              </div>
+            </div>
+            <div class="chat-header">
+              Ielosky
+              <time class="text-xs opacity-50">12:45</time>
+            </div>
+            <div class="bg-slate-800 p-4 w-full border-l-4 my-2 messagge">
+              Nice
+            </div>
+            <div class="chat-footer">
+              <button class="btn btn-sm btn-success mr-2">Like</button>
+              <button class="btn btn-sm">Dislike</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contenedor1">
+        <div class="contenedorDetail"></div>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -168,9 +231,7 @@ const token = localStorage.getItem("token");
 const dataUser = JSON.parse(localStorage.getItem("user_data"));
 
 defineProps(["gamesObj", "gamesValidate", "validateGameUser"]);
-function onProfile(id) {
-  router.push("/profile/" + id);
-}
+
 const validateWishList = ref(false);
 function addWishList(id) {
   if (dataUser != null) {
@@ -212,9 +273,9 @@ function addWishList(id) {
 function getWish() {
   const wlist = JSON.parse(localStorage.getItem("wishlist"));
   if (wlist) {
+    //if wishlist exist then check if there is already a game saved with the same id
     wlist.map((data) => {
       if (data._id === route.params.id) {
-        console.log("hay similitud");
         validateWishList.value = true;
       }
     });
@@ -295,5 +356,8 @@ onMounted(() => {
   padding-top: 2rem;
   display: flex;
   justify-content: space-between;
+}
+.messagge {
+  border-radius: 10px;
 }
 </style>

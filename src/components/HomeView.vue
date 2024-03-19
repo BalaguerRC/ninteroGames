@@ -192,13 +192,6 @@ function getSortDownloads() {
       games.value = data.data;
     });
 }
-
-function onNews() {
-  router.push("/news");
-}
-function onSerch() {
-  router.push("/search");
-}
 </script>
 <style scoped>
 /** scoped, use only on this page */
@@ -215,4 +208,5 @@ function onSerch() {
   max-width: 500px;
   max-height: 700px;
 }
+
 </style>

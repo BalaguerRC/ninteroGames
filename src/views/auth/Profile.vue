@@ -15,8 +15,16 @@
             </div>
           </div>
           <div>
-            <div class="font-bold text-4xl">
-              {{ userName }} {{ userLastName }}
+            <div class="flex flex-row items-center">
+              <div class="font-bold text-4xl">
+                {{ userName }} {{ userLastName }}
+              </div>
+              <div class="badge badge-warning mx-2" v-if="userType === 1">
+                developer
+              </div>
+              <div class="badge badge-info mx-2" v-if="userType === 0">
+                Admin
+              </div>
             </div>
             <div class="text-sm opacity-50">
               {{ userUsername }}
@@ -47,7 +55,9 @@
             </p>
           </a>
           <div>
-            <a class="btn btn-sm btn-warning w-full" href="/settings">Edit User</a>
+            <a class="btn btn-sm btn-warning w-full" href="/settings"
+              >Edit User</a
+            >
           </div>
         </div>
       </div>
@@ -155,106 +165,141 @@
           <button>close</button>
         </form>
       </dialog>
-      <div class="pt-5">
-        <div class="flex centerGame">
-          <h2 class="text-3xl font-bold">Games</h2>
-          <p class="font-bold">Total Games: {{ userData.libreria?.length }}</p>
-        </div>
-        <div class="divider"></div>
-      </div>
 
-      <div class="bg-gray-800 containerGames">
-        <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
-          <div
-            class="card w-90 bg-base-100 shadow-xl"
-            v-for="libreria in userData.libreria"
-            :key="libreria._id"
-          >
-            <figure>
-              <img :src="libreria.thumbnailURL" alt="Shoes" />
-            </figure>
-            <div class="card-body">
-              <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
-              <div class="card-actions justify-end">
-                <a
-                  class="btn btn-primary btn-sm"
-                  :href="'/game/' + libreria._id"
-                  >view</a
+      <div role="tablist" class="tabs tabs-lifted tabs-sm pt-4">
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="Games"
+          checked
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+        >
+          <div>
+            <div class="pt-5">
+              <div class="flex centerGame">
+                <h2 class="text-3xl font-bold">Games</h2>
+                <p class="font-bold">
+                  Total Games: {{ userData.libreria?.length }}
+                </p>
+              </div>
+              <div class="divider"></div>
+            </div>
+
+            <div class="bg-gray-800 containerGames">
+              <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
+                <div
+                  class="card w-90 bg-base-100 shadow-xl"
+                  v-for="libreria in userData.libreria"
+                  :key="libreria._id"
                 >
+                  <figure>
+                    <img :src="libreria.thumbnailURL" alt="Shoes" />
+                  </figure>
+                  <div class="card-body">
+                    <h2 class="font-bold hiddenText">{{ libreria.name }}</h2>
+                    <div class="card-actions justify-end">
+                      <a
+                        class="btn btn-primary btn-sm"
+                        :href="'/game/' + libreria._id"
+                        >view</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="Nothing" v-if="userData.libreria?.length === 0">
+                <div class="NothingChild">THERE NO GAMES</div>
+              </div>
+              <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card w-90 bg-base-100 shadow-xl">
+                  <figure>
+                    <div class="skeleton w-full h-56"></div>
+                  </figure>
+                  <div class="card-body">
+                    <div class="skeleton w-full h-8"></div>
+                    <div class="card-actions justify-end">
+                      <div class="skeleton w-20 h-8"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="Nothing" v-if="userData.libreria?.length === 0">
-          <div class="NothingChild">THERE NO GAMES</div>
-        </div>
-        <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
-          <div class="card w-90 bg-base-100 shadow-xl">
-            <figure>
-              <div class="skeleton w-full h-56"></div>
-            </figure>
-            <div class="card-body">
-              <div class="skeleton w-full h-8"></div>
-              <div class="card-actions justify-end">
-                <div class="skeleton w-20 h-8"></div>
-              </div>
-            </div>
-          </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="My Games"
+          :disabled="dataUser.tipo != 1"
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+        >
+          <MyGames />
         </div>
       </div>
     </div>
@@ -262,6 +307,7 @@
 </template>
 
 <script setup>
+import MyGames from "@/components/auth/MyGames.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
@@ -273,6 +319,7 @@ const userLastName = ref(null);
 const userUsername = ref(null);
 const userCreated = ref(null);
 const userImg = ref(null);
+const userType = ref(null);
 
 const userData = ref({});
 
@@ -288,6 +335,7 @@ if (dataUser) {
   userUsername.value = dataUser.username;
   userCreated.value = dataUser.fechaCreacion;
   userImg.value = dataUser.profileURL;
+  userType.value = dataUser.tipo;
 } else {
   console.log("no hay");
   router.push("login");
@@ -354,5 +402,9 @@ onMounted(() => {
 /*grid-template-columns: repeat(3, minmax(0, 1fr));*/
 .gapP {
   gap: 1.5rem;
+}
+.tab:is(input[type="radio"]) {
+  width: 150px;
+  font-weight: 700;
 }
 </style>

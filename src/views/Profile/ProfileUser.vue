@@ -15,8 +15,12 @@
             </div>
           </div>
           <div>
-            <div class="font-bold text-4xl">
-              {{ userdata.nombre }} {{ userdata.apellido }}
+            <div class="flex flex-row items-center">
+              <div class="font-bold text-4xl">
+                {{ userdata.nombre }} {{ userdata.apellido }}
+              </div>
+              <div class="badge badge-warning mx-2" v-if="userdata.tipo === 1">developer</div>
+              <div class="badge badge-info mx-2" v-if="userdata.tipo ===0 ">Admin</div>
             </div>
             <div class="text-sm opacity-50">
               {{ userdata.username }}

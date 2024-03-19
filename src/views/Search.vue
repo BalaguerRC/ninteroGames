@@ -130,6 +130,7 @@
         </div>
         <div>
           <button class="btn btn-sm ml-4" @click="onSerch">search</button>
+          <button class="btn btn-sm ml-2 btn-error" @click="onClear">clear</button>
         </div>
       </div>
 
@@ -347,6 +348,14 @@ const priceSelected = ref("");
 const developers = ref([]);
 const developerSelected = ref("");
 
+function onClear() {
+  search.value = "";
+  categoriesSelected.value = [];
+  priceSelected.value = "";
+  developerSelected.value = "";
+  orderSelected.value = "";
+}
+
 const orderBy = ref([
   { label: "Most downloads", value: "DESC" },
   { label: "Least downloads", value: "ASCD" },
@@ -415,6 +424,7 @@ function getAllCategories() {
 function filterGame() {
   let query_route;
   let query_body = {};
+  page.value = 1;
   /*console.log(
     "From filter",
     search.value,

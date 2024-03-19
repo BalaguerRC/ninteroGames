@@ -6,14 +6,21 @@
       :key="games"
       :id="games"
     >
-      <img :src="games" class="w-full" style="border-radius: 10px;"/>
+      <img :src="games" class="w-full" style="border-radius: 10px" />
     </div>
   </div>
   <div class="flex justify-center w-full py-2 gap-5">
     <div v-for="games in gamesObj" :key="games" :id="games">
       <a :href="'#' + games">
         <div class="avatar">
-          <div class="w-10 mask mask-squircle">
+          <div
+            class="w-14 rounded-2xl"
+            :class="
+              route.hash === '#' + games
+                ? 'ring ring-primary ring-offset-base-100 ring-offset-2'
+                : 'none'
+            "
+          >
             <img :src="games" alt="Tailwind-CSS-Avatar-component" />
           </div>
         </div>
@@ -24,8 +31,11 @@
 
 <script setup>
 import { onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 defineProps(["gamesObj"]);
+const route = useRoute();
+const router = useRouter();
 
 function test() {
   /*for (let index = 0; index < gamesObj?.length; index++) {
@@ -49,3 +59,11 @@ function test() {
   </div>
  */
 </script>
+
+<style>
+.bordered {
+  /*border-color: white;
+  border-width: 10px;*/
+  box-shadow: 0px 5px 14px 1px white;
+}
+</style>
