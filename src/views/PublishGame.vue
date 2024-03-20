@@ -7,8 +7,13 @@
         </div>
       </div>
       <div>
-        <form class="flex justify-around" @submit.prevent="onPublish">
-          <div class="p-5">
+        <form
+          class="flex justify-around"
+          @submit.prevent="
+            route.params.id ? onPublishUpdate(route.params.id) : onPublish()
+          "
+        >
+          <div class="sticky top-16 h-max p-5">
             <h1 class="text-2xl font-bold py-2">Thumbnail</h1>
             <figure>
               <img
@@ -18,10 +23,10 @@
               />
             </figure>
             <label class="form-control pt-3">
-              <div class="flex">
+              <div class="join">
                 <input
                   type="url"
-                  class="input input-bordered flex-1 mr-2"
+                  class="input input-bordered flex-1 join-item"
                   placeholder="urls..."
                   v-model="imgThumbnail2"
                   :readonly="imgThumbnail == imgThumbnail2 ? true : false"
@@ -29,12 +34,15 @@
                 />
                 <button
                   type="button"
-                  class="btn flex-initial"
+                  class="btn flex-initial join-item"
                   @click="changeThumbnail"
                   :disabled="imgThumbnail == imgThumbnail2 ? true : false"
                 >
                   Addthumbnail
                 </button>
+                <a class="btn btn-error join-item" @click="changeImage()">
+                  X
+                </a>
               </div>
             </label>
             <label class="form-control">
@@ -58,10 +66,10 @@
                   <span class="label-text">Images URLs</span>
                 </label>
 
-                <div class="flex">
+                <div class="join">
                   <input
                     type="url"
-                    class="input input-bordered flex-1 mr-2"
+                    class="input input-bordered flex-1 join-item"
                     placeholder="urls..."
                     :value="imgList?.map((option) => option).join(', ')"
                     readonly
@@ -69,55 +77,62 @@
                   />
                   <button
                     type="button"
-                    class="btn flex-initial"
+                    class="btn flex-initial join-item"
                     onclick="preview_modal.showModal()"
                   >
                     Add Urls
                   </button>
-                  <dialog id="preview_modal" class="modal">
-                    <div class="modal-box">
-                      <h3 class="text-center font-bold text-lg mb-5">
-                        Images URLs
-                      </h3>
-                      <div class="flex justify-center w-full py-2 gap-5">
-                        <div v-for="imgs in imgList" :key="imgs" :id="imgs">
-                          <a>
-                            <div class="avatar">
-                              <div class="w-20 mask mask-squircle">
-                                <img
-                                  :src="imgs"
-                                  alt="Tailwind-CSS-Avatar-component"
-                                />
-                              </div>
+                </div>
+                <dialog id="preview_modal" class="modal">
+                  <div class="modal-box">
+                    <h3 class="text-center font-bold text-lg mb-5">
+                      Images URLs
+                    </h3>
+                    <div class="flex justify-center w-full py-2 gap-5">
+                      <div v-for="imgs in imgList" :key="imgs" :id="imgs">
+                        <a>
+                          <div class="avatar">
+                            <div class="w-20 mask mask-squircle">
+                              <img
+                                :src="imgs"
+                                alt="Tailwind-CSS-Avatar-component"
+                              />
                             </div>
-                          </a>
-                        </div>
+                          </div>
+                        </a>
                       </div>
+                    </div>
+                    <label class="label">
+                      <span class="label-text">URLs</span>
+                    </label>
+                    <div class="join w-full">
                       <input
                         type="url"
-                        class="input input-bordered flex-1 mr-2 w-full"
+                        class="input input-bordered flex-1 w-full join-item"
                         placeholder="urls..."
                         v-model="imgForList"
                       />
                       <a
-                        class="btn btn-accent mt-2 mr-2"
+                        class="btn btn-accent join-item"
                         @click="addImgInImageLIst"
                         >Add Img</a
-                      ><a class="btn btn-error mt-2" @click="imgList = []"
+                      ><a class="btn btn-error join-item" @click="imgList = []"
                         >Clear All</a
                       >
-                      <div class="modal-action">
-                        <form method="dialog">
-                          <!-- if there is a button in form, it will close the modal -->
-                          <button class="btn">Close</button>
-                        </form>
-                      </div>
                     </div>
-                  </dialog>
-                </div>
+
+                    <div class="modal-action">
+                      <form method="dialog">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <button class="btn">Close</button>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
               </div>
             </label>
           </div>
+
           <div class="w-full p-5">
             <div class="form-control">
               <h1 class="text-2xl font-bold py-2">Principal</h1>
@@ -303,6 +318,7 @@
                       v-model="requeMN.storage"
                     />
                   </div>
+
                 </div>
                 <div class="w-full">
                   <h2 class="text-1xl font-bold pt-5">Maximuns:</h2>
@@ -383,15 +399,26 @@
             </label>
 
             <div class="flex flex-row mt-4 space-x-4">
-              <button
+              <a
                 type="button"
                 class="btn grow"
-                @click="$router.push('/search')"
+                href="/search"
               >
                 Back
-              </button>
-              <button type="submit" class="btn btn-accent font-bold grow">
+            </a>
+              <button
+                type="submit"
+                class="btn btn-accent font-bold grow"
+                v-if="!route.params.id"
+              >
                 Publish
+              </button>
+              <button
+                type="submit"
+                class="btn btn-accent font-bold grow"
+                v-if="route.params.id"
+              >
+                Update
               </button>
             </div>
           </div>
@@ -405,10 +432,14 @@ import Editor from "@tinymce/tinymce-vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
 //https://i.pinimg.com/originals/24/f5/0f/24f50f3054c5eccd7a37f1b3e906021c.png
 const imgNull = ref(
   "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg"
 );
+const router = useRouter();
+const route = useRoute();
 
 const title = ref("");
 const categories = ref([]);
@@ -444,8 +475,12 @@ onMounted(() => {
     console.log("test image");
     imgThumbnail.value = imgNull.value;
   }
+  if (route.params.id) {
+    getGameId(route.params.id);
+  }
   getAllCategories();
 });
+
 function changeThumbnail() {
   if (imgThumbnail2.value != "") {
     console.log("test change", imgThumbnail2.value);
@@ -454,11 +489,18 @@ function changeThumbnail() {
 
   //imgThumbnail2.value = imgThumbnail.value;
 }
+function changeImage() {
+  imgThumbnail.value =
+    "https://daisyui.com/images/stock/photo-1494232410401-ad00d5433cfa.jpg";
+  imgThumbnail2.value = "";
+}
 function addImgInImageLIst() {
-  console.log("image", imgForList.value);
-  imgList.value.push(imgForList.value);
-  console.log("imgList", imgList.value);
-  imgForList.value = "";
+  if (imgForList.value != "") {
+    console.log("image", imgForList.value);
+    imgList.value.push(imgForList.value);
+    console.log("imgList", imgList.value);
+    imgForList.value = "";
+  }
 }
 function getAllCategories() {
   axios
@@ -549,12 +591,13 @@ function onPublish() {
         Swal.fire({
           background: "#252526",
           color: "#FFF",
-          title: "New game created!",
+          title: "Game Updated!",
           text: "Redirecting you to news page",
           icon: "success",
           timer: 3000,
           showConfirmButton: false,
         });
+        router.push("/game/" + data.data.game._id);
       })
       .catch((error) => {
         console.log(error);
@@ -580,7 +623,117 @@ function onPublish() {
           : "Fill in the About field",
     });
   }
-  /**/
+}
+
+//params ID
+function getGameId(id) {
+  console.log(import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + id);
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/games/selectid/" + id)
+    .then((data) => {
+      console.log("Game by ID", data.data);
+      //games.value = data.data;
+      title.value = data.data.name;
+      price.value = data.data.price;
+      categoriesSelected.value = data.data.category?.map((data) => data);
+      imgThumbnail.value = data.data.thumbnailURL;
+      imgThumbnail2.value = data.data.thumbnailURL;
+      imgList.value = data.data.gameImages?.map((data) => data);
+      About.value = data.data.about;
+      requeMN.value.os = data.data.minreq.os;
+      requeMN.value.processor = data.data.minreq.processor;
+      requeMN.value.memory = data.data.minreq.memory;
+      requeMN.value.graphics = data.data.minreq.graphics;
+      requeMN.value.directx = data.data.minreq.directx;
+      requeMN.value.storage = data.data.minreq.storage;
+
+      requeMX.value.os = data.data.recreq.os;
+      requeMX.value.processor = data.data.recreq.processor;
+      requeMX.value.memory = data.data.recreq.memory;
+      requeMX.value.graphics = data.data.recreq.graphics;
+      requeMX.value.directx = data.data.recreq.directx;
+      requeMX.value.storage = data.data.recreq.storage;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function onPublishUpdate(id) {
+  if (
+    categoriesSelected.value.length != 0 &&
+    imgList.value.length != 0 &&
+    About.value != ""
+  ) {
+    console.log("Ready To Update", id);
+    axios
+      .put(
+        import.meta.env.VITE_API_ENDPOINT + "/games/update/" + id,
+        {
+          name: title.value,
+          about: About.value,
+          category: categoriesSelected.value?.map((data) => data._id),
+          thumbnailURL: imgThumbnail.value,
+          gameImages: imgList.value?.map((option) => option),
+          price: price.value,
+          minreq: {
+            os: requeMN.value.os,
+            processor: requeMN.value.processor,
+            memory: requeMN.value.memory,
+            graphics: requeMN.value.graphics,
+            directx: requeMN.value.directx,
+            storage: requeMN.value.storage,
+          },
+          recreq: {
+            os: requeMX.value.os,
+            processor: requeMX.value.processor,
+            memory: requeMX.value.memory,
+            graphics: requeMX.value.graphics,
+            directx: requeMX.value.directx,
+            storage: requeMX.value.storage,
+          },
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log("data", data.data.game._id);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Game Updated!",
+          text: "Redirecting you to news page",
+          icon: "success",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        router.push("/game/" + data.data.game._id);
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message,
+        });
+      });
+  } else {
+    Swal.fire({
+      background: "#252526",
+      color: "#FFF",
+      title: "Error when publishing!",
+      icon: "error",
+      text:
+        categoriesSelected.value.length === 0
+          ? "Select a category"
+          : imgList.value.length === 0
+          ? "Add an image in the Image Urls field"
+          : "Fill in the About field",
+    });
+  }
 }
 </script>
 <style>

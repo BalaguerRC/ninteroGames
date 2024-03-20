@@ -1,9 +1,9 @@
 <template>
-  <div class="card w-90 bg-base-100 shadow-xl">
+  <div class="card w-90 bg-base-100 shadow-xl heightCard">
     <figure>
       <img :src="searchItem.thumbnailURL" alt="Shoes" />
     </figure>
-    <div class="card-body">
+    <div class="card-body justify-between">
       <h2 class="font-bold hiddenText">{{ searchItem.name }}</h2>
       <div class="card-actions justify-between">
         <h4 v-if="searchItem.price != 0">${{ searchItem.price }}</h4>
@@ -32,5 +32,8 @@ function onGameItem(id) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.heightCard {
+  max-height: 20rem;
 }
 </style>

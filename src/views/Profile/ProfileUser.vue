@@ -15,8 +15,12 @@
             </div>
           </div>
           <div>
-            <div class="font-bold text-4xl">
-              {{ userdata.nombre }} {{ userdata.apellido }}
+            <div class="flex flex-row items-center">
+              <div class="font-bold text-4xl">
+                {{ userdata.nombre }} {{ userdata.apellido }}
+              </div>
+              <div class="badge badge-warning mx-2" v-if="userdata.tipo === 1">developer</div>
+              <div class="badge badge-info mx-2" v-if="userdata.tipo ===0 ">Admin</div>
             </div>
             <div class="text-sm opacity-50">
               {{ userdata.username }}
@@ -45,22 +49,30 @@
               {{ userdata.followingCount }}
             </p>
           </a>
+
           <div class="py-2" v-if="!validate">
-            <button class="btn btn-sm w-full btn-primary" @click="onFollow()">
-              Follow
-            </button>
-            {{
-              userdata.followers?.forEach((element) => {
-                if (element._id === dataUser._id) {
-                  validate = true;
+            <a
+              class="btn btn-sm w-full btn-primary"
+              @click="
+                () => {
+                  onFollow();
                 }
-              })
-            }}
+              "
+            >
+              Follow
+            </a>
           </div>
-          <div v-if="validate">
-            <button class="btn btn-sm btn-error w-full" @click="onUnFollow()">
+          <div class="py-2" v-if="validate">
+            <a
+              class="btn btn-sm btn-error w-full"
+              @click="
+                () => {
+                  onUnFollow();
+                }
+              "
+            >
               Unfollow
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -164,65 +176,96 @@
           <button>close</button>
         </form>
       </dialog>
-      <div class="pt-5">
-        <div class="flex centerGame">
-          <h2 class="text-3xl font-bold">Games</h2>
-          <p class="font-bold">Total Games: {{ userdata.libreria?.length }}</p>
-        </div>
-        <div class="divider"></div>
-      </div>
 
-      <div class="grid grid-cols-3 gapP">
-        {{ userdata.libreria?.map((data) => data) }}
+      <div role="tablist" class="tabs tabs-lifted tabs-sm pt-4">
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="Games"
+          checked
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+        >
+          <GamesUser />
+        </div>
+
+        <input
+          type="radio"
+          name="my_tabs_2"
+          role="tab"
+          class="tab"
+          aria-label="My Games"
+          :disabled="userdata.tipo != 1"
+        />
+        <div
+          role="tabpanel"
+          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+        >
+          <MyGamesUser />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import GamesUser from "@/components/Profile/GamesUser.vue";
+import MyGamesUser from "@/components/Profile/MyGamesUser.vue";
+import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import Swal from "sweetalert2";
 import axios from "axios";
 
 const userdata = ref({});
+const userFollowers = ref([]);
+const validateGames = ref(false);
+
 const dataUser = JSON.parse(localStorage.getItem("user_data"));
 const route = useRoute();
 const router = useRouter();
 function onFollow() {
-  console.log(
-    "follow",
-    import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id
-  );
-  axios
-    .put(
-      import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id,
-      {},
-      {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      }
-    )
-    .then((data) => {
-      console.log(data);
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "success",
-        text: data.data.message,
+  if (dataUser === null) {
+    router.push("/login");
+  } else {
+    console.log(
+      "follow",
+      import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id
+    );
+    axios
+      .put(
+        import.meta.env.VITE_API_ENDPOINT + "/following/add/" + route.params.id,
+        {},
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      )
+      .then((data) => {
+        console.log(data);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Following!",
+          icon: "success",
+          text: data.data.message,
+        });
+        validate.value = true;
+        getUser();
+      })
+      .catch((err) => {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: err.response.data.message,
+        });
       });
-      getUser();
-    })
-    .catch((err) => {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "error",
-        text: err.response.data.message,
-      });
-    });
+  }
 }
 function onUnFollow() {
   console.log(
@@ -244,11 +287,13 @@ function onUnFollow() {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "There was an error!",
+        title: "Un Follow!",
         icon: "success",
         text: data.data.message,
       });
+
       getUser();
+      validate.value = false;
     })
     .catch((err) => {
       Swal.fire({
@@ -266,6 +311,9 @@ function getUser() {
     .then((data) => {
       console.log(data.data);
       userdata.value = data.data;
+      userFollowers.value = data.data.followers;
+      validateGames.value = true;
+      validateFollowing();
     })
     .catch((err) => {
       Swal.fire({
@@ -277,17 +325,49 @@ function getUser() {
       });
     });
 }
-/*function OnProfileRoute(id) {
-  console.log(id);
-  router.push("/profile/" + id);
-}*/
-
 onMounted(() => {
+  if (dataUser != null) {
+    if (dataUser._id === route.params.id) {
+      console.log("My Profile");
+      router.push("/profile");
+    }
+  }
   getUser();
+  //validateFollowing();
 });
+/*watch(validateGames, () => {
+  console.log("hay cambios");
+});*/
+function validateFollowing() {
+  if (dataUser != null) {
+    userFollowers.value.forEach((data) =>
+      data._id === dataUser._id
+        ? (validate.value = true)
+        : (validate.value = false)
+    );
+  }
+}
 const validate = ref(false);
 </script>
 <style>
+.Nothing {
+  width: 100%; /* Ancho del contenedor */
+  min-height: 46.5rem;
+  display: flex; /* Utilizamos flexbox para centrar horizontalmente */
+  justify-content: center; /* Centramos horizontalmente */
+  align-items: center; /* Centramos verticalmente */
+}
+.NothingChild {
+  text-align: center; /* Alineación del texto dentro del div (opcional) */
+  font-weight: 800;
+  font-size: 20px;
+}
+.containerGames {
+  max-height: 47.5rem;
+  min-height: 47.5rem;
+  overflow-x: auto;
+  border-radius: 10px;
+}
 .centerA {
   align-items: center;
   justify-content: space-between;
@@ -305,5 +385,17 @@ const validate = ref(false);
 /*grid-template-columns: repeat(3, minmax(0, 1fr));*/
 .gapP {
   gap: 1.5rem;
+}
+.content {
+  height: 100vh;
+}
+.hiddenText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tab:is(input[type="radio"]) {
+  width: 150px;
+  font-weight: 700;
 }
 </style>

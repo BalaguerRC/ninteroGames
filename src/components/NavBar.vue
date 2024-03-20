@@ -23,7 +23,9 @@
                   stroke-width="2"
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 ></path>
-                <span class="badge badge-xs badge-primary indicator-item"></span>
+                <span
+                  class="badge badge-xs badge-primary indicator-item"
+                ></span>
               </svg>
             </div>
           </button>
@@ -32,6 +34,9 @@
             class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
           >
             <li>Wishlist</li>
+            <div v-if="wishlist.length === 0" class="text-center py-2">
+              There are no games
+            </div>
             <li v-for="list in wishlist" :key="list._id">
               <div class="flex justify-between">
                 <a>{{ list.name }}</a>
@@ -125,6 +130,7 @@ const dataValidate = ref(false);
 const userImg = ref("");
 
 const wishlist = ref([]);
+const wishListValidate = ref(false);
 
 function getWishList() {
   axios
@@ -133,17 +139,13 @@ function getWishList() {
     })
     .then((data) => {
       console.log("wishlist", data.data);
-      wishlist.value = data.data.wishlist;
       localStorage.setItem("wishlist", JSON.stringify(data.data.wishlist));
+      //wishListValidate.value = true;
+      wishlist.value = data.data.wishlist;
+      
     })
     .catch((err) => {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "There was an error!",
-        icon: "error",
-        text: err.response.data.message,
-      });
+      console.log(err.response.data.message);
     });
 }
 

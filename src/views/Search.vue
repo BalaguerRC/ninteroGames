@@ -36,7 +36,7 @@
         </button>
       </div>
 
-      <h2 class="text-4xl font-bold pt-5">
+      <h2 class="text-4xl font-bold pt-14">
         {{ $route.params.name == undefined ? null : `"${$route.params.name}"` }}
       </h2>
 
@@ -130,22 +130,122 @@
         </div>
         <div>
           <button class="btn btn-sm ml-4" @click="onSerch">search</button>
+          <button class="btn btn-sm ml-2 btn-error" @click="onClear">clear</button>
         </div>
       </div>
 
-      <div class="pt-5">
-        <div class="pt-3">
-          <div class="grid grid-cols-4 gap-3">
+      <div class="py-14">
+        <div>
+          <div class="grid grid-cols-4 gap-3" v-if="validateGames">
             <SearchItem
               v-for="searchItems in game"
               :key="searchItems._id"
               :search-item="searchItems"
             />
           </div>
+          <div class="grid grid-cols-4 gap-3" v-if="!validateGames">
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card w-90 bg-base-100 shadow-xl">
+              <figure>
+                <div class="skeleton h-48 w-80"></div>
+              </figure>
+              <div class="card-body">
+                <div class="skeleton w-full h-8"></div>
+                <div class="card-actions justify-between">
+                  <div class="skeleton w-16 h-8"></div>
+                  <div class="skeleton w-20 h-8"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="my-4">
+      <div class="mb-10">
         <div class="flex items-center gap-3 justify-center">
           <div class="join">
             <button
@@ -232,6 +332,7 @@ const user_data = JSON.parse(localStorage.getItem("user_data"));
 
 const route = useRoute();
 const search = ref("");
+const validateGames = ref(false);
 const game = ref([]);
 
 const price = ref([
@@ -246,6 +347,14 @@ const priceSelected = ref("");
 
 const developers = ref([]);
 const developerSelected = ref("");
+
+function onClear() {
+  search.value = "";
+  categoriesSelected.value = [];
+  priceSelected.value = "";
+  developerSelected.value = "";
+  orderSelected.value = "";
+}
 
 const orderBy = ref([
   { label: "Most downloads", value: "DESC" },
@@ -299,6 +408,7 @@ function getAllGames() {
 
       page.value = data.data.page;
       totalPages.value = data.data.totalPages;
+      validateGames.value = true;
     })
     .catch((err) => console.log(err));
 }
@@ -314,6 +424,7 @@ function getAllCategories() {
 function filterGame() {
   let query_route;
   let query_body = {};
+  page.value = 1;
   /*console.log(
     "From filter",
     search.value,
@@ -360,6 +471,7 @@ function filterGame() {
 
         page.value = data.data.page;
         totalPages.value = data.data.totalPages;
+        validateGames.value = true;
       })
       .catch((error) => {
         console.log(error);
