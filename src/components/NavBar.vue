@@ -154,9 +154,10 @@ function getWishList() {
     })
     .then((data) => {
       console.log("wishlist", data.data);
+      localStorage.setItem("wishlist", JSON.stringify(data.data.wishlist));
       //wishListValidate.value = true;
       wishlist.value = data.data.wishlist;
-      localStorage.setItem("wishlist", JSON.stringify(data.data.wishlist));
+      
     })
     .catch((err) => {
       console.log(err.response.data.message);

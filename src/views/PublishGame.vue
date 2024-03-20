@@ -132,7 +132,7 @@
               </div>
             </label>
           </div>
-          
+
           <div class="w-full p-5">
             <div class="form-control">
               <h1 class="text-2xl font-bold py-2">Principal</h1>
@@ -318,6 +318,7 @@
                       v-model="requeMN.storage"
                     />
                   </div>
+
                 </div>
                 <div class="w-full">
                   <h2 class="text-1xl font-bold pt-5">Maximuns:</h2>
@@ -398,13 +399,13 @@
             </label>
 
             <div class="flex flex-row mt-4 space-x-4">
-              <button
+              <a
                 type="button"
                 class="btn grow"
-                @click="$router.push('/search')"
+                href="/search"
               >
                 Back
-              </button>
+            </a>
               <button
                 type="submit"
                 class="btn btn-accent font-bold grow"

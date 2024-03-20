@@ -28,9 +28,12 @@
           </div>
         </div>
       </div>
-      <div class="Nothing" v-if="myGames?.length === 0">
-        <div class="NothingChild">THERE NO GAMES</div>
+      <div v-if="validateGames">
+        <div class="Nothing" v-if="myGames.length === 0">
+          <div class="NothingChild">THERE NO GAMES</div>
+        </div>
       </div>
+
       <div class="grid grid-cols-3 gapP p-2" v-if="!validateGames">
         <div class="card w-90 bg-base-100 shadow-xl">
           <figure>

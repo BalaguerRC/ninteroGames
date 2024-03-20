@@ -80,7 +80,9 @@
                 <tr>
                   <th>Author::</th>
                   <th>
-                    <a class="link" :href="'/profile/'+gamesObj.developer?._id"
+                    <a
+                      class="link"
+                      :href="'/profile/' + gamesObj.developer?._id"
                       ><div class="badge badge-info">
                         {{ gamesObj.developer?.username }}
                       </div></a
@@ -162,9 +164,10 @@
           <div class="join my-5">
             <input
               placeholder="comment..."
+              disabled
               class="input input-bordered w-full join-item"
             />
-            <button class="btn btn-success join-item">Send</button>
+            <button class="btn btn-success join-item" disabled>Send</button>
           </div>
           <div class="chat chat-start">
             <div class="chat-image avatar">
@@ -229,6 +232,7 @@ const router = useRouter();
 const route = useRoute();
 const token = localStorage.getItem("token");
 const dataUser = JSON.parse(localStorage.getItem("user_data"));
+const wlist = JSON.parse(localStorage.getItem("wishlist"));
 
 defineProps(["gamesObj", "gamesValidate", "validateGameUser"]);
 
@@ -245,6 +249,7 @@ function addWishList(id) {
       )
       .then((data) => {
         console.log("wishlist", data.data);
+        getWish();
         Swal.fire({
           background: "#252526",
           color: "#FFF",
@@ -252,7 +257,7 @@ function addWishList(id) {
           icon: "success",
           text: data.data.message,
         });
-        getWish();
+
         validateWishList.value = true;
         //gamesValidate2.value = true;
         //userdata.value = data.data;
@@ -271,8 +276,9 @@ function addWishList(id) {
   }
 }
 function getWish() {
-  const wlist = JSON.parse(localStorage.getItem("wishlist"));
-  if (wlist) {
+  console.log("Getting list", wlist);
+
+  if (wlist != null) {
     //if wishlist exist then check if there is already a game saved with the same id
     wlist.map((data) => {
       if (data._id === route.params.id) {
@@ -298,7 +304,7 @@ function buyGame(id) {
         Swal.fire({
           background: "#252526",
           color: "#FFF",
-          title: "Success!",
+          title: "transaction Completed!",
           icon: "success",
           text: data.data.message,
         });

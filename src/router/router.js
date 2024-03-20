@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import axios from "axios";
 
+const dataUser = JSON.parse(localStorage.getItem("user_data"));
 const routes = [
   {
     path: "/",
@@ -44,6 +45,9 @@ const routes = [
           {
             path: "",
             component: () => import("@/views/auth/Profile.vue"),
+            meta: {
+              isProtected: true,
+            },
           },
           {
             path: ":id",
