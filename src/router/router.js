@@ -93,6 +93,53 @@ const routes = [
     ],
   },
   {
+    path: "/dashboard/",
+    component: () => import("@/views/admin/Home.vue"),
+    children: [
+      {
+        path: "",
+        component: () => import("@/components/admin/Dashboard.vue"),
+      },
+      {
+        path: "users",
+        component: () => import("@/views/admin/Users.vue"),
+      },
+      {
+        path: "requests",
+        component: () => import("@/views/admin/Requests.vue"),
+      },
+      {
+        path: "bills",
+        component: () => import("@/views/admin/Bills.vue"),
+      },
+      {
+        path: "games",
+        component: () => import("@/views/admin/Games.vue"),
+      },
+      {
+        path: "categories",
+        component: () => import("@/views/admin/Categories.vue"),
+      },
+
+      {
+        path: "gamesNotifications",
+        component: () => import("@/views/admin/GamesNotifications.vue"),
+      },
+      {
+        path: "news",
+        component: () => import("@/views/admin/News.vue"),
+      },
+      {
+        path: "newsNotifications",
+        component: () => import("@/views/admin/NewsNotifications.vue"),
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: () => import("@/views/NotFound.vue"),
+  },
+  {
     path: "/login",
     name: "login",
     component: () => import("@/views/auth/Login.vue"),
