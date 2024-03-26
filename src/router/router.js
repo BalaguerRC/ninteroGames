@@ -105,6 +105,14 @@ const routes = [
         component: () => import("@/views/admin/Users.vue"),
       },
       {
+        path: "users/create",
+        component: () => import("@/views/admin/Users/AddUser.vue"),
+      },
+      {
+        path: "users/:id",
+        component: () => import("@/views/admin/Users/AddUser.vue"),
+      },
+      {
         path: "requests",
         component: () => import("@/views/admin/Requests.vue"),
       },

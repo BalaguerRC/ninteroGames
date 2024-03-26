@@ -1,3 +1,293 @@
 <template>
-    <h1>Users</h1>
+  <div class="px-20">
+    <div class="flex flex-row justify-between items-center">
+      <div class="flex flex-col">
+        <h1 class="text-3xl font-bold py-4">User</h1>
+        <div class="text-sm breadcrumbs">
+          <ul>
+            <li>
+              <a href="/"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  /></svg
+                >Dashboard</a
+              >
+            </li>
+            <li>Users</li>
+          </ul>
+        </div>
+      </div>
+      <a class="btn" href="/dashboard/users/create">+ Add User</a>
+    </div>
+    <!-- search bar -->
+    <div class="pt-10 pb-4 flex flex-row justify-end items-center">
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn m-1">Filter v</div>
+        <ul
+          tabindex="0"
+          class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+        >
+          <li><a>Blocked</a></li>
+          <li><a>No Blocked</a></li>
+          <li><a>Admin</a></li>
+          <li><a>Developer</a></li>
+          <li><a>User Normal</a></li>
+        </ul>
+      </div>
+      <form>
+        <div class="join" v-on:submit.prevent="">
+          <input class="input input-bordered join-item" placeholder="search" />
+          <button type="button" class="btn join-item">Search</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Type</th>
+            <th>Wallet</th>
+            <th>Blocked</th>
+            <th>Creation Date</th>
+            <th>Edition Date</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          <tr v-for="user in Users" :key="user._id">
+            <div class="tooltip tooltip-right" :data-tip="user._id">
+              <th>{{ user._id.slice(0, 5) }}...</th>
+            </div>
+            <td>{{ user.nombre }} {{ user.apellido }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              {{
+                user.tipo == 0
+                  ? "Admin"
+                  : user.tipo == 1
+                  ? "Developer"
+                  : "User Normal"
+              }}
+            </td>
+            <td>{{ user.billetera }}</td>
+            <td>{{ user.blocked }}</td>
+            <td>{{ user.fechaCreacion.slice(0, 10) }}</td>
+            <td>{{ user.fechaEdicion.slice(0, 10) }}</td>
+            <td>
+              <div class="dropdown dropdown-left">
+                <div
+                  tabindex="0"
+                  role="button"
+                  class="btn btn-circle btn-ghost btn-sm"
+                >
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='M12 3c-.825 0-1.5.675-1.5 1.5S11.175 6 12 6s1.5-.675 1.5-1.5S12.825 3 12 3m0 15c-.825 0-1.5.675-1.5 1.5S11.175 21 12 21s1.5-.675 1.5-1.5S12.825 18 12 18m0-7.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5s1.5-.675 1.5-1.5s-.675-1.5-1.5-1.5'/%3E%3C/svg%3E"
+                  />
+                </div>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content z-[1] menu menu-xs p-2 shadow bg-base-200 rounded-box w-52"
+                >
+                  <li class="">
+                    <a :href="'/profile/' + user._id">
+                      <img :src="Eye" class="h-5 w-5" /> View
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="hover:bg-yellow-600"
+                      :href="'/dashboard/users/' + user._id"
+                      ><img :src="Edit" class="h-5 w-5" />Edit</a
+                    >
+                  </li>
+                  <li>
+                    <a class="hover:bg-red-600"
+                      ><img :src="Delete" class="h-5 w-5" />Delete</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Pagination -->
+    <div class="my-4">
+      <div class="flex items-center gap-3 justify-center">
+        <div class="join">
+          <button
+            type="button"
+            class="join-item btn btn-sm"
+            :class="{ 'btn-disabled': page == 1 }"
+            :data-gotonumber="1"
+            @click="setPage"
+          >
+            First page
+          </button>
+          <button
+            type="button"
+            class="join-item btn btn-sm"
+            :class="{ 'btn-disabled': !hasPrevPage }"
+            :data-gotonumber="prevPage"
+            @click="setPage"
+          >
+            Previous page
+          </button>
+          <button
+            type="button"
+            class="join-item btn btn-sm"
+            :class="{ 'btn-disabled': !hasNextPage }"
+            :data-gotonumber="nextPage"
+            @click="setPage"
+          >
+            Next page
+          </button>
+          <button
+            type="button"
+            class="join-item btn btn-sm"
+            :class="{ 'btn-disabled': page == totalPages }"
+            :data-gotonumber="totalPages"
+            @click="setPage"
+          >
+            Last page
+          </button>
+        </div>
+        <span class="flex items-center gap-1">
+          <div>Page</div>
+          <strong> {{ page }} of {{ totalPages }} </strong>
+        </span>
+        <span class="flex items-center gap-1">
+          | Go to page:
+          <div class="tooltip" data-tip="Press enter">
+            <input
+              :value="page"
+              type="number"
+              @keyup.enter="setPage"
+              class="input input-bordered input-info input-sm w-20"
+              placeholder="Page number"
+            />
+          </div>
+        </span>
+        <select v-model="pageLimit" class="select select-bordered select-sm">
+          <option
+            v-for="option in pageLimitOptions"
+            :key="'limit' + option"
+            :value="option"
+          >
+            Show {{ option }} pages
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
 </template>
+
+<script setup>
+import { onMounted, ref, watch } from "vue";
+import Eye from "@/assets/Eye.png";
+import Edit from "@/assets/Edit.png";
+import Delete from "@/assets/Delete.png";
+import axios from "axios";
+
+const Users = ref([]);
+const Search = ref("");
+
+function getAllUsers() {
+  axios
+    .get(
+      import.meta.env.VITE_API_ENDPOINT +
+        `/users/getall/?limit=${pageLimit.value}&page=${page.value}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    )
+    .then((data) => {
+      console.log(data.data);
+      //console.log(data.data.docs);
+      Users.value = data.data.docs;
+      hasPrevPage.value = data.data.hasPrevPage;
+      hasNextPage.value = data.data.hasNextPage;
+      prevPage.value = data.data.prevPage;
+      nextPage.value = data.data.nextPage;
+
+      page.value = data.data.page;
+      totalPages.value = data.data.totalPages;
+    })
+    .catch((err) => console.log(err));
+}
+
+onMounted(() => {
+  getAllUsers();
+});
+
+function getUsersMiddleware() {
+  //getAllAuthors();
+  if (Search.value) {
+    console.log("getting users by filter");
+    //filterGame();
+  } else {
+    console.log("getting all Users");
+    getAllUsers();
+  }
+}
+
+function setPage(event) {
+  if (page.value > totalPages.value) {
+    page.value = totalPages.value;
+  }
+  if (page.value < 1) {
+    page.value = 1;
+  }
+
+  if (event.target.tagName == "BUTTON") {
+    page.value = parseInt(event.target.dataset.gotonumber) || null;
+  } else if (event.target.tagName == "INPUT") {
+    page.value = parseInt(event.target.value) || 1;
+  }
+  console.log("cambio de pagina");
+  getUsersMiddleware();
+}
+
+const hasPrevPage = ref(false);
+const hasNextPage = ref(true);
+const prevPage = ref();
+const nextPage = ref();
+
+const page = ref(1);
+const totalPages = ref();
+const pageLimit = ref(10);
+const pageLimitOptions = [10, 15, 20, 25, 30];
+
+watch(pageLimit, () => {
+  page.value = 1;
+  getUsersMiddleware();
+});
+</script>
+
+<style>
+.testOption {
+  --svg: url(
+    data:image/svg + xml,
+    %3Csvgxmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"width="24"height="24"%3E%3Cpathfill="black"d="M12 3c-.825 0-1.5.675-1.5 1.5S11.175 6 12 6s1.5-.675 1.5-1.5S12.825 3 12 3m0 15c-.825 0-1.5.675-1.5 1.5S11.175 21 12 21s1.5-.675 1.5-1.5S12.825 18 12 18m0-7.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5s1.5-.675 1.5-1.5s-.675-1.5-1.5-1.5"/%3E%3C/svg%3E
+  );
+}
+</style>
