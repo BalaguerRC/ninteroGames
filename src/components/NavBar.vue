@@ -53,7 +53,11 @@
           </ul>
         </div>
         <div class="tooltip tooltip-bottom" data-tip="Notifications">
-          <a class="btn btn-ghost btn-circle" tabindex="0" @click="onNotifications">
+          <a
+            class="btn btn-ghost btn-circle"
+            tabindex="0"
+            @click="onNotifications"
+          >
             <div class="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +97,7 @@
                 <span class="badge">New</span>
               </a>
             </li>
+            <li v-if="typeUser === 0"><a href="/dashboard">Dashboard</a></li>
             <li><a v-on:click="onSettings">Settings</a></li>
             <li><a v-on:click="logOut">Logout</a></li>
           </ul>
@@ -127,6 +132,7 @@ import axios from "axios";
 const router = useRouter();
 
 const dataValidate = ref(false);
+const typeUser = ref(0);
 const userImg = ref("");
 
 const wishlist = ref([]);
@@ -142,7 +148,6 @@ function getWishList() {
       localStorage.setItem("wishlist", JSON.stringify(data.data.wishlist));
       //wishListValidate.value = true;
       wishlist.value = data.data.wishlist;
-      
     })
     .catch((err) => {
       console.log(err.response.data.message);
@@ -179,6 +184,7 @@ onMounted(() => {
   if (dataUser) {
     dataValidate.value = true;
     userImg.value = dataUser.profileURL;
+    typeUser.value = dataUser.tipo;
     console.log("there is data");
     console.log("datavalidate", dataValidate.value);
   }

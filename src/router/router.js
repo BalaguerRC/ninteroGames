@@ -117,8 +117,8 @@ const routes = [
         component: () => import("@/views/admin/Requests.vue"),
       },
       {
-        path: "bills",
-        component: () => import("@/views/admin/Bills.vue"),
+        path: "receipts",
+        component: () => import("@/views/admin/Receipts.vue"),
       },
       {
         path: "games",

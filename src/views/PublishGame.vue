@@ -3,7 +3,8 @@
     <div class="m-10">
       <div class="divider">
         <div class="divider-content">
-          <h1 class="text-3xl font-bold">Publish a new game</h1>
+          <h1 class="text-3xl font-bold" v-if="route.params.id===undefined">Publish a new game</h1>
+          <h1 class="text-3xl font-bold" v-if="route.params.id!=undefined">Update Game</h1>
         </div>
       </div>
       <div>
