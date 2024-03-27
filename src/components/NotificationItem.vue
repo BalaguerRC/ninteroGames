@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 defineProps(['notificationObj']);
 
 function goToItem(itemId, notificationId, itemType) {
+    console.log(itemId, notificationId, itemType)
     //console.log(notificationObj.article);
     axios.put(import.meta.env.VITE_API_ENDPOINT + `/notifications/${itemType}/read/${notificationId}`, 
     {}, {

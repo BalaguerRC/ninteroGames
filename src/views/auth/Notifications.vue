@@ -32,6 +32,7 @@ function getAllNotifications() {
 
                 page.value = response.data.page;
                 totalPages.value = response.data.totalPages;
+                console.log("notifications",notifications.value)
             } else {
                 console.log(response.data);
                 Swal.fire({
