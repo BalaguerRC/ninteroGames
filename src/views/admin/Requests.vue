@@ -37,7 +37,9 @@
             disabled
             placeholder="search"
           />
-          <button type="button" class="btn join-item btn-sm" disabled>Search</button>
+          <button type="button" class="btn join-item btn-sm" disabled>
+            Search
+          </button>
         </div>
       </form>
     </div>
@@ -95,7 +97,8 @@
                   </li>
                   <li v-if="!request.state">
                     <a
-                      class="hover:bg-green-600" @click="acceptRequest(request.requestUser?._id)"
+                      class="hover:bg-green-600"
+                      @click="acceptRequest(request._id)"
                       ><img :src="Accept" class="h-5 w-5" />Accept</a
                     >
                   </li>
@@ -106,7 +109,7 @@
                       @click="
                         RequestToDelete = {
                           id: request._id,
-                          nombre: request.requestUser?.nombre,
+                          name: request.requestUser?.nombre,
                         }
                       "
                       ><img :src="Delete" class="h-5 w-5" />Delete</a
@@ -123,7 +126,7 @@
       <div class="modal-box">
         <h3 class="font-bold text-3xl">Warning!</h3>
         <p class="py-4">
-          Are you sure to delete the user {{ RequestToDelete.nombre }} with the
+          Are you sure to delete the {{ RequestToDelete.name }} request with the
           id {{ RequestToDelete.id }}?
         </p>
         <div class="modal-action">
@@ -220,7 +223,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const Search = ref("");
-const RequestToDelete = ref({ id: "", nombre: "" });
+const RequestToDelete = ref({ id: "", name: "" });
 
 const requests = ref([]);
 function getAllRequests() {
@@ -263,7 +266,7 @@ function deleteRequest(id) {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "User Deleted!",
+        title: "Request Deleted!",
         text: "Succes",
         icon: "success",
         timer: 3000,
@@ -299,7 +302,7 @@ function acceptRequest(id) {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "User Deleted!",
+        title: "Request Accepted!",
         text: "Succes",
         icon: "success",
         timer: 3000,
