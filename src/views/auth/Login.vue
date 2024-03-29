@@ -24,6 +24,7 @@
               class="input input-bordered"
               v-model="email"
               required
+              autofocus
             />
           </div>
           <div class="form-control">
