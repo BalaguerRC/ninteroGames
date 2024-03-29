@@ -44,7 +44,7 @@
       </form>
     </div>
 
-    <div class="overflow-x-auto relative w-full min-h-[25rem]">
+    <div class="overflow-x-auto relative w-full min-h-[25rem] pb-20">
       <table class="table table-sm md:table-sm table-pin-rows w-full">
         <!-- head -->
         <thead>
@@ -144,7 +144,7 @@
       </div>
     </dialog>
     <!-- Pagination -->
-    <div class="my-4">
+    <div class="mb-4">
       <div class="flex items-center gap-3 justify-center">
         <div class="join">
           <button

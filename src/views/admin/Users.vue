@@ -30,29 +30,45 @@
       <a class="btn btn-sm" href="/dashboard/users/create">+ Add User</a>
     </div>
     <!-- search bar -->
-    <div class="pt-10 pb-4 flex flex-row justify-end items-center">
-      <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn m-1 btn-sm">Filter v</div>
-        <ul
-          tabindex="0"
-          class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+    <div class="pt-10 pb-4 flex flex-row justify-end items-center gap-2">
+      <select
+        class="select select-sm select-bordered w-44 max-w-xs"
+        v-model="Filter"
+      >
+        <option selected :value="{}">Filter</option>
+        <option
+          v-for="options in OptionsFilter"
+          :key="options.n"
+          :value="options"
         >
-          <li><a>Blocked</a></li>
-          <li><a>No Blocked</a></li>
-          <li><a>Admin</a></li>
-          <li><a>Developer</a></li>
-          <li><a>User Normal</a></li>
-        </ul>
-      </div>
-      <form>
-        <div class="join" v-on:submit.prevent="">
-          <input class="input input-sm input-bordered join-item" placeholder="search" />
-          <button type="button" class="btn join-item btn-sm">Search</button>
+          {{ options.field }}
+        </option>
+      </select>
+      <form @submit.prevent="filter">
+        <div class="join">
+          <input
+            class="input input-sm input-bordered join-item"
+            placeholder="search"
+            v-model="Search"
+          />
+          <button
+            type="button"
+            v-if="Search != ''"
+            class="btn join-item btn-sm btn-warning"
+            @click="
+              () => {
+                Search = '';
+              }
+            "
+          >
+            x
+          </button>
+          <button type="submit" class="btn join-item btn-sm">Search</button>
         </div>
       </form>
     </div>
 
-    <div class="overflow-x-auto relative w-full">
+    <div class="overflow-x-auto relative w-full pb-20">
       <table class="table md:table-xs table-pin-rows w-full">
         <!-- head -->
         <thead>
@@ -157,7 +173,7 @@
       </div>
     </dialog>
     <!-- Pagination -->
-    <div class="my-4">
+    <div class="mb-4">
       <div class="flex items-center gap-3 justify-center">
         <div class="join">
           <button
@@ -237,6 +253,14 @@ import Swal from "sweetalert2";
 
 const Users = ref([]);
 const Search = ref("");
+const Filter = ref({});
+const OptionsFilter = ref([
+  { n: 1, name: "blocked", value: true, field: "Blocked" },
+  { n: 2, name: "blocked", value: false, field: "No Blocked" },
+  { n: 3, name: "tipo", value: 2, field: "User Normal" },
+  { n: 4, name: "tipo", value: 1, field: "Developer" },
+  { n: 5, name: "tipo", value: 0, field: "Admin" },
+]);
 const UserToDelete = ref({ id: "", nombre: "" });
 
 function getAllUsers() {
@@ -299,15 +323,59 @@ function deleteUser(id) {
     });
 }
 
+function filter() {
+  console.log("search", Search.value, "filter", Filter.value.name);
+  let query_route;
+  let query_body = {};
+  //page.value = 1;
+  if (Search.value != "" || Filter.value != "") {
+    query_route = `/users/filter?limit=${pageLimit.value}&&page=${page.value}`;
+
+    query_body = {
+      username: Search.value == "" ? undefined : Search.value, //keys condition {}, if search.value == "": return undefine ,otherwise return the exact value of search.value
+      tipo: Filter.value.name === "tipo" ? Filter.value.value : undefined,
+      blocked: Filter.value.name === "blocked" ? Filter.value.value : undefined,
+    };
+    axios
+      .post(import.meta.env.VITE_API_ENDPOINT + query_route, query_body, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((data) => {
+        console.log("filter User", data.data);
+        Users.value = data.data.docs;
+        hasPrevPage.value = data.data.hasPrevPage;
+        hasNextPage.value = data.data.hasNextPage;
+        prevPage.value = data.data.prevPage;
+        nextPage.value = data.data.nextPage;
+
+        page.value = data.data.page;
+        totalPages.value = data.data.totalPages;
+        //validateGames.value = true;
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message,
+        });
+      });
+  } else {
+    getAllUsers();
+  }
+}
+
 onMounted(() => {
   getAllUsers();
 });
 
 function getUsersMiddleware() {
   //getAllAuthors();
-  if (Search.value) {
+  if (Search.value || Filter.value != "") {
     console.log("getting users by filter");
-    //filterGame();
+    filter();
   } else {
     console.log("getting all Users");
     getAllUsers();

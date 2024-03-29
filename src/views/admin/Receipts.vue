@@ -44,7 +44,7 @@
       </form>
     </div>
 
-    <div class="overflow-x-auto relative w-full min-h-[25rem]">
+    <div class="overflow-x-auto relative w-full min-h-[25rem] pb-20">
       <table class="table table-sm md:table-sm table-pin-rows w-full">
         <!-- head -->
         <thead>
@@ -114,8 +114,8 @@
       <div class="modal-box">
         <h3 class="font-bold text-3xl">Warning!</h3>
         <p class="py-4">
-          Are you sure to delete the {{ ReceiptsToDelete.name }} receipt with the
-          id {{ ReceiptsToDelete.id }}?
+          Are you sure to delete the {{ ReceiptsToDelete.name }} receipt with
+          the id {{ ReceiptsToDelete.id }}?
         </p>
         <div class="modal-action">
           <form method="dialog">
@@ -132,7 +132,7 @@
       </div>
     </dialog>
     <!-- Pagination -->
-    <div class="my-4">
+    <div class="mb-4">
       <div class="flex items-center gap-3 justify-center">
         <div class="join">
           <button
@@ -244,7 +244,7 @@ function getAllReceipts() {
 }
 function deleteReceipt(id) {
   console.log("delete ", id);
-  /*axios
+  axios
     .delete(import.meta.env.VITE_API_ENDPOINT + "/receipts/delete/" + id, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
@@ -272,7 +272,7 @@ function deleteReceipt(id) {
           ? error.response.data.message
           : error.response.data.error.map((data) => data),
       });
-    });*/
+    });
 }
 
 onMounted(() => {
