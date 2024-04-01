@@ -6,22 +6,11 @@
         <div class="text-sm breadcrumbs">
           <ul>
             <li>
-              <a href="/"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                  /></svg
-                >Dashboard</a
-              >
+              <a href="/"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>Dashboard</a>
             </li>
             <li>Games</li>
           </ul>
@@ -33,11 +22,7 @@
     <div class="pt-10 pb-4 flex flex-row justify-end items-center">
       <form v-on:submit.prevent="">
         <div class="join">
-          <input
-            class="input input-sm input-bordered join-item"
-            disabled
-            placeholder="search"
-          />
+          <input class="input input-sm input-bordered join-item" disabled placeholder="search" />
           <button type="button" class="btn join-item btn-sm" disabled>Search</button>
         </div>
       </form>
@@ -51,7 +36,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>Developer</th>
-            <th>Cateogires</th>
+            <th>Categories</th>
             <th>Price</th>
             <th>Dowloads</th>
             <th>Blocked</th>
@@ -62,7 +47,7 @@
         </thead>
         <tbody>
           <!-- row 1 -->
-          <tr v-for="game in Games" :key="game._id">
+          <tr v-for="game in Games" :key="game._id" class="hover">
             <div class="tooltip tooltip-right" :data-tip="game._id">
               <th>{{ game._id.slice(0, 5) }}...</th>
             </div>
@@ -74,10 +59,7 @@
               {{ game.developer?.apellido }}
             </td>
             <td>
-              <div
-                class="tooltip tooltip-right"
-                :data-tip="game.category?.map((data) => data.nombre).join(',')"
-              >
+              <div class="tooltip tooltip-right" :data-tip="game.category?.map((data) => data.nombre).join(',')">
                 <div class="badge">...</div>
               </div>
             </td>
@@ -92,36 +74,23 @@
             <td>{{ game.updateDate.slice(0, 10) }}</td>
             <td>
               <div class="dropdown dropdown-left">
-                <div
-                  tabindex="0"
-                  role="button"
-                  class="btn btn-circle btn-ghost btn-sm"
-                >
+                <div tabindex="0" role="button" class="btn btn-circle btn-ghost btn-sm">
                   <img
-                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='M12 3c-.825 0-1.5.675-1.5 1.5S11.175 6 12 6s1.5-.675 1.5-1.5S12.825 3 12 3m0 15c-.825 0-1.5.675-1.5 1.5S11.175 21 12 21s1.5-.675 1.5-1.5S12.825 18 12 18m0-7.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5s1.5-.675 1.5-1.5s-.675-1.5-1.5-1.5'/%3E%3C/svg%3E"
-                  />
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='black' d='M12 3c-.825 0-1.5.675-1.5 1.5S11.175 6 12 6s1.5-.675 1.5-1.5S12.825 3 12 3m0 15c-.825 0-1.5.675-1.5 1.5S11.175 21 12 21s1.5-.675 1.5-1.5S12.825 18 12 18m0-7.5c-.825 0-1.5.675-1.5 1.5s.675 1.5 1.5 1.5s1.5-.675 1.5-1.5s-.675-1.5-1.5-1.5'/%3E%3C/svg%3E" />
                 </div>
-                <ul
-                  tabindex="0"
-                  class="dropdown-content z-[1] menu menu-xs p-2 shadow bg-base-200 rounded-box w-52"
-                >
+                <ul tabindex="0" class="dropdown-content z-[1] menu menu-xs p-2 shadow bg-base-200 rounded-box w-52">
                   <li class="">
                     <a :href="'/game/' + game._id">
                       <img :src="Eye" class="h-5 w-5" /> View Game
                     </a>
                   </li>
                   <li>
-                    <a
-                      class="hover:bg-red-600"
-                      onclick="my_modal_1.showModal()"
-                      @click="
-                        GameToDelete = {
-                          id: game._id,
-                          name: game.name,
-                        }
-                      "
-                      ><img :src="Delete" class="h-5 w-5" />Delete</a
-                    >
+                    <a class="hover:bg-red-600" onclick="my_modal_1.showModal()" @click="
+        GameToDelete = {
+          id: game._id,
+          name: game.name,
+        }
+        "><img :src="Delete" class="h-5 w-5" />Delete</a>
                   </li>
                 </ul>
               </div>
@@ -140,10 +109,7 @@
         <div class="modal-action">
           <form method="dialog">
             <!-- if there is a button in form, it will close the modal -->
-            <button
-              class="btn bg-red-600 hover:btn-error mr-2"
-              @click="deleteRequest(GameToDelete.id)"
-            >
+            <button class="btn bg-red-600 hover:btn-error mr-2" @click="deleteRequest(GameToDelete.id)">
               Delete
             </button>
             <button class="btn">Close</button>
@@ -155,40 +121,20 @@
     <div class="my-4">
       <div class="flex items-center gap-3 justify-center">
         <div class="join">
-          <button
-            type="button"
-            class="join-item btn btn-sm"
-            :class="{ 'btn-disabled': page == 1 }"
-            :data-gotonumber="1"
-            @click="setPage"
-          >
+          <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1"
+            @click="setPage">
             First page
           </button>
-          <button
-            type="button"
-            class="join-item btn btn-sm"
-            :class="{ 'btn-disabled': !hasPrevPage }"
-            :data-gotonumber="prevPage"
-            @click="setPage"
-          >
+          <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasPrevPage }"
+            :data-gotonumber="prevPage" @click="setPage">
             Previous page
           </button>
-          <button
-            type="button"
-            class="join-item btn btn-sm"
-            :class="{ 'btn-disabled': !hasNextPage }"
-            :data-gotonumber="nextPage"
-            @click="setPage"
-          >
+          <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasNextPage }"
+            :data-gotonumber="nextPage" @click="setPage">
             Next page
           </button>
-          <button
-            type="button"
-            class="join-item btn btn-sm"
-            :class="{ 'btn-disabled': page == totalPages }"
-            :data-gotonumber="totalPages"
-            @click="setPage"
-          >
+          <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == totalPages }"
+            :data-gotonumber="totalPages" @click="setPage">
             Last page
           </button>
         </div>
@@ -199,21 +145,12 @@
         <span class="flex items-center gap-1">
           | Go to page:
           <div class="tooltip" data-tip="Press enter">
-            <input
-              :value="page"
-              type="number"
-              @keyup.enter="setPage"
-              class="input input-bordered input-info input-sm w-20"
-              placeholder="Page number"
-            />
+            <input :value="page" type="number" @keyup.enter="setPage"
+              class="input input-bordered input-info input-sm w-20" placeholder="Page number" />
           </div>
         </span>
         <select v-model="pageLimit" class="select select-bordered select-sm">
-          <option
-            v-for="option in pageLimitOptions"
-            :key="'limit' + option"
-            :value="option"
-          >
+          <option v-for="option in pageLimitOptions" :key="'limit' + option" :value="option">
             Show {{ option }} pages
           </option>
         </select>
@@ -238,7 +175,7 @@ function getAllGames() {
   axios
     .get(
       import.meta.env.VITE_API_ENDPOINT +
-        `/games/?limit=${pageLimit.value}&page=${page.value}`
+      `/games/?limit=${pageLimit.value}&page=${page.value}`
     )
     .then((data) => {
       //console.log(data.data);

@@ -1,228 +1,228 @@
 <script setup>
-    // Normal fields
-    import { ref, onMounted, watch } from 'vue';
-    import { useRouter } from "vue-router";
-    import Swal from 'sweetalert2';
-    import axios from "axios";
-    import ReceiptHistoryTableRow from '../../components/ReceiptHistoryTableRow.vue';
+// Normal fields
+import { ref, onMounted, watch } from 'vue';
+import { useRouter } from "vue-router";
+import Swal from 'sweetalert2';
+import axios from "axios";
+import ReceiptHistoryTableRow from '../../components/ReceiptHistoryTableRow.vue';
 
-    const router = useRouter();
-    const user_data = JSON.parse(localStorage.getItem("user_data"));
-    
-    let payload = {}
+const router = useRouter();
+const user_data = JSON.parse(localStorage.getItem("user_data"));
 
-    const firstName = ref('');
-    const lastName = ref('');
-    const username = ref('');
-    const email = ref('');
-    const profileURL = ref('')
+let payload = {}
 
-    // Receipts object and paginations
-    const receipts = ref(null);
+const firstName = ref('');
+const lastName = ref('');
+const username = ref('');
+const email = ref('');
+const profileURL = ref('')
 
-    const hasPrevPage = ref(false);
-    const hasNextPage = ref(true);
-    const prevPage = ref();
-    const nextPage = ref();
+// Receipts object and paginations
+const receipts = ref(null);
 
-    const page = ref(1);
-    const totalPages = ref()
-    const pageLimit = ref(10);
-    const pageLimitOptions = [10, 15, 20, 25, 30];
+const hasPrevPage = ref(false);
+const hasNextPage = ref(true);
+const prevPage = ref();
+const nextPage = ref();
 
-    // Password fields
-    const currentPassword = ref('');
-    const newPassword = ref('');
-    const confirmNewPassword = ref('');
+const page = ref(1);
+const totalPages = ref()
+const pageLimit = ref(10);
+const pageLimitOptions = [10, 15, 20, 25, 30];
 
-    // Booleans to show settings sections
-    const showUserSettings = ref(true);
-    const showReceiptHistory = ref(false);
-    const showAdvancedSettings = ref(false);
+// Password fields
+const currentPassword = ref('');
+const newPassword = ref('');
+const confirmNewPassword = ref('');
 
-    function btnShowUserSettings() {
-      page.value = 1;
+// Booleans to show settings sections
+const showUserSettings = ref(true);
+const showReceiptHistory = ref(false);
+const showAdvancedSettings = ref(false);
 
-      showReceiptHistory.value = false;
-      showAdvancedSettings.value = false;
-      showUserSettings.value = true;
-    }
+function btnShowUserSettings() {
+  page.value = 1;
 
-    function btnShowReceiptHistory() {
-      populateUser();
-      getAllReceipts();
+  showReceiptHistory.value = false;
+  showAdvancedSettings.value = false;
+  showUserSettings.value = true;
+}
 
-      showAdvancedSettings.value = false;
-      showUserSettings.value = false;
-      showReceiptHistory.value = true;
-    }
+function btnShowReceiptHistory() {
+  populateUser();
+  getAllReceipts();
 
-    function btnShowAdvancedSettings() {
-      populateUser();
-      page.value = 1;
+  showAdvancedSettings.value = false;
+  showUserSettings.value = false;
+  showReceiptHistory.value = true;
+}
 
-      showReceiptHistory.value = false;
-      showUserSettings.value = false;
-      showAdvancedSettings.value = true;
-    }
+function btnShowAdvancedSettings() {
+  populateUser();
+  page.value = 1;
 
-    function logOut() {
-      router.push("/logout");
-    }
+  showReceiptHistory.value = false;
+  showUserSettings.value = false;
+  showAdvancedSettings.value = true;
+}
 
-    async function saveProfile(){
-      // Test if payload is empty. If it is, then all fields are the same as the current user
-      if (Object.keys(payload).length === 0) {
-        Swal.fire({
-          background: "#252526",
-          color: "#FFF",
-          title: "No fields have changed!",
-          icon: "warning",
-          timer: 2500,
-          showConfirmButton: false
-        })
-      } else {
-        axios.put(import.meta.env.VITE_API_ENDPOINT + "/users/update",
-        payload, {
-          headers: {"Authorization" : `Bearer ${localStorage.getItem("token")}`}
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "User profile updated successfully!",
-              icon: "success",
-              timer: 3000,
-              showConfirmButton: false
-            })
+function logOut() {
+  router.push("/logout");
+}
+
+async function saveProfile() {
+  // Test if payload is empty. If it is, then all fields are the same as the current user
+  if (Object.keys(payload).length === 0) {
+    Swal.fire({
+      background: "#252526",
+      color: "#FFF",
+      title: "No fields have changed!",
+      icon: "warning",
+      timer: 2500,
+      showConfirmButton: false
+    })
+  } else {
+    axios.put(import.meta.env.VITE_API_ENDPOINT + "/users/update",
+      payload, {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            background: "#252526",
+            color: "#FFF",
+            title: "User profile updated successfully!",
+            icon: "success",
+            timer: 3000,
+            showConfirmButton: false
+          })
             .then(() => {
               localStorage.setItem("user_data", JSON.stringify(response.data.user))
               router.push("/home")
             });
-          } else {
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "There was an error!",
-              icon: "error",
-              html: '<pre>' + response.data.message + '</pre>'
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          if ('error' in err.response.data) {
-            let err_text = "";
-            err.response.data.error.forEach((error_msg, idx, errors) => {
-              if (idx === errors.length - 1) {
-                err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1);
-              } else {
-                err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1) + "\n";
-              }
-            });
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "There was an error!",
-              icon: "error",
-              html: '<pre>' + err_text + '</pre>'
-            });
-          } else {
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "There was an error!",
-              icon: "error",
-              html: '<pre>' + err.response.data.message + '</pre>'
-            });
-          }
-        });
-      }
-    }
-
-    async function changePassword() {
-      console.log(currentPassword)
-      axios.put(import.meta.env.VITE_API_ENDPOINT + "/users/password", {
-        oldPassword: currentPassword.value,
-        newPassword: newPassword.value,
-        confirmPassword: confirmNewPassword.value
-      },
-      {
-        headers: {"Authorization" : `Bearer ${localStorage.getItem("token")}`}
-      })
-      .then((response) => {
-        if (response.status === 200) {
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "Password changed successfully!",
-              text: "Logging you out now...",
-              icon: "success",
-              timer: 4000,
-              showConfirmButton: false,
-              timerProgressBar: true
-            })
-            .then(() => {
-              router.push("/logout")
-            });
-          } else {
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "There was an error!",
-              icon: "error",
-              html: '<pre>' + response.data.message + '</pre>'
-            });
-          }
+        } else {
+          Swal.fire({
+            background: "#252526",
+            color: "#FFF",
+            title: "There was an error!",
+            icon: "error",
+            html: '<pre>' + response.data.message + '</pre>'
+          });
+        }
       })
       .catch((err) => {
         console.log(err);
-          if ('error' in err.response.data) {
-            let err_text = "";
-            err.response.data.error.forEach((error_msg, idx, errors) => {
-              if (idx === errors.length - 1) {
-                err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1);
-              } else {
-                err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1) + "\n";
-              }
-            });
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "There was an error!",
-              icon: "error",
-              html: '<pre>' + err_text + '</pre>'
-            });
-          } else {
-            Swal.fire({
-              background: "#252526",
-              color: "#FFF",
-              title: "There was an error!",
-              icon: "error",
-              html: '<pre>' + err.response.data.message + '</pre>'
-            });
-          }
+        if ('error' in err.response.data) {
+          let err_text = "";
+          err.response.data.error.forEach((error_msg, idx, errors) => {
+            if (idx === errors.length - 1) {
+              err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1);
+            } else {
+              err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1) + "\n";
+            }
+          });
+          Swal.fire({
+            background: "#252526",
+            color: "#FFF",
+            title: "There was an error!",
+            icon: "error",
+            html: '<pre>' + err_text + '</pre>'
+          });
+        } else {
+          Swal.fire({
+            background: "#252526",
+            color: "#FFF",
+            title: "There was an error!",
+            icon: "error",
+            html: '<pre>' + err.response.data.message + '</pre>'
+          });
+        }
       });
-    }
+  }
+}
 
-    async function deleteAccount() {
-      Swal.fire({
-        background: "#252526",
-        color: "#FFF",
-        title: "Are you sure?",
-        text: "You won't be able to get your account back",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085D6",
-        cancelButtonColor: "#D33",
-        confirmButtonText: "Yes, delete it!"
-      })
-      .then((answer) => {
-        if (answer.isConfirmed) {
-          axios.delete(import.meta.env.VITE_API_ENDPOINT + "/users/delete", {
-            headers: {"Authorization" : `Bearer ${localStorage.getItem("token")}`}
-          })
+async function changePassword() {
+  console.log(currentPassword)
+  axios.put(import.meta.env.VITE_API_ENDPOINT + "/users/password", {
+    oldPassword: currentPassword.value,
+    newPassword: newPassword.value,
+    confirmPassword: confirmNewPassword.value
+  },
+    {
+      headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Password changed successfully!",
+          text: "Logging you out now...",
+          icon: "success",
+          timer: 4000,
+          showConfirmButton: false,
+          timerProgressBar: true
+        })
+          .then(() => {
+            router.push("/logout")
+          });
+      } else {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          html: '<pre>' + response.data.message + '</pre>'
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      if ('error' in err.response.data) {
+        let err_text = "";
+        err.response.data.error.forEach((error_msg, idx, errors) => {
+          if (idx === errors.length - 1) {
+            err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1);
+          } else {
+            err_text = err_text + error_msg.charAt(0).toUpperCase() + error_msg.slice(1) + "\n";
+          }
+        });
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          html: '<pre>' + err_text + '</pre>'
+        });
+      } else {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          html: '<pre>' + err.response.data.message + '</pre>'
+        });
+      }
+    });
+}
+
+async function deleteAccount() {
+  Swal.fire({
+    background: "#252526",
+    color: "#FFF",
+    title: "Are you sure?",
+    text: "You won't be able to get your account back",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085D6",
+    cancelButtonColor: "#D33",
+    confirmButtonText: "Yes, delete it!"
+  })
+    .then((answer) => {
+      if (answer.isConfirmed) {
+        axios.delete(import.meta.env.VITE_API_ENDPOINT + "/users/delete", {
+          headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+        })
           .then((response) => {
             if (response.status === 200) {
               console.log(response.data);
@@ -236,9 +236,9 @@
                 showConfirmButton: false,
                 timerProgressBar: true
               })
-              .then(() => {
-                router.push("/logout")
-              });
+                .then(() => {
+                  router.push("/logout")
+                });
             } else {
               console.log(response.data);
               Swal.fire({
@@ -260,179 +260,179 @@
               text: err.response.data.message
             });
           });
-        }
-      });
-    }
+      }
+    });
+}
 
-    async function submitDeveloperRequest() {
-      axios.post(import.meta.env.VITE_API_ENDPOINT + "/request/post", {}, {
-        headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-      })
-      .then((response) => {
-        if (response.status == 201) {
-          Swal.fire({
-            background: "#252526",
-            color: "#FFF",
-            title: "Application sent!",
-            icon: "success",
-            text: "Your request to become a developer will be reviewed soon."
-          });
-        } else {
-          Swal.fire({
-            background: "#252526",
-            color: "#FFF",
-            title: "There was an error!",
-            icon: "error",
-            text: response.data.message
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response.status == 422) {
-          Swal.fire({
-            background: "#252526",
-            color: "#FFF",
-            title: "Cannot send application",
-            icon: "warning",
-            text: "You have already submitted a request to become a developer."
-          });
-        } else {
-          Swal.fire({
-            background: "#252526",
-            color: "#FFF",
-            title: "There was an error!",
-            icon: "error",
-            text: error.response.data.message
-          });
-        }
-      });
-    }
-
-    function populateUser() {
-      firstName.value = user_data.nombre;
-      lastName.value = user_data.apellido;
-      username.value = user_data.username;
-      email.value = user_data.email;
-      profileURL.value = user_data.profileURL
-    }
-
-    function getAllReceipts() {
-    receipts.value = null;
-    axios.get(import.meta.env.VITE_API_ENDPOINT + `/receipts/getself?limit=${pageLimit.value}&page=${page.value}`, {
-        headers: {"Authorization" : `Bearer ${localStorage.getItem("token")}`}
-    })
-        .then((response) => {
-            if (response.status === 200) {
-                receipts.value = response.data.docs;
-                hasPrevPage.value = response.data.hasPrevPage;
-                hasNextPage.value = response.data.hasNextPage;
-                prevPage.value = response.data.prevPage;
-                nextPage.value = response.data.nextPage;
-
-                page.value = response.data.page;
-                totalPages.value = response.data.totalPages;
-            } else {
-                console.log(response.data);
-                Swal.fire({
-                    background: "#252526",
-                    color: "#FFF",
-                    title: "There was an error!",
-                    icon: "error",
-                    html: response.data.message
-                });
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            Swal.fire({
-                background: "#252526",
-                color: "#FFF",
-                title: "There was an error!",
-                icon: "error",
-                text: error.response.data.message
-            });
+async function submitDeveloperRequest() {
+  axios.post(import.meta.env.VITE_API_ENDPOINT + "/request/post", {}, {
+    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+  })
+    .then((response) => {
+      if (response.status == 201) {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Application sent!",
+          icon: "success",
+          text: "Your request to become a developer will be reviewed soon."
         });
+      } else {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: response.data.message
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      if (error.response.status == 422) {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "Cannot send application",
+          icon: "warning",
+          text: "You have already submitted a request to become a developer."
+        });
+      } else {
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message
+        });
+      }
+    });
+}
+
+function populateUser() {
+  firstName.value = user_data.nombre;
+  lastName.value = user_data.apellido;
+  username.value = user_data.username;
+  email.value = user_data.email;
+  profileURL.value = user_data.profileURL
+}
+
+function getAllReceipts() {
+  receipts.value = null;
+  axios.get(import.meta.env.VITE_API_ENDPOINT + `/receipts/getself?limit=${pageLimit.value}&page=${page.value}`, {
+    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        receipts.value = response.data.docs;
+        hasPrevPage.value = response.data.hasPrevPage;
+        hasNextPage.value = response.data.hasNextPage;
+        prevPage.value = response.data.prevPage;
+        nextPage.value = response.data.nextPage;
+
+        page.value = response.data.page;
+        totalPages.value = response.data.totalPages;
+      } else {
+        console.log(response.data);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          html: response.data.message
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: error.response.data.message
+      });
+    });
 }
 
 function setPage(event) {
-    if (page.value > totalPages.value) {
-        page.value = totalPages.value;
-    }
-    if (page.value < 1) {
-        page.value = 1;
-    }
-    
-    if (event.target.tagName == "BUTTON") {
-        page.value = parseInt(event.target.dataset.gotonumber) || null;
-    } else if (event.target.tagName == "INPUT") {
-        page.value = parseInt(event.target.value) || 1;
-    }
-    getAllReceipts();
+  if (page.value > totalPages.value) {
+    page.value = totalPages.value;
+  }
+  if (page.value < 1) {
+    page.value = 1;
+  }
+
+  if (event.target.tagName == "BUTTON") {
+    page.value = parseInt(event.target.dataset.gotonumber) || null;
+  } else if (event.target.tagName == "INPUT") {
+    page.value = parseInt(event.target.value) || 1;
+  }
+  getAllReceipts();
 }
 
-    onMounted(() => {
-      populateUser();
+onMounted(() => {
+  populateUser();
 
-    });
+});
 
-    // Watching profile properties to change and save
-    watch(firstName, (newFirstName) => {
-      if (newFirstName != user_data.nombre) {
-        payload.nombre = newFirstName;
-      } else {
-        if (payload.hasOwnProperty("nombre") && newFirstName == user_data.nombre) {
-          delete payload.nombre; 
-        }
-      }
-    })
+// Watching profile properties to change and save
+watch(firstName, (newFirstName) => {
+  if (newFirstName != user_data.nombre) {
+    payload.nombre = newFirstName;
+  } else {
+    if (payload.hasOwnProperty("nombre") && newFirstName == user_data.nombre) {
+      delete payload.nombre;
+    }
+  }
+})
 
-    watch(lastName, (newLastName) => {
-      if (newLastName != user_data.apellido) {
-        payload.apellido = newLastName;
-      } else {
-        if (payload.hasOwnProperty("apellido") && newLastName == user_data.apellido) {
-          delete payload.apellido; 
-        }
-      }
-    })
+watch(lastName, (newLastName) => {
+  if (newLastName != user_data.apellido) {
+    payload.apellido = newLastName;
+  } else {
+    if (payload.hasOwnProperty("apellido") && newLastName == user_data.apellido) {
+      delete payload.apellido;
+    }
+  }
+})
 
-    watch(username, (newUserName) => {
-      if (newUserName != user_data.username) {
-        payload.username = newUserName;
-      } else {
-        if (payload.hasOwnProperty("username") && newUserName == user_data.username) {
-          delete payload.username; 
-        }
-      }
-    })
+watch(username, (newUserName) => {
+  if (newUserName != user_data.username) {
+    payload.username = newUserName;
+  } else {
+    if (payload.hasOwnProperty("username") && newUserName == user_data.username) {
+      delete payload.username;
+    }
+  }
+})
 
-    watch(email, (newEmail) => {
-      if (newEmail != user_data.email) {
-        payload.email = newEmail;
-      } else {
-        if (payload.hasOwnProperty("email") && newEmail == user_data.email) {
-          delete payload.email; 
-        }
-      }
-    })
+watch(email, (newEmail) => {
+  if (newEmail != user_data.email) {
+    payload.email = newEmail;
+  } else {
+    if (payload.hasOwnProperty("email") && newEmail == user_data.email) {
+      delete payload.email;
+    }
+  }
+})
 
-    watch(profileURL, (newProfileURL) => {
-      if (newProfileURL != user_data.profileURL) {
-        payload.profileURL = newProfileURL;
-      } else {
-        if (payload.hasOwnProperty("profileURL") && newProfileURL == user_data.profileURL) {
-          delete payload.profileURL; 
-        }
-      }
-    })
+watch(profileURL, (newProfileURL) => {
+  if (newProfileURL != user_data.profileURL) {
+    payload.profileURL = newProfileURL;
+  } else {
+    if (payload.hasOwnProperty("profileURL") && newProfileURL == user_data.profileURL) {
+      delete payload.profileURL;
+    }
+  }
+})
 
-    watch(pageLimit, () => {
-        //console.log(new Date(date.value[0]).toLocaleDateString('en-CA'));
-        //console.log(date.value);
-        page.value = 1;
-        getAllReceipts();
-    });
+watch(pageLimit, () => {
+  //console.log(new Date(date.value[0]).toLocaleDateString('en-CA'));
+  //console.log(date.value);
+  page.value = 1;
+  getAllReceipts();
+});
 
 </script>
 
@@ -665,7 +665,7 @@ function setPage(event) {
               </div>
             </div>
             <input type="submit" value="Send Application" class="btn btn-primary mt-4 font-bold"
-              :class="{'btn-disabled': user_data && user_data.tipo === 1}" />
+              :class="{'btn-disabled': user_data && user_data.tipo === 1 || user_data.tipo === 0}" />
           </div>
         </form>
         <div class="divider mt-8">

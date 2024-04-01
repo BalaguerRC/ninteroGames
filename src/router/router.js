@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import axios from "axios";
 
-const dataUser = JSON.parse(localStorage.getItem("user_data"));
+//const dataUser = JSON.parse(localStorage.getItem("user_data"));
 const routes = [
   {
     path: "/",
@@ -142,6 +142,9 @@ const routes = [
         component: () => import("@/views/admin/NewsNotifications.vue"),
       },
     ],
+    meta: {
+      isProtected: true,
+    }
   },
   {
     path: "/:pathMatch(.*)*",
@@ -178,7 +181,9 @@ const routes = [
     beforeEnter: (to, from) => {
       localStorage.removeItem("user_data");
       localStorage.removeItem("token");
-      router.push("/");
+      // Originally router.push("/"), but an implementation and communication comprehension mistake
+      // regarding global reactive storage of user data forced the use of pushing for login in the router
+      router.push("/login");
     },
     meta: {
       isProtected: true,
@@ -189,6 +194,9 @@ const routes = [
 const router = createRouter({
   routes,
   history: createWebHistory(),
+  scrollBehavior (to, from, savedPosition) {
+    return { top: 0, behavior: "smooth" };
+  }
 });
 
 router.beforeEach((to, from, next) => {
