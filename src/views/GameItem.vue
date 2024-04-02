@@ -107,7 +107,7 @@ console.log(route.params.id);
 onMounted(() => {
   getGame();
   getWish();
-  if (user_data!=null) {
+  if (user_data != null) {
     getUser();
   }
 });
@@ -127,6 +127,13 @@ function getGame() {
     })
     .catch((err) => {
       console.log(err);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: err.response.data.message,
+      });
       validateGameExist.value = false;
     });
 }

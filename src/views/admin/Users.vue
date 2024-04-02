@@ -312,13 +312,7 @@ function deleteUser(id) {
         color: "#FFF",
         title: "There was an error!",
         icon: "error",
-        text: error.response.data.message
-          ? error.response.data.message
-          : error.response.data.result_email
-          ? error.response.data.result_email
-          : error.response.data.result_username
-          ? error.response.data.result_username
-          : error.response.data.error.map((data) => data),
+        text: error.response.data.message,
       });
     });
 }

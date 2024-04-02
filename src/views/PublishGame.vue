@@ -3,8 +3,43 @@
     <div class="m-10">
       <div class="divider">
         <div class="divider-content">
-          <h1 class="text-3xl font-bold" v-if="route.params.id===undefined">Publish a new game</h1>
-          <h1 class="text-3xl font-bold" v-if="route.params.id!=undefined">Update Game</h1>
+          <h1 class="text-3xl font-bold" v-if="route.params.id === undefined">
+            Publish a new game
+          </h1>
+          <h1 class="text-3xl font-bold" v-if="route.params.id != undefined">
+            Update Game
+          </h1>
+        </div>
+      </div>
+      <div
+        class="alert shadow-lg mt-5"
+        v-if="user_data && user_data.tipo === 0"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          class="stroke-warning shrink-0 w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          ></path>
+        </svg>
+        <div>
+          <h3 class="font-bold pb-1">
+            Welcome <strong>{{ user_data.username }}</strong
+            >!
+          </h3>
+          <div class="text-sm font-bold">
+            This section is ONLY for testing purposes. Once the test is finished
+            REMOVE it from the store.
+          </div>
+          <div class="text-sm">
+            PD: This section should be used by developers.
+          </div>
         </div>
       </div>
       <div>
@@ -131,6 +166,13 @@
                   </div>
                 </dialog>
               </div>
+            </label>
+            <label class="form-control" v-if="validateAdmin">
+              <h1 class="text-2xl font-bold py-5">Block</h1>
+              <label class="label cursor-pointer py-2">
+                <span class="label-text">Block game?</span>
+                <input type="checkbox" v-model="blocked" class="checkbox" />
+              </label>
             </label>
           </div>
 
@@ -319,7 +361,6 @@
                       v-model="requeMN.storage"
                     />
                   </div>
-
                 </div>
                 <div class="w-full">
                   <h2 class="text-1xl font-bold pt-5">Maximuns:</h2>
@@ -404,9 +445,18 @@
                 type="button"
                 class="btn grow"
                 href="/search"
+                v-if="!validateAdmin"
               >
                 Back
-            </a>
+              </a>
+              <a
+                type="button"
+                class="btn grow"
+                href="/dashboard/games"
+                v-if="validateAdmin"
+              >
+                Back
+              </a>
               <button
                 type="submit"
                 class="btn btn-accent font-bold grow"
@@ -417,9 +467,16 @@
               <button
                 type="submit"
                 class="btn btn-accent font-bold grow"
-                v-if="route.params.id"
+                v-if="route.params.id && !validateAdmin"
               >
                 Update
+              </button>
+              <button
+                type="submit"
+                class="btn btn-accent font-bold grow"
+                v-if="route.params.id && validateAdmin"
+              >
+                Update By Admin
               </button>
             </div>
           </div>
@@ -442,11 +499,14 @@ const imgNull = ref(
 const router = useRouter();
 const route = useRoute();
 
+const user_data = JSON.parse(localStorage.getItem("user_data"));
+
 const title = ref("");
 const categories = ref([]);
 const categoriesSelected = ref([]);
 const About = ref("");
 const price = ref(0);
+const blocked = ref(false);
 const requeMN = ref({
   os: "",
   processor: "",
@@ -464,6 +524,8 @@ const requeMX = ref({
   storage: "",
 });
 
+const validateAdmin = ref(false);
+
 const imgThumbnail = ref("");
 const imgThumbnail2 = ref("");
 
@@ -478,6 +540,9 @@ onMounted(() => {
   }
   if (route.params.id) {
     getGameId(route.params.id);
+  }
+  if (user_data.tipo === 0) {
+    validateAdmin.value = true;
   }
   getAllCategories();
 });
@@ -521,9 +586,6 @@ function getAllCategories() {
       });
     });
 }
-/*watch(imgList, () => {
-  console.log("watch", imgList);
-});*/
 function onPublish() {
   console.log("data to send", {
     name: title.value,
@@ -592,7 +654,7 @@ function onPublish() {
         Swal.fire({
           background: "#252526",
           color: "#FFF",
-          title: "Game Updated!",
+          title: "Game Created!",
           text: "Redirecting you to news page",
           icon: "success",
           timer: 3000,
@@ -641,6 +703,7 @@ function getGameId(id) {
       imgThumbnail2.value = data.data.thumbnailURL;
       imgList.value = data.data.gameImages?.map((data) => data);
       About.value = data.data.about;
+      blocked.value = data.data.blocked;
       requeMN.value.os = data.data.minreq.os;
       requeMN.value.processor = data.data.minreq.processor;
       requeMN.value.memory = data.data.minreq.memory;
@@ -661,15 +724,98 @@ function getGameId(id) {
 }
 
 function onPublishUpdate(id) {
+  if (user_data.tipo === 0) {
+    onPublishUpdateAdmin(id);
+  } else {
+    if (
+      categoriesSelected.value.length != 0 &&
+      imgList.value.length != 0 &&
+      About.value != ""
+    ) {
+      console.log("Ready To Update", id);
+      axios
+        .put(
+          import.meta.env.VITE_API_ENDPOINT + "/games/update/" + id,
+          {
+            name: title.value,
+            about: About.value,
+            category: categoriesSelected.value?.map((data) => data._id),
+            thumbnailURL: imgThumbnail.value,
+            gameImages: imgList.value?.map((option) => option),
+            price: price.value,
+            minreq: {
+              os: requeMN.value.os,
+              processor: requeMN.value.processor,
+              memory: requeMN.value.memory,
+              graphics: requeMN.value.graphics,
+              directx: requeMN.value.directx,
+              storage: requeMN.value.storage,
+            },
+            recreq: {
+              os: requeMX.value.os,
+              processor: requeMX.value.processor,
+              memory: requeMX.value.memory,
+              graphics: requeMX.value.graphics,
+              directx: requeMX.value.directx,
+              storage: requeMX.value.storage,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
+        .then((data) => {
+          console.log("data", data.data.game._id);
+          Swal.fire({
+            background: "#252526",
+            color: "#FFF",
+            title: "Game Updated!",
+            text: "Redirecting you to news page",
+            icon: "success",
+            timer: 3000,
+            showConfirmButton: false,
+          });
+          router.push("/game/" + data.data.game._id);
+        })
+        .catch((error) => {
+          console.log(error);
+          Swal.fire({
+            background: "#252526",
+            color: "#FFF",
+            title: "There was an error!",
+            icon: "error",
+            text: error.response.data.message,
+          });
+        });
+    } else {
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "Error when publishing!",
+        icon: "error",
+        text:
+          categoriesSelected.value.length === 0
+            ? "Select a category"
+            : imgList.value.length === 0
+            ? "Add an image in the Image Urls field"
+            : "Fill in the About field",
+      });
+    }
+  }
+}
+
+function onPublishUpdateAdmin(id) {
   if (
     categoriesSelected.value.length != 0 &&
     imgList.value.length != 0 &&
     About.value != ""
   ) {
-    console.log("Ready To Update", id);
+    console.log("Ready To Update by Admin", id);
     axios
       .put(
-        import.meta.env.VITE_API_ENDPOINT + "/games/update/" + id,
+        import.meta.env.VITE_API_ENDPOINT + "/games/admin/update/" + id,
         {
           name: title.value,
           about: About.value,
@@ -677,6 +823,7 @@ function onPublishUpdate(id) {
           thumbnailURL: imgThumbnail.value,
           gameImages: imgList.value?.map((option) => option),
           price: price.value,
+          blocked: blocked.value,
           minreq: {
             os: requeMN.value.os,
             processor: requeMN.value.processor,
@@ -709,7 +856,7 @@ function onPublishUpdate(id) {
           timer: 3000,
           showConfirmButton: false,
         });
-        router.push("/game/" + data.data.game._id);
+        router.push("/dashboard/games");
       })
       .catch((error) => {
         console.log(error);

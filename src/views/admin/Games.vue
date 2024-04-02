@@ -30,20 +30,33 @@
       <a class="btn btn-sm" href="/game/create">+ Create a Game</a>
     </div>
     <!-- search bar -->
-    <div class="pt-10 pb-4 flex flex-row justify-end items-center">
-      <form v-on:submit.prevent="">
+    <div class="pt-10 pb-4 flex flex-row justify-end items-center gap-2">
+      <select
+        class="select select-sm select-bordered w-44 max-w-xs"
+        v-model="Filter"
+      >
+        <option selected :value="{}">Filter</option>
+        <option
+          v-for="options in OptionsFilter"
+          :key="options.n"
+          :value="options"
+        >
+          {{ options.field }}
+        </option>
+      </select>
+      <form @submit.prevent="filterGame">
         <div class="join">
           <input
             class="input input-sm input-bordered join-item"
-            disabled
             placeholder="search"
+            v-model="Search"
           />
-          <button type="button" class="btn join-item btn-sm" disabled>Search</button>
+          <button type="submit" class="btn join-item btn-sm">Search</button>
         </div>
       </form>
     </div>
 
-    <div class="overflow-x-auto relative w-full min-h-[25rem]">
+    <div class="overflow-x-auto relative w-full min-h-[25rem] pb-20">
       <table class="table table-xs md:table-xs table-pin-rows w-full">
         <!-- head -->
         <thead>
@@ -54,6 +67,7 @@
             <th>Cateogires</th>
             <th>Price</th>
             <th>Dowloads</th>
+            <th>WhishListCount</th>
             <th>Blocked</th>
             <th>Creation Date</th>
             <th>Update Date</th>
@@ -86,6 +100,9 @@
               {{ game.downloads }}
             </td>
             <td>
+              {{ game.wishlistedUsersCount }}
+            </td>
+            <td>
               {{ game.blocked }}
             </td>
             <td>{{ game.publishDate.slice(0, 10) }}</td>
@@ -109,6 +126,13 @@
                     <a :href="'/game/' + game._id">
                       <img :src="Eye" class="h-5 w-5" /> View Game
                     </a>
+                  </li>
+                  <li>
+                    <a
+                      class="hover:bg-yellow-600"
+                      :href="'/game/update/' + game._id"
+                      ><img :src="Edit" class="h-5 w-5" />Edit</a
+                    >
                   </li>
                   <li>
                     <a
@@ -142,7 +166,7 @@
             <!-- if there is a button in form, it will close the modal -->
             <button
               class="btn bg-red-600 hover:btn-error mr-2"
-              @click="deleteRequest(GameToDelete.id)"
+              @click="deleteGame(GameToDelete.id)"
             >
               Delete
             </button>
@@ -152,7 +176,7 @@
       </div>
     </dialog>
     <!-- Pagination -->
-    <div class="my-4">
+    <div class="mb-4">
       <div class="flex items-center gap-3 justify-center">
         <div class="join">
           <button
@@ -226,12 +250,18 @@
 import { onMounted, ref, watch } from "vue";
 import Eye from "@/assets/Eye.png";
 import Accept from "@/assets/Accept.webp";
+import Edit from "@/assets/Edit.png";
 import Delete from "@/assets/Delete.png";
 import axios from "axios";
 import Swal from "sweetalert2";
 
 const Games = ref([]);
 const Search = ref("");
+const Filter = ref({});
+const OptionsFilter = ref([
+  { n: 1, name: "blocked", value: true, field: "Blocked" },
+  { n: 2, name: "blocked", value: false, field: "No Blocked" },
+]);
 
 const GameToDelete = ref({ id: "", name: "" });
 function getAllGames() {
@@ -264,15 +294,98 @@ function getAllGames() {
     });
 }
 
+function filterGame() {
+  console.log("search", Search.value, "filetr", Filter.value);
+  let query_route;
+  let query_body = {};
+  //page.value = 1;
+  if (Search.value != "" || Filter.value.value != null) {
+    console.log("hay algo");
+    query_route = `/games/filter?limit=${pageLimit.value}&&page=${page.value}`;
+
+    query_body = {
+      name: Search.value == "" ? undefined : Search.value, //keys condition {}, if search.value == "": return undefine ,otherwise return the exact value of search.value
+      blocked: Filter.value.name == "blocked" ? Filter.value.value : undefined,
+      /*category:
+        categoriesSelected.value.length == 0
+          ? undefined
+          : categoriesSelected.value?.map((data) => data._id),
+      price:
+        priceSelected.value.value == "" ? undefined : priceSelected.value.value,
+      developer:
+        developerSelected.value == "" ? undefined : developerSelected.value,
+      downloads: orderSelected.value == "" ? undefined : orderSelected.value,*/
+    };
+    axios
+      .post(import.meta.env.VITE_API_ENDPOINT + query_route, query_body)
+      .then((data) => {
+        console.log("filter category", data.data);
+        Games.value = data.data.docs;
+        hasPrevPage.value = data.data.hasPrevPage;
+        hasNextPage.value = data.data.hasNextPage;
+        prevPage.value = data.data.prevPage;
+        nextPage.value = data.data.nextPage;
+
+        page.value = data.data.page;
+        totalPages.value = data.data.totalPages;
+        //validateGames.value = true;
+      })
+      .catch((error) => {
+        console.log(error);
+        Swal.fire({
+          background: "#252526",
+          color: "#FFF",
+          title: "There was an error!",
+          icon: "error",
+          text: error.response.data.message,
+        });
+      });
+  } else {
+    console.log("else getAll");
+    getAllGames();
+  }
+}
+
+function deleteGame(id) {
+  console.log("delete ", id);
+  axios
+    .delete(import.meta.env.VITE_API_ENDPOINT + "/games/delete/" + id, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    })
+    .then((data) => {
+      console.log(data.data);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "Game Deleted!",
+        text: "Succes",
+        icon: "success",
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      getAllGames();
+    })
+    .catch((error) => {
+      console.log(error);
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: error.response.data.message,
+      });
+    });
+}
+
 onMounted(() => {
   getAllGames();
 });
 
 function getGamesMiddleware() {
   //getAllAuthors();
-  if (Search.value) {
+  if (Search.value || Filter.value.value != null) {
     console.log("getting games by filter");
-    //filterGame();
+    filterGame();
   } else {
     console.log("getting all games");
     getAllGames();
