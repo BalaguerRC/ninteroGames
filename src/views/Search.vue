@@ -424,7 +424,7 @@ function getAllCategories() {
 function filterGame() {
   let query_route;
   let query_body = {};
-  page.value = 1;
+  //page.value = 1;
   /*console.log(
     "From filter",
     search.value,

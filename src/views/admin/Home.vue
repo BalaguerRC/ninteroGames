@@ -92,8 +92,10 @@
                           >Requests</a
                         >
                       </li>
-                      <li class="disabled">
-                        <a @click="$router.push('/dashboard/receipts')"
+                      <li>
+                        <a
+                          @click="$router.push('/dashboard/receipts')"
+                          class="hover:bg-blue-950"
                           >Receipts</a
                         >
                       </li>
@@ -164,9 +166,7 @@ import Dashboard from "@/components/admin/Dashboard.vue";
 import StoreAndUser from "@/components/admin/StoreAndUsers.vue";
 import { onMounted, ref } from "vue";
 import { useRouter, RouterView } from "vue-router";
-
 const router = useRouter();
-
 const userImg = ref("");
 const dataValidate = ref(false);
 
