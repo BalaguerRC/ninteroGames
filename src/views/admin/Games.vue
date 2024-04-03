@@ -31,6 +31,47 @@
     </div>
     <!-- search bar -->
     <div class="pt-10 pb-4 flex flex-row justify-end items-center gap-2">
+      <input
+        type="text"
+        placeholder="categories..."
+        class="input max-w-xs input-sm input-bordered"
+        readonly
+        :value="categoriesSelected?.map((option) => option.nombre).join(', ')"
+      />
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-outline btn-sm">
+          Category
+          <svg
+            width="12px"
+            height="12px"
+            class="hidden h-2 w-2 fill-current opacity-60 sm:inline-block"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 2048 2048"
+          >
+            <path
+              d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"
+            ></path>
+          </svg>
+        </div>
+        <ul
+          tabindex="0"
+          class="dropdown-content z-[1] menu bg-base-200 w-56 p-0 [&_li>*]:rounded-none"
+        >
+          <label
+            class="label cursor-pointer"
+            v-for="category in categories"
+            :key="category._id"
+          >
+            <span class="label-text">{{ category.nombre }}</span>
+            <input
+              class="checkbox checkbox-sm"
+              type="checkbox"
+              :value="category"
+              v-model="categoriesSelected"
+            />
+          </label>
+        </ul>
+      </div>
       <select
         class="select select-sm select-bordered w-44 max-w-xs"
         v-model="Filter"
@@ -54,6 +95,9 @@
           <button type="submit" class="btn join-item btn-sm">Search</button>
         </div>
       </form>
+      <button class="btn btn-error join-item btn-sm" @click="onClear()">
+        clear
+      </button>
     </div>
 
     <div class="overflow-x-auto relative w-full min-h-[25rem] pb-20">
@@ -263,6 +307,18 @@ const OptionsFilter = ref([
   { n: 2, name: "blocked", value: false, field: "No Blocked" },
 ]);
 
+const categories = ref([]);
+const categoriesSelected = ref([]);
+function getAllCategories() {
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/categories/get")
+    .then((data) => {
+      console.log("category", data.data);
+      categories.value = data.data;
+    })
+    .catch((err) => console.log(err));
+}
+
 const GameToDelete = ref({ id: "", name: "" });
 function getAllGames() {
   axios
@@ -299,12 +355,20 @@ function filterGame() {
   let query_route;
   let query_body = {};
   //page.value = 1;
-  if (Search.value != "" || Filter.value.value != null) {
+  if (
+    Search.value != "" ||
+    categoriesSelected.value.length != 0 ||
+    Filter.value.value != null
+  ) {
     console.log("hay algo");
     query_route = `/games/filter?limit=${pageLimit.value}&&page=${page.value}`;
 
     query_body = {
       name: Search.value == "" ? undefined : Search.value, //keys condition {}, if search.value == "": return undefine ,otherwise return the exact value of search.value
+      category:
+        categoriesSelected.value.length == 0
+          ? undefined
+          : categoriesSelected.value?.map((data) => data._id),
       blocked: Filter.value.name == "blocked" ? Filter.value.value : undefined,
       /*category:
         categoriesSelected.value.length == 0
@@ -379,17 +443,29 @@ function deleteGame(id) {
 
 onMounted(() => {
   getAllGames();
+  getAllCategories();
 });
 
 function getGamesMiddleware() {
   //getAllAuthors();
-  if (Search.value || Filter.value.value != null) {
+  if (
+    Search.value ||
+    categoriesSelected.value.length != 0 ||
+    Filter.value.value != null
+  ) {
     console.log("getting games by filter");
     filterGame();
   } else {
     console.log("getting all games");
     getAllGames();
   }
+}
+
+function onClear() {
+  Search.value = "";
+  Filter.value = {};
+  categoriesSelected.value = [];
+  getAllGames();
 }
 
 function setPage(event) {
