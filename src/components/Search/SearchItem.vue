@@ -1,5 +1,5 @@
 <template>
-  <div class="card w-90 bg-base-100 shadow-xl heightCard">
+  <div class="card bg-base-100 shadow-xl lg:max-h-2xl rounded-lg">
     <figure>
       <img :src="searchItem.thumbnailURL" alt="Shoes" />
     </figure>
@@ -35,5 +35,8 @@ function onGameItem(id) {
 }
 .heightCard {
   max-height: 20rem;
+}
+.backgroundContent{
+  background-color: #181D29;
 }
 </style>

@@ -4,7 +4,7 @@
       <SearchBar />
 
       <div>
-        <div class="carousel w-full" v-if="validateCorousel">
+        <div class="carousel w-full drop-shadow-2xl" v-if="validateCorousel">
           <div id="c1" class="carousel-item relative w-full pt-14">
             <CarouselItem
               :thumbnailURL="corousel.articleMostRecent?.thumbnailURL"
@@ -89,7 +89,10 @@
       <div class="py-14">
         <h2 class="text-4xl font-bold">Popular</h2>
         <div class="pt-10">
-          <div class="grid grid-cols-4 gap-3" v-if="validateCorousel">
+          <div
+            class="grid lg:grid-cols-4 gap-3 md:grid-cols-2"
+            v-if="validateCorousel"
+          >
             <GamesItems
               v-for="game in games"
               :key="game.downloads"
@@ -208,5 +211,4 @@ function getSortDownloads() {
   max-width: 500px;
   max-height: 700px;
 }
-
 </style>

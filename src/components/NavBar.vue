@@ -98,8 +98,18 @@
             class="menu menu-sm dropdown-content bg-neutral mt-3 z-[1] p-2 shadow rounded-box w-52"
           >
             <div class="p-3 flex flex-col gap-1">
-              <div class="text-lg font-bold" v-if="user_data?.username.length===13">{{ user_data?.username }}</div>
-              <div class="text-lg font-bold" v-if="user_data?.username.length!==13">{{ user_data?.username.slice(0,13) }}...</div>
+              <div
+                class="text-lg font-bold"
+                v-if="user_data?.username.length != 9"
+              >
+                {{ user_data?.username.slice(0, 9) }}...
+              </div>
+              <div
+                class="text-lg font-bold"
+                v-if="user_data?.username.length === 9"
+              >
+                {{ user_data?.username }}
+              </div>
               <div class="text-sm opacity-50">{{ user_data?.email }}</div>
             </div>
 

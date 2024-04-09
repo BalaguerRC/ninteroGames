@@ -1,25 +1,20 @@
 <template>
-  <div class="card lg:card-side bg-base-100 shadow-xl w-full heigthCard">
-    <figure class="componentIMG0 componentIMG">
-      <img
-        class="h-full"
-        :src="thumbnailURL"
-        alt="Album"
-        style="border-top-left-radius: 10px; border-bottom-left-radius: 10px"
-      />
+  <div class="card lg:card-side rounded-lg bg-base-100 w-full lg:h-96">
+    <figure class="lg:w-full lg:max-w-2xl md:w-full">
+      <img class="h-full" :src="thumbnailURL" alt="Album" />
     </figure>
     <div class="card-body">
       <div class="flex flex-col">
         <div class="flex justify-between">
           <h2 class="card-title">{{ title }}</h2>
-          <span class="badge badge-accent badge-lg my-2">{{ category }}</span>
+          <span class="badge badge-primary badge-lg my-2">{{ category }}</span>
         </div>
 
         <h2 class="text-sm opacity-50">by {{ author }}</h2>
       </div>
 
       <p
-        v-html="content.length > 270 ? content.slice(0, 270) + '...' : content"
+        v-html="content.length > 470 ? content.slice(0, 270) + '...' : content"
         v-if="!article"
       ></p>
       <p
@@ -49,13 +44,8 @@ defineProps([
 ]);
 </script>
 <style>
-.componentIMG0 {
-  width: 100%;
-}
-.componentIMG {
-  max-width: 750px;
-}
-.heigthCard{
-  height: 25rem;
+.borderIMG {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 </style>
