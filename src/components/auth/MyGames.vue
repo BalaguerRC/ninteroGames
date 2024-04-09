@@ -172,3 +172,17 @@ onMounted(() => {
   getMyGames();
 });
 </script>
+<style>
+.Nothing {
+  width: 100%;
+  min-height: 46.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.NothingChild {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+</style>

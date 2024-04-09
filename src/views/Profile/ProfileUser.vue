@@ -351,14 +351,14 @@ const validate = ref(false);
 </script>
 <style>
 .Nothing {
-  width: 100%; /* Ancho del contenedor */
+  width: 100%;
   min-height: 46.5rem;
-  display: flex; /* Utilizamos flexbox para centrar horizontalmente */
-  justify-content: center; /* Centramos horizontalmente */
-  align-items: center; /* Centramos verticalmente */
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
 }
 .NothingChild {
-  text-align: center; /* Alineación del texto dentro del div (opcional) */
+  text-align: center; 
   font-weight: 800;
   font-size: 20px;
 }
