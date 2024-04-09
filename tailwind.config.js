@@ -36,6 +36,27 @@ module.exports = {
       "dim",
       "nord",
       "sunset",
+      {
+        mytheme: {
+          primary: "#81CC96",
+
+          secondary: "#0000ff",
+
+          accent: "#d946ef",
+
+          neutral: "#1D2433",
+
+          "base-100": "#0F141F",
+
+          info: "#6b21a8",
+
+          success: "#4ade80",
+
+          warning: "#fbbf24",
+
+          error: "#dc2626",
+        },
+      },
     ],
   },
 };

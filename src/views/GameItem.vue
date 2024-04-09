@@ -35,6 +35,13 @@
       </div>
 
       <div v-if="validateGameExist && validateGame">
+        <div class="text-sm breadcrumbs pt-5">
+          <ul>
+            <li><a>Home</a></li>
+            <li><a href="/search">Search</a></li>
+            <li>{{ games?.name }}</li>
+          </ul>
+        </div>
         <h2 class="text-4xl font-bold pt-5">
           {{ games?.name }}
         </h2>

@@ -4,54 +4,60 @@
   >
     <nav className="navbar w-full p-2">
       <div class="flex-1">
-        <a class="btn btn-ghost text-xl" href="/">nintero</a>
+        <a class="btn btn-ghost hover:bg-base-100 text-xl" href="/">nintero</a>
       </div>
 
       <div class="flex-none" v-if="dataValidate">
-        <div class="dropdown dropdown-end">
-          <button class="btn btn-ghost btn-circle" tabindex="1">
-            <div class="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                class="inline-block h-5 w-5 stroke-current"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                ></path>
-                <span
-                  class="badge badge-xs badge-primary indicator-item"
-                ></span>
-              </svg>
-            </div>
-          </button>
-          <ul
-            tabindex="1"
-            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-72"
-          >
-            <li>Wishlist</li>
-            <div v-if="wishlist.length === 0" class="text-center py-2">
-              There are no games
-            </div>
-            <li v-for="list in wishlist" :key="list._id">
-              <div class="flex justify-between">
-                <a>{{ list.name }}</a>
-                <div class="flex">
-                  <a class="btn btn-sm" :href="'/game/' + list._id">View</a>
-                  <a
-                    class="btn btn-sm btn-error btn-circle"
-                    @click="removeWishListItem(list._id)"
-                    >X</a
-                  >
-                </div>
+        <CreditCard />
+        <div class="tooltip tooltip-bottom" data-tip="Wishlist">
+          <div class="dropdown dropdown-end">
+            <button class="btn btn-ghost btn-circle" tabindex="1">
+              <div class="indicator">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="inline-block h-5 w-5 stroke-current"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  ></path>
+                  <span
+                    class="badge badge-xs badge-primary indicator-item"
+                  ></span>
+                </svg>
               </div>
-            </li>
-          </ul>
+            </button>
+            <ul
+              tabindex="1"
+              class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-neutral rounded-box w-72"
+            >
+              <li class="py-2 text-1xl font-bold">Wishlist</li>
+              <div v-if="wishlist.length === 0" class="text-center py-5">
+                There are no games
+              </div>
+              <li v-for="list in wishlist" :key="list._id">
+                <div class="flex justify-between">
+                  <a>{{ list.name }}</a>
+                  <div class="join">
+                    <a class="btn btn-sm join-item" :href="'/game/' + list._id"
+                      >View</a
+                    >
+                    <a
+                      class="btn btn-sm btn-error btn-circle join-item"
+                      @click="removeWishListItem(list._id)"
+                      >X</a
+                    >
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
+
         <div class="tooltip tooltip-bottom" data-tip="Notifications">
           <a
             class="btn btn-ghost btn-circle"
@@ -89,17 +95,26 @@
           </div>
           <ul
             tabindex="0"
-            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            class="menu menu-sm dropdown-content bg-neutral mt-3 z-[1] p-2 shadow rounded-box w-52"
           >
+            <div class="p-3 flex flex-col gap-1">
+              <div class="text-lg font-bold" v-if="user_data?.username.length===13">{{ user_data?.username }}</div>
+              <div class="text-lg font-bold" v-if="user_data?.username.length!==13">{{ user_data?.username.slice(0,13) }}...</div>
+              <div class="text-sm opacity-50">{{ user_data?.email }}</div>
+            </div>
+
+            <div class="divider m-0" />
             <li>
-              <a class="justify-between" v-on:click="onProfile">
-                Profile
-                <span class="badge">New</span>
-              </a>
+              <a v-on:click="onProfile"> Profile </a>
             </li>
-            <li v-if="typeUser === 0"><a href="/dashboard">Dashboard</a></li>
+            <li v-if="typeUser === 0">
+              <a class="justify-between" href="/dashboard"
+                >Dashboard <span class="badge">New</span></a
+              >
+            </li>
             <li><a v-on:click="onSettings">Settings</a></li>
-            <li><a v-on:click="logOut">Logout</a></li>
+            <div class="divider m-0" />
+            <li><a v-on:click="logOut" class="hover:bg-error">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -128,6 +143,9 @@ import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import axios from "axios";
+import CreditCard from "@/components/CreditCard.vue";
+
+const user_data = JSON.parse(localStorage.getItem("user_data"));
 
 const router = useRouter();
 
