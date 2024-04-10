@@ -32,10 +32,7 @@ Settigns
 ![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/70d7ed10-82cf-4bb1-bb35-4ff28bae1a9a)
 ![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/e8e3e1b5-cc19-4b73-9996-c01a5c06517b)
 
-Cards
-![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/1cf591de-54f6-4f34-8866-7b46a94786a2)
-![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/f68fc44f-637f-484f-82e3-8afedba27d16)
-![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/a86fb8f2-8dda-4ea9-9cda-1939374fba39)
+
 
 
 
