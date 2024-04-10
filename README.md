@@ -11,8 +11,6 @@ Api used: https://github.com/herr-derlowe/nintero-api
 ![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/5cde2991-7801-466f-9a68-9e9578fcaec4)
 ![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/29800a52-ac5a-44e9-85d6-a4800cbde66d)
 
-![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/d8e162b0-a2d6-42d9-84a3-d3fa6eac4928)
-
 news
 ![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/a43d88ff-9cde-4736-8f75-065eacbeac14)
 ![image](https://github.com/BalaguerRC/ninteroGames/assets/86633462/c772cd74-60e0-43d5-871e-c390b45e4304)
