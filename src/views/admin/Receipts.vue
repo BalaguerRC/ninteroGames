@@ -56,7 +56,7 @@
             <th>Options</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="receipts.length != 0">
           <!-- row 1 -->
           <tr v-for="receipt in receipts" :key="receipt._id">
             <div class="tooltip tooltip-right" :data-tip="receipt._id">
@@ -109,6 +109,9 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="receipts.length == 0" class="w-full grid justify-center p-4">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
     </div>
     <dialog id="my_modal_1" class="modal">
       <div class="modal-box">

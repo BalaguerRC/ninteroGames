@@ -48,33 +48,28 @@
         <div class="join">
           <input
             class="input input-sm input-bordered join-item"
-            placeholder="search"
+            placeholder="search username"
             v-model="Search"
           />
-          <button
-            type="button"
-            v-if="Search != ''"
-            class="btn join-item btn-sm btn-warning"
-            @click="
-              () => {
-                Search = '';
-              }
-            "
-          >
-            x
-          </button>
           <button type="submit" class="btn join-item btn-sm">Search</button>
         </div>
       </form>
+      <button
+        class="btn btn-error join-item btn-sm"
+        @click="onClear()"
+        :disabled="Search || Filter.name ? false : true"
+      >
+        clear
+      </button>
     </div>
 
-    <div class="overflow-x-auto relative w-full pb-20">
+    <div class="overflow-x-auto relative w-full min-h-[25rem] pb-20">
       <table class="table md:table-xs table-pin-rows w-full">
         <!-- head -->
         <thead>
           <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Profile + Name</th>
             <th>Username</th>
             <th>Email</th>
             <th>Type</th>
@@ -85,13 +80,29 @@
             <th>Options</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="Users.length != 0">
           <!-- row 1 -->
           <tr v-for="user in Users" :key="user._id">
             <div class="tooltip tooltip-right" :data-tip="user._id">
               <th>{{ user._id.slice(0, 5) }}...</th>
             </div>
-            <td>{{ user.nombre }} {{ user.apellido }}</td>
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle w-12 h-12">
+                    <img
+                      v-bind:src="user.profileURL"
+                      alt="Avatar Tailwind CSS Component"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-bold">
+                    {{ user.nombre }} {{ user.apellido }}
+                  </div>
+                </div>
+              </div>
+            </td>
             <td>{{ user.username }}</td>
             <td>{{ user.email }}</td>
             <td>
@@ -150,6 +161,9 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="Users.length == 0" class="w-full grid justify-center p-4">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
     </div>
     <dialog id="my_modal_1" class="modal">
       <div class="modal-box">
@@ -374,6 +388,12 @@ function getUsersMiddleware() {
     console.log("getting all Users");
     getAllUsers();
   }
+}
+
+function onClear() {
+  Search.value = "";
+  Filter.value = {};
+  getAllUsers();
 }
 
 function setPage(event) {

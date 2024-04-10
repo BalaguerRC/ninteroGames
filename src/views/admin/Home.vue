@@ -45,16 +45,38 @@
               </div>
               <ul
                 tabindex="0"
-                class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                class="menu menu-sm dropdown-content bg-neutral mt-3 z-[1] p-2 shadow rounded-lg w-52"
               >
+                <div class="p-3 flex flex-col gap-1">
+                  <div
+                    class="text-lg font-bold"
+                    v-if="user_data?.username.length != 9"
+                  >
+                    {{ user_data?.username.slice(0, 9) }}...
+                  </div>
+                  <div
+                    class="text-lg font-bold"
+                    v-if="user_data?.username.length === 9"
+                  >
+                    {{ user_data?.username }}
+                  </div>
+                  <div class="text-sm opacity-50">{{ user_data?.email }}</div>
+                </div>
+
+                <div class="divider m-0" />
                 <li>
-                  <a class="justify-between" v-on:click="onProfile">
-                    Profile
-                    <span class="badge">New</span>
-                  </a>
+                  <a v-on:click="onProfile"> Profile </a>
+                </li>
+                <li v-if="typeUser === 0">
+                  <a class="justify-between" href="/dashboard"
+                    >Dashboard <span class="badge">New</span></a
+                  >
                 </li>
                 <li><a v-on:click="onSettings">Settings</a></li>
-                <li><a v-on:click="logOut">Logout</a></li>
+                <div class="divider m-0" />
+                <li>
+                  <a v-on:click="logOut" class="hover:bg-error">Logout</a>
+                </li>
               </ul>
             </div>
           </ul>
@@ -169,6 +191,8 @@ import { useRouter, RouterView } from "vue-router";
 const router = useRouter();
 const userImg = ref("");
 const dataValidate = ref(false);
+
+const user_data = JSON.parse(localStorage.getItem("user_data"));
 
 onMounted(() => {
   const dataUser = JSON.parse(localStorage.getItem("user_data"));

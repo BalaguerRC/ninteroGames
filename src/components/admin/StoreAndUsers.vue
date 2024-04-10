@@ -8,7 +8,7 @@
           class="table table-xs static table-pin-rows table-pin-cols justify-center"
         >
           <thead></thead>
-          <tbody>
+          <tbody v-if="GamesCount.length != 0">
             <tr
               class="flex justify-between items-center"
               v-for="game in GamesCount"
@@ -35,6 +35,9 @@
               </td>
             </tr>
           </tbody>
+          <div v-else class="grid justify-center p-2">
+            <span class="loading loading-spinner loading-lg"></span>
+          </div>
         </table>
         <div class="card-actions justify-center">
           <a class="btn btn-sm btn-link" href="/dashboard/games">View More</a>
@@ -48,7 +51,7 @@
           class="table table-xs table-pin-rows table-pin-cols justify-center"
         >
           <thead></thead>
-          <tbody>
+          <tbody v-if="NewsCount.length != 0">
             <tr
               class="flex justify-between items-center"
               v-for="news in NewsCount"
@@ -72,6 +75,9 @@
               </td>
             </tr>
           </tbody>
+          <div v-else class="grid justify-center p-2">
+            <span class="loading loading-spinner loading-lg"></span>
+          </div>
         </table>
         <div class="card-actions justify-center">
           <a class="btn btn-sm btn-link" href="/dashboard/news">View More</a>
@@ -88,7 +94,7 @@
           class="table table-xs table-pin-rows table-pin-cols justify-center"
         >
           <thead></thead>
-          <tbody>
+          <tbody v-if="UsersCount.length != 0">
             <tr
               class="flex justify-between items-center"
               v-for="user in UsersCount"
@@ -114,6 +120,9 @@
               </td>
             </tr>
           </tbody>
+          <div v-else class="grid justify-center p-2">
+            <span class="loading loading-spinner loading-lg"></span>
+          </div>
         </table>
         <div class="card-actions justify-center">
           <a class="btn btn-sm btn-link" href="/dashboard/users">View More</a>

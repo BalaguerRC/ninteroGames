@@ -55,7 +55,7 @@
         </div>
         <ul
           tabindex="0"
-          class="dropdown-content z-[1] menu bg-base-200 w-56 p-0 [&_li>*]:rounded-none"
+          class="dropdown-content z-[1] menu bg-base-200 w-56 p-1 rounded-lg"
         >
           <label
             class="label cursor-pointer"
@@ -95,7 +95,11 @@
           <button type="submit" class="btn join-item btn-sm">Search</button>
         </div>
       </form>
-      <button class="btn btn-error join-item btn-sm" @click="onClear()">
+      <button
+        class="btn btn-error join-item btn-sm"
+        @click="onClear()"
+        :disabled="Search || Filter.name || categoriesSelected.length > 0 ? false : true"
+      >
         clear
       </button>
     </div>
@@ -103,8 +107,8 @@
     <div class="overflow-x-auto relative w-full min-h-[25rem] pb-20">
       <table class="table table-xs md:table-xs table-pin-rows w-full">
         <!-- head -->
-        <thead>
-          <tr>
+        <thead >
+          <tr style="z-index: -1;">
             <th>ID</th>
             <th>Name</th>
             <th>Developer</th>
@@ -118,7 +122,7 @@
             <th>Options</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="Games.length != 0">
           <!-- row 1 -->
           <tr v-for="game in Games" :key="game._id">
             <div class="tooltip tooltip-right" :data-tip="game._id">
@@ -197,6 +201,9 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="Games.length == 0" class="w-full grid justify-center p-4">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
     </div>
     <dialog id="my_modal_1" class="modal">
       <div class="modal-box">

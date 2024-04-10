@@ -437,7 +437,7 @@ function setPage(event) {
 </script>
 
 <template>
-  <div class="md:container md:mx-auto p-10 flex flex-row gap-3">
+  <div class="md:container md:mx-auto p-10 flex flex-row gap-3 min-h-[60rem]">
     <div class="shadow bg-base-200 basis-1/4 p-5 rounded-lg flex flex-col justify-between">
       <div class="space-y-7">
         <button type="button" class="btn btn-block font-bold" @click="btnShowUserSettings"><svg
@@ -457,7 +457,7 @@ function setPage(event) {
           </svg>Advanced</button>
       </div>
       <div class="mt-7">
-        <button type="button" class="font-bold btn btn-error btn-block" @click="logOut">Log out</button>
+        <a class="font-bold btn btn-error btn-block" href="/logout">Log out</a>
       </div>
     </div>
     <!-- <div class="shadow bg-base-200 basis-1/4 p-5 rounded-lg space-y-7">
@@ -479,7 +479,7 @@ function setPage(event) {
       <button type="button" class="font-bold btn btn-error btn-block">Log out</button>
     </div> -->
 
-    <div class="shadow basis-3/4 p-5 rounded">
+    <div class="shadow basis-3/4 p-5 rounded overflow-x-auto maxHeightSettings">
       <div id="usersettings" v-if="showUserSettings">
         <div class="divider">
           <div class="divider-content">
@@ -540,7 +540,7 @@ function setPage(event) {
             </div>
           </div>
 
-          <button type="submit" class="btn btn-accent mt-4">Save Profile</button>
+          <button type="submit" class="btn btn-success mt-4">Save Profile</button>
         </form>
 
         <div class="divider mt-8">
@@ -574,7 +574,7 @@ function setPage(event) {
               class="input input-bordered" required />
           </div>
 
-          <button type="submit" class="btn btn-accent mt-4">Change Password</button>
+          <button type="submit" class="btn btn-success mt-4">Change Password</button>
         </form>
 
 
@@ -607,10 +607,10 @@ function setPage(event) {
         <div class="my-4">
             <div class="flex items-center gap-3 justify-center">
                 <div class="join">
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1" @click="setPage">First page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': !hasPrevPage }" :data-gotonumber="prevPage" @click="setPage">Previous page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': !hasNextPage }" :data-gotonumber="nextPage" @click="setPage">Next page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': page == totalPages }" :data-gotonumber="totalPages" @click="setPage">Last page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1" @click="setPage">First page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasPrevPage }" :data-gotonumber="prevPage" @click="setPage">Previous page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasNextPage }" :data-gotonumber="nextPage" @click="setPage">Next page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == totalPages }" :data-gotonumber="totalPages" @click="setPage">Last page</button>
                 </div>
                 <span class="flex items-center gap-1">
                     <div>Page</div>
@@ -633,14 +633,14 @@ function setPage(event) {
         </div>
       </div>
       <div id="advancedsettings" v-else-if="showAdvancedSettings">
-        <div class="divider mt-8">
+        <div class="divider">
           <div class="divider-content">
             <h2 class="text-2xl font-bold">Advanced Settings</h2>
           </div>
         </div>
 
         <form @submit.prevent="submitDeveloperRequest">
-          <div class="form-control ">
+          <div class="form-control gap-4">
             <p>
               Turn your passion for gaming into an exciting career!
             </p>
@@ -675,7 +675,7 @@ function setPage(event) {
         </div>
 
         <form @submit.prevent="deleteAccount">
-          <div class="form-control">
+          <div class="form-control gap-4">
             <p>
               Ready to say goodbye? Deleting your account is easy. Just contact us if you have any problems and we'll
               take care of the rest. Thank you for being part of our community!
@@ -688,3 +688,21 @@ function setPage(event) {
 
   </div>
 </template>
+
+<style scoped>
+.maxHeightSettings{
+  max-height: 55rem;
+}
+.Nothing {
+  width: 100%;
+  min-height: 46.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.NothingChild {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+</style>

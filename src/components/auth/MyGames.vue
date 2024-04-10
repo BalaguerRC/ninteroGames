@@ -7,10 +7,10 @@
       </div>
       <div class="divider"></div>
     </div>
-    <div class="bg-gray-800 containerGames">
+    <div class=" containerGames">
       <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
         <div
-          class="card w-90 bg-base-100 shadow-xl"
+          class="card w-90 bg-base-100 shadow-xl rounded-lg"
           v-for="libreria in myGames"
           :key="libreria._id"
         >

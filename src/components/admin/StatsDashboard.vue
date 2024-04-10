@@ -18,7 +18,8 @@
         <div class="stat-title text-gray-300 text-1xl font-bold">
           Total Users
         </div>
-        <div class="stat-value">{{ UsersCount }}</div>
+        <div class="stat-value" v-if="UsersCount">{{ UsersCount }}</div>
+        <span v-else class="loading loading-spinner loading-lg"></span>
       </div>
     </div>
     <div class="stats shadow bg-blue-600">
@@ -41,7 +42,8 @@
         <div class="stat-title text-gray-300 text-1xl font-bold">
           Total Requests
         </div>
-        <div class="stat-value">{{ RequestsCount }}</div>
+        <div v-if="RequestsCount" class="stat-value">{{ RequestsCount }}</div>
+        <span v-else class="loading loading-spinner loading-lg"></span>
       </div>
     </div>
     <div class="stats shadow bg-blue-600">
@@ -61,7 +63,8 @@
         <div class="stat-title text-gray-300 text-1xl font-bold">
           Total Categories
         </div>
-        <div class="stat-value">{{ CategoriesCount }}</div>
+        <div v-if="CategoriesCount" class="stat-value">{{ CategoriesCount }}</div>
+        <span v-else class="loading loading-spinner loading-lg"></span>
       </div>
     </div>
   </div>
@@ -83,7 +86,8 @@
         <div class="stat-title text-gray-300 text-1xl font-bold">
           Total Games
         </div>
-        <div class="stat-value">{{ GamesCount }}</div>
+        <div v-if="GamesCount" class="stat-value">{{ GamesCount }}</div>
+        <span v-else class="loading loading-spinner loading-lg"></span>
       </div>
     </div>
     <div class="stats shadow bg-green-600">
@@ -103,7 +107,8 @@
         <div class="stat-title text-gray-300 text-1xl font-bold">
           Total News
         </div>
-        <div class="stat-value">{{ NewsCount }}</div>
+        <div v-if="NewsCount" class="stat-value">{{ NewsCount }}</div>
+        <span v-else class="loading loading-spinner loading-lg"></span>
       </div>
     </div>
   </div>

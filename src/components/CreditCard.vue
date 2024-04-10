@@ -16,11 +16,11 @@
       </a>
       <ul
         tabindex="1"
-        class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-info rounded-box w-96"
+        class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-info rounded-lg w-96"
       >
         <li class="py-2 text-1xl font-bold">Credit Card</li>
         <div class="flex flex-row justify-start label">
-          <span>Total Cash: $0</span>
+          <span>Total Cash: ${{ wallet }}</span>
         </div>
         <div class="divider"></div>
         <div class="flex flex-col gap-3">
@@ -78,9 +78,37 @@
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const amount = ref(0);
+const wallet = ref(0);
+
+function getUserById(id) {
+  console.log(id);
+  axios
+    .get(import.meta.env.VITE_API_ENDPOINT + "/users/getid/" + id)
+    .then((data) => {
+      console.log("cash",data.data);
+      wallet.value = data.data.billetera;
+    })
+    .catch((err) => {
+      Swal.fire({
+        background: "#252526",
+        color: "#FFF",
+        title: "There was an error!",
+        icon: "error",
+        text: err.response.data.message,
+      });
+    });
+}
+
+const dataUser = JSON.parse(localStorage.getItem("user_data"));
+
+onMounted(() => {
+  getUserById(dataUser._id);
+});
 </script>
 <style>
 .tab:is(input[type="radio"]) {

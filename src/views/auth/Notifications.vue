@@ -90,29 +90,32 @@ watch(notificationType, () => {
 </script>
 
 <template>
-    <div class="container mx-auto mt-10">
-        <div role="tablist" class="tabs tabs-boxed font-bold">
+    <div class="container mx-auto mt-10 min-h-[48rem]">
+        <div>
+            <div role="tablist" class="tabs tabs-boxed font-bold mb-2">
             <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Article Notifications" value="articles" v-model="notificationType" checked/>
             <input type="radio" name="my_tabs_1" role="tab" class="tab" aria-label="Game Notifications" value="games" v-model="notificationType" />
-        </div>
-        <div v-if="notifications">
-            <div v-if="notifications.length == 0" class="text-center mt-4 mb-8">
-                <span class="italic">No notifications to show</span>
             </div>
-            <div v-else>
-                <NotificationItem v-for="notification in notifications" :key="notification._id" :notificationObj="notification" />
+            <div v-if="notifications">
+            
+                <div v-if="notifications.length == 0" class="text-center mt-4 mb-8 Nothing">
+                    <span class="italic NothingChild">No notifications to show</span>
+                </div>
+                <div v-else>
+                    <NotificationItem v-for="notification in notifications" :key="notification._id" :notificationObj="notification" />
+                </div>
             </div>
-        </div>
-        <div v-else class="text-center my-4">
-            <span class="loading loading-spinner loading-lg"></span>
+            <div v-else class="text-center my-4">
+                <span class="loading loading-spinner loading-lg"></span>
+            </div>
         </div>
         <div class="my-4">
             <div class="flex items-center gap-3 justify-center">
                 <div class="join">
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1" @click="setPage">First page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': !hasPrevPage }" :data-gotonumber="prevPage" @click="setPage">Previous page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': !hasNextPage }" :data-gotonumber="nextPage" @click="setPage">Next page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': page == totalPages }" :data-gotonumber="totalPages" @click="setPage">Last page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1" @click="setPage">First page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasPrevPage }" :data-gotonumber="prevPage" @click="setPage">Previous page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasNextPage }" :data-gotonumber="nextPage" @click="setPage">Next page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == totalPages }" :data-gotonumber="totalPages" @click="setPage">Last page</button>
                 </div>
                 <span class="flex items-center gap-1">
                     <div>Page</div>
@@ -136,3 +139,21 @@ watch(notificationType, () => {
         <!-- <ArticleItem v-for="article in articles" :key="article._id" :articleObj="article" /> -->
     </div>
 </template>
+
+<style scoped>
+.Nothing {
+  width: 100%;
+  min-height: 46.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.NothingChild {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+.tab:is(input[type="radio"]) {
+  width: auto;
+}
+</style>

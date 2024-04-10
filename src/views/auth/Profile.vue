@@ -7,8 +7,8 @@
           <li>Profile</li>
         </ul>
       </div>
-      <div class="flex centerA">
-        <div class="flex items-center gap-3">
+      <div class="flex centerA py-5">
+        <div class="flex items-center gap-4">
           <div class="avatar">
             <div class="mask mask-squircle w-24">
               <img v-bind:src="userImg" />
@@ -85,8 +85,10 @@
                     <div class="flex items-center gap-3">
                       <div class="avatar">
                         <div class="mask mask-squircle w-12 h-12">
-                          <img v-bind:src="followers.profileURL" />
-                          alt="Avatar Tailwind CSS Component" />
+                          <img
+                            v-bind:src="followers.profileURL"
+                            alt="Avatar Tailwind CSS Component"
+                          />
                         </div>
                       </div>
                       <div>
@@ -177,7 +179,7 @@
         />
         <div
           role="tabpanel"
-          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+          class="tab-content bg-base-200 border-base-300 rounded-box p-4"
         >
           <div>
             <div class="pt-5">
@@ -190,10 +192,10 @@
               <div class="divider"></div>
             </div>
 
-            <div class="bg-gray-800 containerGames">
+            <div class="containerGames">
               <div class="grid grid-cols-3 gapP p-2" v-if="validateGames">
                 <div
-                  class="card w-90 bg-base-100 shadow-xl"
+                  class="card w-90 bg-base-100 shadow-xl rounded-lg"
                   v-for="libreria in userData.libreria"
                   :key="libreria._id"
                 >
@@ -297,7 +299,7 @@
         />
         <div
           role="tabpanel"
-          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+          class="tab-content bg-base-200 border-base-300 rounded-box p-4"
         >
           <MyGames />
         </div>
@@ -368,14 +370,14 @@ onMounted(() => {
 </script>
 <style>
 .Nothing {
-  width: 100%; /* Ancho del contenedor */
+  width: 100%;
   min-height: 46.5rem;
-  display: flex; /* Utilizamos flexbox para centrar horizontalmente */
-  justify-content: center; /* Centramos horizontalmente */
-  align-items: center; /* Centramos verticalmente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .NothingChild {
-  text-align: center; /* Alineación del texto dentro del div (opcional) */
+  text-align: center;
   font-weight: 800;
   font-size: 20px;
 }

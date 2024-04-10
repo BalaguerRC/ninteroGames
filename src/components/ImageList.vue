@@ -14,7 +14,7 @@
       <a :href="'#' + games">
         <div class="avatar">
           <div
-            class="w-14 rounded-2xl"
+            class="w-14 rounded-2xl "
             :class="
               route.hash === '#' + games
                 ? 'ring ring-primary ring-offset-base-100 ring-offset-2'

@@ -33,7 +33,7 @@
             </button>
             <ul
               tabindex="1"
-              class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-neutral rounded-box w-72"
+              class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-neutral rounded-lg w-72"
             >
               <li class="py-2 text-1xl font-bold">Wishlist</li>
               <div v-if="wishlist.length === 0" class="text-center py-5">
@@ -95,7 +95,7 @@
           </div>
           <ul
             tabindex="0"
-            class="menu menu-sm dropdown-content bg-neutral mt-3 z-[1] p-2 shadow rounded-box w-52"
+            class="menu menu-sm dropdown-content bg-neutral mt-3 z-[1] p-2 shadow rounded-lg w-52"
           >
             <div class="p-3 flex flex-col gap-1">
               <div

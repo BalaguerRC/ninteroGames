@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
+const anyArticles=ref(false); //validate if there is no articles
+
 const articles = ref();
 const hasPrevPage = ref(false);
 const hasNextPage = ref(true);
@@ -61,6 +63,14 @@ function filterArticles() {
 
                 page.value = response.data.page;
                 totalPages.value = response.data.totalPages;
+
+                if(response.data.totalDocs===0){
+                    anyArticles.value=true
+                }else{
+                    anyArticles.value=false
+                }
+                console.log('response',response.data)
+
             } else {
                 console.log(response.data);
                 Swal.fire({
@@ -102,6 +112,11 @@ function filterArticles() {
 
                 page.value = response.data.page;
                 totalPages.value = response.data.totalPages;
+                if(response.data.totalDocs===0){
+                    anyArticles.value=true
+                }else{
+                    anyArticles.value=false
+                }
             } else {
                 console.log(response.data);
                 Swal.fire({
@@ -250,7 +265,7 @@ watch(pageLimit, () => {
 </script>
 
 <template>
-    <div class="container mx-auto mt-10">
+    <div class="container mx-auto mt-10 min-h-[50rem]">
         <div class="alert shadow-lg mb-5" v-if="user_data && user_data.tipo === 1">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <div>
@@ -259,28 +274,34 @@ watch(pageLimit, () => {
             </div>
             <button class="btn btn-sm btn-primary" @click="router.push('news/create')">Write new article</button>
         </div>
-        <div class="flex flex-row mb-5 items-center space-x-4">
-            <input type="text" placeholder="Title Query" class="input input-bordered grow" v-model="search">
-            <select v-model="author" class="select select-bordered w-full max-w-xs grow">
+        <div class="flex flex-row items-center gap-3 mb-5"> 
+            <input type="text" placeholder="Title Query" class="input input-sm input-bordered w-full" v-model="search">
+            
+            <select v-model="author" class="select select-sm select-bordered max-w-xs w-full">
                 <option disabled selected value="">Filter author</option>
                 <option v-for="authorItem in authorList" :value="authorItem._id">
                     {{ authorItem.username }}
                 </option>
             </select>
-            <VueDatePicker v-model="date" input-class-name="grow" dark :clearable="true" :enable-time-picker="false" :range="true"/>
+
+            <div class="w-full"><VueDatePicker v-model="date" dark :clearable="true" :enable-time-picker="false" :range="true"/></div>
+
+            <button type="button" @click="onFilterArticle" class="btn btn-sm btn-outline btn-primary w-52">Filter articles</button>
+            <button type="button" @click="onClearFilter" class="btn btn-sm btn-outline btn-error" :disabled="!clearFilterButton">Clear filter</button>
+            
         </div>
-        <div class="flex flex-row mb-5 justify-between gap-4">
-            <button type="button" @click="onClearFilter" class="btn btn-outline btn-error basis-1/2" :disabled="!clearFilterButton">Clear filter</button>
-            <button type="button" @click="onFilterArticle" class="btn btn-outline btn-primary basis-1/2">Filter articles</button>
-        </div>
+
         <ArticleItem v-for="article in articles" :key="article._id" :articleObj="article" />
-        <div class="my-4">
+        <div class="Nothing" v-if="anyArticles">
+            <div class="NothingChild">THERE NO ARTICLES</div>
+        </div>
+        <div class="my-10">
             <div class="flex items-center gap-3 justify-center">
                 <div class="join">
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1" @click="setPage">First page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': !hasPrevPage }" :data-gotonumber="prevPage" @click="setPage">Previous page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': !hasNextPage }" :data-gotonumber="nextPage" @click="setPage">Next page</button>
-                    <button type="button" class="join-item btn" :class="{ 'btn-disabled': page == totalPages }" :data-gotonumber="totalPages" @click="setPage">Last page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == 1 }" :data-gotonumber="1" @click="setPage">First page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasPrevPage }" :data-gotonumber="prevPage" @click="setPage">Previous page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': !hasNextPage }" :data-gotonumber="nextPage" @click="setPage">Next page</button>
+                    <button type="button" class="join-item btn btn-sm" :class="{ 'btn-disabled': page == totalPages }" :data-gotonumber="totalPages" @click="setPage">Last page</button>
                 </div>
                 <span class="flex items-center gap-1">
                     <div>Page</div>
@@ -317,3 +338,22 @@ watch(pageLimit, () => {
         </router-link> -->
     </div>
 </template>
+
+<style>
+.Nothing {
+  width: 100%;
+  min-height: 46.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.NothingChild {
+  text-align: center;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.dp__input{
+    padding: 0.8%
+}
+</style>

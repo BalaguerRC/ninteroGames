@@ -107,8 +107,15 @@ onBeforeMount(() => {
 </script>
 
 <template>
-<div class="container mx-auto">
+<div class="container mx-auto min-h-[50rem]">
     <div class="m-10" v-if="article">
+        <div class="text-sm breadcrumbs py-5">
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/news">News</a></li>
+            <li>{{ article.title }}</li>
+          </ul>
+        </div>
         <div class="mb-3">
             <h1 class="font-bold text-4xl">{{ article.title }}</h1>
         </div>

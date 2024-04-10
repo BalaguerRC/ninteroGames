@@ -107,7 +107,7 @@
             <th>Options</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="categories.length != 0">
           <!-- row 1 -->
           <tr v-for="category in categories" :key="category._id">
             <div class="tooltip tooltip-right" :data-tip="category._id">
@@ -166,6 +166,9 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="categories.length == 0" class="w-full grid justify-center p-4">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
     </div>
     <dialog id="my_modal_1" class="modal">
       <div class="modal-box">

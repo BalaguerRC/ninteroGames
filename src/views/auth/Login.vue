@@ -4,9 +4,9 @@
       <div class="text-center lg:text-left">
         <h1 class="text-5xl font-bold">Login now!</h1>
         <p class="py-6">
-          Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
-          excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a
-          id nisi.
+          Welcome to the "best" game store. Here you will find a wide variety
+          of games such as action, adventure, multiplayer, driving and many
+          others. Enter your data to login
         </p>
       </div>
       <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">

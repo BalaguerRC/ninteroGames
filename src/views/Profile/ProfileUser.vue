@@ -7,8 +7,8 @@
           <li>Profile</li>
         </ul>
       </div>
-      <div class="flex centerA">
-        <div class="flex items-center gap-3">
+      <div class="flex centerA py-5">
+        <div class="flex items-center gap-4">
           <div class="avatar">
             <div class="mask mask-squircle w-24">
               <img v-bind:src="userdata.profileURL" />
@@ -19,8 +19,12 @@
               <div class="font-bold text-4xl">
                 {{ userdata.nombre }} {{ userdata.apellido }}
               </div>
-              <div class="badge badge-warning mx-2" v-if="userdata.tipo === 1">developer</div>
-              <div class="badge badge-info mx-2" v-if="userdata.tipo ===0 ">Admin</div>
+              <div class="badge badge-warning mx-2" v-if="userdata.tipo === 1">
+                developer
+              </div>
+              <div class="badge badge-info mx-2" v-if="userdata.tipo === 0">
+                Admin
+              </div>
             </div>
             <div class="text-sm opacity-50">
               {{ userdata.username }}
@@ -60,6 +64,15 @@
               "
             >
               Follow
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                class="inline-block h-5 w-5 stroke-current"
+              >
+                <path
+                  d="M22 9V7h-2v2h-2v2h2v2h2v-2h2V9zM8 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4m0 1c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4m4.51-8.95C13.43 5.11 14 6.49 14 8s-.57 2.89-1.49 3.95C14.47 11.7 16 10.04 16 8s-1.53-3.7-3.49-3.95m4.02 9.78C17.42 14.66 18 15.7 18 17v3h2v-3c0-1.45-1.59-2.51-3.47-3.17"
+                ></path>
+              </svg>
             </a>
           </div>
           <div class="py-2" v-if="validate">
@@ -72,6 +85,16 @@
               "
             >
               Unfollow
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="white"
+                viewBox="0 0 24 24"
+                class="inline-block h-5 w-5 stroke-current"
+              >
+                <path
+                  d="M14 8c0-2.21-1.79-4-4-4S6 5.79 6 8s1.79 4 4 4 4-1.79 4-4m3 2v2h6v-2zM2 18v2h16v-2c0-2.66-5.33-4-8-4s-8 1.34-8 4"
+                ></path>
+              </svg>
             </a>
           </div>
         </div>
@@ -188,7 +211,7 @@
         />
         <div
           role="tabpanel"
-          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+          class="tab-content bg-base-200 border-base-300 rounded-box p-4"
         >
           <GamesUser />
         </div>
@@ -203,7 +226,7 @@
         />
         <div
           role="tabpanel"
-          class="tab-content bg-base-100 border-base-300 rounded-box p-4"
+          class="tab-content bg-base-200 border-base-300 rounded-box p-4"
         >
           <MyGamesUser />
         </div>
@@ -287,7 +310,7 @@ function onUnFollow() {
       Swal.fire({
         background: "#252526",
         color: "#FFF",
-        title: "Un Follow!",
+        title: "UnFollow!",
         icon: "success",
         text: data.data.message,
       });
@@ -353,12 +376,12 @@ const validate = ref(false);
 .Nothing {
   width: 100%;
   min-height: 46.5rem;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .NothingChild {
-  text-align: center; 
+  text-align: center;
   font-weight: 800;
   font-size: 20px;
 }

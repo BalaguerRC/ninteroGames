@@ -120,7 +120,7 @@
           >
           <dialog id="my_modal_1" class="modal">
             <div class="modal-box image-full glass">
-              <h3 class="font-bold text-lg">Confir you order!</h3>
+              <h3 class="font-bold text-lg">Confirm you order!</h3>
 
               <p class="py-4">
                 Are you sure you want to buy the {{ gamesObj.name }} game?
@@ -156,12 +156,12 @@
     </div>
     <div class="gameDetails">
       <div class="w-full">
-        <div class="flex flex-col">
+        <div class="flex flex-col gap-2">
           <div>
             <h2 class="text-4xl font-bold pt-5">Comments</h2>
           </div>
           <div class="divider" />
-          <div class="join my-5">
+          <div class="join my-1">
             <input
               placeholder="comment..."
               disabled
