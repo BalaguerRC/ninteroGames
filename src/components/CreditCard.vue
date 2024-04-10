@@ -71,7 +71,7 @@
         </div>
         <div class="divider"></div>
         <div class="flex flex-row justify-end">
-          <button class="btn btn-sm">reload</button>
+          <button class="btn btn-sm" disabled>reload</button>
         </div>
       </ul>
     </div>

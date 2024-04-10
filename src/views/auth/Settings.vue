@@ -581,6 +581,11 @@ watch(pageLimit, () => {
       </div>
 
       <div id="receipthistory" v-else-if="showReceiptHistory">
+        <div class="divider">
+          <div class="divider-content">
+            <h2 class="text-2xl font-bold">Receipt History</h2>
+          </div>
+        </div>
         <table class="table table-zebra">
           <thead>
             <tr>
